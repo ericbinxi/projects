@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/mod_office.iml" filepath="$PROJECT_DIR$/mod_office.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mod_office/mod_office-mod_office.iml" filepath="$PROJECT_DIR$/mod_office/mod_office-mod_office.iml" />
-      <module fileurl="file://$PROJECT_DIR$/viewpagerindicator-library/viewpagerindicator-library.iml" filepath="$PROJECT_DIR$/viewpagerindicator-library/viewpagerindicator-library.iml" />
     </modules>
   </component>
 </project>
