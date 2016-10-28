@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+        android:background="@drawable/bg_scene_button"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/scene_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="14sp"
+            android:text="@string/default_scene1"
+            android:textColor="@color/white" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/scene_name">
+
+            <cn.com.mod.office.lightman.widget.CircleImageView
+                android:id="@+id/scene"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/default_01_off" />
+
+            <cn.com.mod.office.lightman.widget.CircleImageView
+                android:id="@+id/border1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bg_scene_border_off" />
+
+            <cn.com.mod.office.lightman.widget.CircleImageView
+                android:id="@+id/border2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bg_scene_border_off" />
+
+            <ImageView
+                android:id="@+id/ic_delete"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_scene_delete"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/ic_clock"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_scene_clock"
+                android:visibility="invisible" />
+
+
+            <ImageView
+                android:id="@+id/ic_edit"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="right|bottom"
+                android:src="@drawable/ic_scene_edit"
+                android:visibility="invisible" />
+        </FrameLayout>
+    </RelativeLayout>
+</LinearLayout>

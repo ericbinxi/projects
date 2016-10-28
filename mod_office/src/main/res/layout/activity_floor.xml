@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <RelativeLayout
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/orange"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/ic_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_back"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/floor_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/ic_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bar">
+
+        <FrameLayout
+            android:id="@+id/bottom_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="106dp"
+                android:layout_gravity="bottom"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_scene_button" />
+
+            <cn.com.mod.office.lightman.widget.HorizontalListView
+                android:id="@+id/control_panel"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_above="@id/bottom_panel">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+                <cn.com.mod.office.lightman.widget.PowerfulLayout
+                    android:id="@+id/pf_floor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_above="@id/control_panel" >
+                    <!--<FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">-->
+                        <!--<ImageView
+                            android:id="@+id/background"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>-->
+                        <cn.com.mod.office.lightman.widget.MyLayout
+                            android:id="@+id/layout_floor"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    <!--</FrameLayout>-->
+
+                </cn.com.mod.office.lightman.widget.PowerfulLayout>
+            </FrameLayout>
+
+            <cn.com.mod.office.lightman.widget.ItemListView
+                android:id="@+id/menu_list"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bar"
+                android:layout_gravity="right"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:persistentDrawingCache="scrolling"
+                android:visibility="invisible" />
+        </FrameLayout>
+    </RelativeLayout>
+</RelativeLayout>

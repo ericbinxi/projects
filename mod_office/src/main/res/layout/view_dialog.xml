@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dark_repeat"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/ic_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_exit" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ic_exit"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_take_photo"
+            android:layout_width="260dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_btn"
+            android:padding="8dp"
+            android:text="@string/take_photo"
+            android:textColor="@drawable/bg_btn"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_pick_photo"
+            android:layout_width="260dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/bg_btn"
+            android:padding="8dp"
+            android:text="@string/pick_photo"
+            android:textColor="@drawable/bg_btn"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+</RelativeLayout>

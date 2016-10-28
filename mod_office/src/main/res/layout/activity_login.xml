@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_config"
+        android:id="@+id/gate"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="48dp"
+            android:paddingRight="48dp"
+            android:scaleType="fitEnd"
+            android:src="@drawable/bg_footer" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer">
+
+        <LinearLayout
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/login_username"
+                android:layout_width="260dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/input_username"
+                android:gravity="center_vertical"
+                android:hint="@string/username"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textCursorDrawable="@null"
+                android:textSize="20sp" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <EditText
+                    android:id="@+id/login_password"
+                    android:layout_width="260dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/input_password"
+                    android:gravity="center_vertical"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textCursorDrawable="@null"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/login_pass_alert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/login_password"
+                    android:layout_below="@id/login_password"
+                    android:layout_gravity="right|bottom"
+                    android:text="@string/tip_pass_wrong"
+                    android:textColor="@color/orange"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="260dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_btn"
+                android:padding="10dp"
+                android:text="@string/btn_login"
+                android:textColor="@drawable/bg_btn"
+                android:textSize="20sp" />
+
+            <RelativeLayout
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <CheckBox
+                    android:id="@+id/login_remember"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:button="@drawable/bg_cb" />
+
+                <TextView
+                    android:id="@+id/login_label_remember"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/login_remember"
+                    android:text="@string/remember_pass"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/login_label_auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/auto_login"
+                    android:textColor="@color/white" />
+
+                <CheckBox
+                    android:id="@+id/login_auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/login_label_auto"
+                    android:button="@drawable/bg_cb" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/input"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <cn.com.mod.office.lightman.widget.HeaderImage
+                android:id="@+id/login_header"
+                android:layout_width="@dimen/header_size"
+                android:layout_height="@dimen/header_size"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/default_header" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

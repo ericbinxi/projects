@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">云控照明</string>
+
+    <string name="tip_network_connect_faild">当前网络不可用</string>
+    <string name="tip_timeout">服务器响应超时</string>
+    <string name="tip_pass_wrong">密码错误，请重新输入</string>
+    <string name="tip_username_empty">请输入用户名</string>
+    <string name="tip_username_length">用户名长度不能小于5位</string>
+    <string name="tip_password_empty">请输入密码</string>
+    <string name="tip_password_length">密码长度不能小于4位</string>
+    <string name="tip_newpass_empty">请输入新密码</string>
+    <string name="tip_feedback_empty">请输入反馈信息</string>
+    <string name="tip_feedback_length">反馈信息长度不能小于15字</string>
+    <string name="tip_app_exit">再按一次退出程序</string>
+    <string name="tip_room_empty">请先选择房间</string>
+    <string name="tip_group_empty">请先选择灯组</string>
+    <string name="tip_scene_name_empty">请输入名称</string>
+    <string name="tip_scene_name_length">名称长度不能超出5个字节</string>
+    <string name="tip_brightness_format">请输入合法的亮度值</string>
+    <string name="tip_colortemp_format">请输入合法的色温值</string>
+    <string name="tip_rgb_format">请输入合法的色彩值</string>
+
+
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="remember_pass">记住密码</string>
+    <string name="auto_login">自动登录</string>
+    <string name="btn_login">登&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;录</string>
+
+    <string name="feedback">意见反馈</string>
+    <string name="send">发送</string>
+
+    <string name="select_floor">选择楼层</string>
+    <string name="about">关于</string>
+
+    <string name="hint_old_pass">请输入旧密码</string>
+    <string name="hint_new_pass">请输入新密码</string>
+    <string name="confirm">确定</string>
+
+    <string name="user_info">个人信息</string>
+    <string name="label_department">部门：</string>
+    <string name="label_position">职位：</string>
+    <string name="modify_pass">修改密码</string>
+
+    <string name="serviceterm">服务条款</string>
+    <string name="label_serviceterm">服务条款：云控照明系统服务条款</string>
+    <string name="serviceterm_comment">【注意】请用户仔细阅读以下全部内容</string>
+
+    <string name="update">更新版本</string>
+    <string name="label_desc">软件说明：</string>
+    <string name="text_app">LED云控照明系统V1.0</string>
+    <string name="label_company">公司信息：</string>
+    <string name="text_company">广东凯乐斯光电科技有限公司\nwww.mod.com.cn</string>
+    <string name="label_support">软件支持：</string>
+    <string name="text_support">安卓系统2.3及以上</string>
+    <string name="label_copyright">版权信息：</string>
+    <string name="text_copyright">©广东凯乐斯光电科技有限公\n司版权所有</string>
+    <string name="label_contact">联系方式：</string>
+    <string name="text_contact">广东省深圳市南山区华瀚科技园\nC座306室</string>
+    <string name="label_phone">电&#160;&#160;&#160;&#160;&#160;&#160;&#160;话：</string>
+    <string name="text_phone">0755-86701586</string>
+    <string name="label_weixin">微&#160;&#160;&#160;&#160;&#160;&#160;&#160;信：</string>
+    <string name="text_weixin">weixin</string>
+    <string name="label_weibo">微&#160;&#160;&#160;&#160;&#160;&#160;&#160;博：</string>
+    <string name="text_weibo">weibo</string>
+
+    <string name="repick">重新选择</string>
+
+    <string name="update_version">更新版本</string>
+    <string name="label_curr_version">当前版本：V</string>
+
+    <string name="open_time">开启\n时间</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
+    <string name="delete">删除</string>
+    <string name="repart">重复</string>
+    <string name="edit">编辑</string>
+
+    <string name="take_photo">拍照</string>
+    <string name="pick_photo">从相册选择</string>
+    <string name="select_all">全选</string>
+    <string name="update_dialog_title">更新提示</string>
+    <string name="update_dialog_msg">检测到有新版本，是否进行更新？</string>
+    <string name="cancel">取消</string>
+
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+    <string name="sunday">日</string>
+    <string name="sure">OK</string>
+
+    <string name="delete_clock_dialog_title">提示</string>
+    <string name="delete_clock_dialog_msg">确定要删除该定时灯光模式（%1$S）吗？</string>
+
+    <string name="update_cancel_dialog_title">提示</string>
+    <string name="update_cancel_dialog_msg">正在下载更新资源，是否取消更新？</string>
+
+    <string name="default_scene1">办公模式</string>
+    <string name="default_scene2">下班模式</string>
+    <string name="default_scene3">接待模式</string>
+    <string name="default_scene4">休息模式</string>
+    <string name="default_add">添加模式</string>
+
+    <string name="save">保存</string>
+    <string name="brightness">亮度</string>
+    <string name="colortemp">色温</string>
+    <string name="rgb">色彩</string>
+    <string name="led_control">灯光调节</string>
+    <string name="default_scene_name">自定义模式</string>
+
+    <string name="delete_scene_dialog_title">提示</string>
+    <string name="delete_scene_dialog_msg">确认删除该自定义模式吗?</string>
+
+    <string name="config_path">配置服务器</string>
+    <string name="tip_config_path">服务器地址：</string>
+
+    <string name="tip_path_empty">服务器地址不能为空</string>
+    <string name="config_success">配置成功</string>
+    <string name="config_faild">配置失败 请检查链接</string>
+
+    <!--新增字段，需适配中英文-->
+    <string name="logout">退出登录</string>
+    <string name="my_permissions">我的权限</string>
+    <string name="fault_declare">故障申报</string>
+    <string name="mod_password">修改密码</string>
+    <string name="settings">设置</string>
+    <string name="mode_manager">模式管理</string>
+    <string name="clock_setting">闹钟设置</string>
+    <string name="select_none">反选</string>
+    <string name="grouping">分组</string>
+    <string name="unmarshall">解组</string>
+    <string name="adjust_lamp">调节灯具</string>
+    <string name="diy_model">自定义模式</string>
+    <string name="adjust_parameter">参数编辑</string>
+    <string name="adjust_angle">角度调节</string>
+    <string name="unselected_rooms_tips">请先选择房间</string>
+    <string name="room_no_map">房间地图不存在，请重新选择房间</string>
+    <string name="call_params">调用参数</string>
+    <string name="copy_params">备份参数</string>
+    <string name="params_list">参数列表</string>
+    <string name="apply">应用</string>
+    <string name="remark">备注:</string>
+    <string name="params_desc">亮度%1$d,颜色R%2$d、G%3$d、B%4$d,色温%5$dK</string>
+    <string name="normal_mode">常规模式</string>
+    <string name="dynamic_mode">动态模式</string>
+    <string name="apply_dynamic">预览</string>
+    <string name="mode_create">创建模式</string>
+    <string name="mode_edit">编辑模式</string>
+    <string name="mode">模式</string>
+    <string name="clock_create">创建闹钟</string>
+    <string name="get_clocks_fail">获取闹钟列表失败</string>
+    <string name="open_clock_success">闹钟已开启</string>
+    <string name="open_clock_fail">开启闹钟失败</string>
+    <string name="close_clock_success">闹钟已关闭</string>
+    <string name="close_clock_fail">闹钟关闭失败</string>
+    <string name="delete_clock_success">闹钟已删除</string>
+    <string name="delete_clock_fail">删除闹钟失败</string>
+    <string name="clock_edit">编辑闹钟</string>
+    <string name="time_picker">时间选择</string>
+    <string name="time_picker_tips">当前的时间不能小于前一帧的时间，请重新选择时间</string>
+    <string name="et_mode_name">请输入自定义模式的名字</string>
+    <string name="setting_params_tips">请设置灯具的参数</string>
+
+    <string name="up_and_down">升降</string>
+    <string name="left_and_right">移动位置</string>
+
+</resources>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <RelativeLayout
+    android:id="@+id/bar"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/orange"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/ic_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_back"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/room_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/ic_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_menu" />
+</RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/ll_scene"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_scene_button">
+
+            <cn.com.mod.office.lightman.widget.HorizontalListView
+                android:id="@+id/control_panel"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_gravity="bottom" />
+
+            <cn.com.mod.office.lightman.widget.ScrollBar
+                android:id="@+id/scrollbar"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_adjust_lamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_normal_selector"
+            android:visibility="gone">
+            <!--调节灯具-->
+            <TextView
+                android:id="@+id/adjust_lamp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical"
+                android:padding="20dp"
+                android:text="@string/adjust_lamp"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom"
+        android:layout_below="@id/bar"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/select_menu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/select_all"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/select_all" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/select_none"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="@string/select_none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/grouping"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="@string/grouping" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/unmarshall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="@string/unmarshall" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <AbsoluteLayout
+            android:id="@+id/led_canvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/control_panel"
+            android:layout_marginTop="60dp" />
+
+        <cn.com.mod.office.lightman.widget.ItemListView
+            android:id="@+id/menu_list"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bar"
+            android:layout_gravity="right"
+            android:layout_marginRight="8dp"
+            android:visibility="invisible" />
+    </FrameLayout>
+</RelativeLayout>

@@ -1,0 +1,1 @@
+include ':common', ':mod_office', ':viewpagerindicator-library'

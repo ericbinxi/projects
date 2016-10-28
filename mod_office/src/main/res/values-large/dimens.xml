@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_size">204dp</dimen>
+    <dimen name="floor_size">435dp</dimen>
+    <dimen name="shadow_size">413dp</dimen>
+    <dimen name="text_size">120dp</dimen>
+    <dimen name="space_size">-345dp</dimen>
+</resources>

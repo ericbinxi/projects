@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:text="@string/rgb"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/red"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_tv_week"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="3"
+                android:text="255"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@null"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/green"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_tv_week"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="3"
+                android:text="255"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@null"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/blue"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_tv_week"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="3"
+                android:text="255"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@null"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-56dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <cn.com.mod.office.lightman.widget.ColorPicker
+                android:id="@+id/color_picker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="24dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="64dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_color" />
+
+            <ImageView
+                android:id="@+id/file"
+                android:layout_width="32dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_file" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

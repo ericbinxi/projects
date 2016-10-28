@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/floor_size"
+    android:layout_height="@dimen/floor_size">
+
+    <ImageView
+        android:id="@+id/iv_floor"
+        android:layout_width="@dimen/floor_size"
+        android:layout_height="@dimen/floor_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@null"
+        android:scaleType="fitStart"
+        android:src="@drawable/floor" />
+
+    <ImageView
+        android:id="@+id/iv_shadow"
+        android:layout_width="@dimen/shadow_size"
+        android:layout_height="@dimen/shadow_size"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/floor_shadow"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/img_floornum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/text_size"
+        android:layout_marginRight="@dimen/text_size"
+        android:contentDescription="@null" />
+
+</FrameLayout>

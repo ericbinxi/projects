@@ -1,0 +1,147 @@
+<resources>
+    <string name="app_name">Cloud Lighting</string>
+
+    <string name="tip_network_connect_faild">Networking not available</string>
+    <string name="tip_timeout">Server response timeout</string>
+    <string name="tip_pass_wrong">Error,please try it again</string>
+    <string name="tip_username_empty">Enter username</string>
+    <string name="tip_username_length">The length of username shoud be larger than 5</string>
+    <string name="tip_password_empty">Enter password</string>
+    <string name="tip_password_length">The length of password shoud be larger than 4</string>
+    <string name="tip_newpass_empty">Enter the new password</string>
+    <string name="tip_feedback_empty">Please enter feedback information</string>
+    <string name="tip_feedback_length">The feedback information length should be larger than 15 words</string>
+    <string name="tip_app_exit">Exit if press it again</string>
+    <string name="tip_room_empty">Please choose the room</string>
+    <string name="tip_group_empty">Please select the light group</string>
+    <string name="tip_scene_name_empty">Please enter a name</string>
+    <string name="tip_scene_name_length">Name length can not exceed 5 bytes</string>
+    <string name="tip_brightness_format">Please enter a valid brightness value between 0 and 100.</string>
+    <string name="tip_colortemp_format">Please enter a valid color temperature value between 2700 and 6500.</string>
+    <string name="tip_rgb_format">Please enter a valid color value between 0 and 255.</string>
+
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="remember_pass">Remember</string>
+    <string name="auto_login">Auto-login</string>
+    <string name="btn_login">Login</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="send">Send</string>
+
+    <string name="select_floor">select floor</string>
+    <string name="about">About</string>
+
+    <string name="hint_old_pass">Enter the old password</string>
+    <string name="hint_new_pass">Enter the new password</string>
+    <string name="confirm">OK</string>
+
+    <string name="user_info">user information</string>
+    <string name="label_department">department：</string>
+    <string name="label_position">position：</string>
+    <string name="modify_pass">change password</string>
+
+    <string name="serviceterm">term of service</string>
+    <string name="label_serviceterm">term of service：term of Cloud lighting smart light control system</string>
+    <string name="serviceterm_comment">please read all of the following</string>
+
+    <string name="update">Version update</string>
+    <string name="label_desc">Version：</string>
+    <string name="text_app">MOD smart light control system V1.0</string>
+    <string name="label_company">Company：</string>
+    <string name="text_company">Shenzhen cloud control lighting Information Technology Co., Ltd.</string>
+    <string name="label_support">System required：</string>
+    <string name="text_support">Android4.1</string>
+    <string name="label_copyright">Copyright：</string>
+    <string name="text_copyright">©GuangDong Kailesi Optoelectronics Sci &#38;Tech Co .,Ltd.</string>
+    <string name="label_contact">Address：</string>
+    <string name="text_contact">No. 306, C block, Huahan technology park,\n Nanshan District, Shenzhen City, Guangdong.</string>
+    <string name="label_phone">Tel:</string>
+    <string name="text_phone">0755-86701586</string>
+    <string name="label_weixin">Wechat：</string>
+    <string name="text_weixin">weixin</string>
+    <string name="label_weibo">Weibo：</string>
+    <string name="text_weibo">weibo</string>
+
+    <string name="repick">Re selection</string>
+
+    <string name="update_version">Version update</string>
+    <string name="label_curr_version">Current version：V</string>
+
+    <string name="open_time">Turn on</string>
+    <string name="hour">H</string>
+    <string name="minute">M</string>
+    <string name="delete">Delete</string>
+    <string name="repart">Repeat</string>
+    <string name="edit">Edit</string>
+
+    <string name="take_photo">take a picture</string>
+    <string name="pick_photo">Choose from the album</string>
+    <string name="select_all">select all</string>
+    <string name="update_dialog_title">Update prompt</string>
+    <string name="update_dialog_msg">There is a new version, whether to update?</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">TUR</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
+    <string name="sunday">SUN</string>
+    <string name="sure">OK</string>
+
+    <string name="delete_clock_dialog_title">Notice</string>
+    <string name="delete_clock_dialog_msg">Are you sure that you need remove the（%1$S）mode?</string>
+
+    <string name="update_cancel_dialog_title">Notice</string>
+    <string name="update_cancel_dialog_msg">Downloading now, and are you sure to cancel update?</string>
+
+    <string name="default_scene1">Working</string>
+    <string name="default_scene2">Off work</string>
+    <string name="default_scene3">Meeting</string>
+    <string name="default_scene4">Rest</string>
+    <string name="default_add">Adding</string>
+
+    <string name="save">Save</string>
+    <string name="brightness">Brightness</string>
+    <string name="colortemp">Color Temp</string>
+    <string name="rgb">RGB</string>
+    <string name="led_control">Light setting</string>
+    <string name="default_scene_name">user defined</string>
+
+    <string name="delete_scene_dialog_title">Notice</string>
+    <string name="delete_scene_dialog_msg">Are you sure to delete the user-defined mode?</string>
+
+    <string name="config_path">Configure server</string>
+    <string name="tip_config_path">Server address：</string>
+
+    <string name="tip_path_empty">Server address can not be empty</string>
+    <string name="config_success">Configure successfully</string>
+    <string name="config_faild">Fail to configure server,Please check the network</string>
+
+    <!--新增字段，需适配中英文-->
+    <string name="logout">退出登录</string>
+    <string name="my_permissions">我的权限</string>
+    <string name="fault_declare">故障申报</string>
+    <string name="mod_password">修改密码</string>
+    <string name="settings">设置</string>
+    <string name="mode_manager">模式管理</string>
+    <string name="clock_setting">闹钟设置</string>
+    <string name="select_none">反选</string>
+    <string name="grouping">分组</string>
+    <string name="unmarshall">解组</string>
+    <string name="adjust_lamp">调节灯具</string>
+    <string name="diy_model">自定义模式</string>
+    <string name="adjust_parameter">参数编辑</string>
+    <string name="adjust_angle">角度调节</string>
+    <string name="unselected_rooms_tips">请先选择房间</string>
+    <string name="room_no_map">房间地图不存在，请重新选择房间</string>
+    <string name="call_params">调用参数</string>
+    <string name="copy_params">备份参数</string>
+    <string name="params_list">参数列表</string>
+    <string name="apply">应用</string>
+    <string name="remark">备注:</string>
+    <string name="params_desc">亮度%1$d,颜色R%2$d、G%3$d、B%4$d,色温%5$dK</string>
+</resources>

@@ -1,0 +1,43 @@
+package com.joshua.common.util;
+
+import android.os.Handler;
+import android.os.Message;
+
+/**
+ * 开关按钮的动画控制器
+ */
+public class FrameAnimationController {
+    public static final int ANIMATION_FRAME_DURATION = 1000 / 60;
+    private static final int MSG_ANIMATE = 1000;
+    private static final Handler mHandler = new AnimationHandler();
+
+    private FrameAnimationController() {
+        throw new UnsupportedOperationException();
+    }
+
+    public static void requestAnimationFrame(Runnable runnable) {
+        Message message = new Message();
+        message.what = MSG_ANIMATE;
+        message.obj = runnable;
+        mHandler.sendMessageDelayed(message, ANIMATION_FRAME_DURATION);
+    }
+
+    public static void requestFrameDelay(Runnable runnable, long delay) {
+        Message message = new Message();
+        message.what = MSG_ANIMATE;
+        message.obj = runnable;
+        mHandler.sendMessageDelayed(message, delay);
+    }
+
+    private static class AnimationHandler extends Handler {
+        public void handleMessage(Message m) {
+            switch (m.what) {
+                case MSG_ANIMATE:
+                    if (m.obj != null) {
+                        ((Runnable) m.obj).run();
+                    }
+                    break;
+            }
+        }
+    }
+}

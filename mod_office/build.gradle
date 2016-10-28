@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.2"
+    defaultConfig {
+        applicationId "cn.com.mod.office.lightman"
+        minSdkVersion 10
+        targetSdkVersion 22
+        versionCode 13
+        versionName "1.58"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile project(':common')
+    compile project(':viewpagerindicator-library')
+    compile files('libs/android-query.0.26.8.jar')
+    //    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    //    compile 'com.squareup.okio:okio:1.6.0'
+    //    compile 'com.google.code.gson:gson:2.4'
+    compile files('libs/nineoldandroids-2.4.0.jar')
+}

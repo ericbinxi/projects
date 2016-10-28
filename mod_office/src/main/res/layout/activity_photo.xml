@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_dark_repeat"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_pick_photo"
+                android:layout_width="260dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_btn"
+                android:padding="8dp"
+                android:text="@string/repick"
+                android:textColor="@drawable/bg_btn"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_confirm"
+                android:layout_width="260dp"
+                android:layout_height="56dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_btn"
+                android:padding="8dp"
+                android:text="@string/confirm"
+                android:textColor="@drawable/bg_btn"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <cn.com.mod.office.lightman.widget.MaskImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer"
+        android:scaleType="fitCenter" />
+
+</RelativeLayout>
