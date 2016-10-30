@@ -9,8 +9,8 @@
         android:layout_height="@dimen/floor_size"
         android:background="@android:color/transparent"
         android:contentDescription="@null"
-        android:scaleType="fitStart"
-        android:src="@drawable/floor" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/shape_floor_background" />
 
     <ImageView
         android:id="@+id/iv_shadow"

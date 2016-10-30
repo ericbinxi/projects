@@ -82,6 +82,131 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                android:background="@color/black">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_vertical_angle"
+                    android:drawablePadding="10dp"
+                    android:text="@string/vertical_angle"/>
+            </LinearLayout>
+            <cn.com.mod.office.lightman.widget.VerticalAngleView
+                android:id="@+id/view_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_btn_bg"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:layout_gravity="center_horizontal">
+                <ImageView
+                    android:id="@+id/btn_v_reduce"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_angle_reduce"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tv_v_angle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="20sp"
+                        android:text="0"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:text=" 。"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btn_v_add"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_angle_add"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                android:background="@color/black">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_vertical_angle"
+                    android:drawablePadding="10dp"
+                    android:text="@string/vertical_angle"/>
+            </LinearLayout>
+            <cn.com.mod.office.lightman.widget.HorizonAngleView
+                android:id="@+id/view_horizon"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_btn_bg"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:layout_gravity="center_horizontal">
+                <ImageView
+                    android:id="@+id/btn_h_reduce"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_angle_reduce"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tv_h_angle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="20sp"
+                        android:text="0"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:text=" 。"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btn_h_add"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_angle_add"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 

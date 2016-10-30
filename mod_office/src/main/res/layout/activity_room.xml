@@ -68,20 +68,29 @@
         <LinearLayout
             android:id="@+id/ll_adjust_lamp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
+
             android:background="@drawable/btn_normal_selector"
-            android:visibility="gone">
+            android:visibility="visible"
+            android:gravity="center_horizontal">
             <!--调节灯具-->
-            <TextView
-                android:id="@+id/adjust_lamp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical"
-                android:padding="20dp"
-                android:text="@string/adjust_lamp"
-                android:textSize="20sp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_adjust_lamp"
+                    android:layout_gravity="center" />
+                <TextView
+                    android:id="@+id/adjust_lamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:padding="20dp"
+                    android:text="@string/adjust_lamp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
         </LinearLayout>
 
     </RelativeLayout>
@@ -101,24 +110,25 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:padding="5dp"
-            android:visibility="gone">
+            android:visibility="invisible">
 
             <LinearLayout
                 android:id="@+id/select_all"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_selector">
+                android:layout_weight="1">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock" />
+                    android:background="@drawable/btn_all_selector" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="2dp"
                     android:text="@string/select_all" />
             </LinearLayout>
 
@@ -126,19 +136,18 @@
                 android:id="@+id/select_none"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_selector">
+                android:layout_weight="1">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock" />
+                    android:background="@drawable/btn_none_selector" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-
+                    android:layout_marginLeft="2dp"
                     android:text="@string/select_none" />
             </LinearLayout>
 
@@ -146,19 +155,18 @@
                 android:id="@+id/grouping"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_selector">
+                android:layout_weight="1">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock" />
+                    android:background="@drawable/btn_group_selector"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-
+                    android:layout_marginLeft="2dp"
                     android:text="@string/grouping" />
             </LinearLayout>
 
@@ -166,19 +174,18 @@
                 android:id="@+id/unmarshall"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_selector">
+                android:layout_weight="1">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock" />
+                    android:background="@drawable/btn_cancel_selector"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-
+                    android:layout_marginLeft="2dp"
                     android:text="@string/unmarshall" />
             </LinearLayout>
         </LinearLayout>

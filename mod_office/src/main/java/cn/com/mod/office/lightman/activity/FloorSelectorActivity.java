@@ -39,7 +39,7 @@ public class FloorSelectorActivity extends BaseActivity implements View.OnClickL
     private List<FloorInfo> mFloorInfos;
 
     private LinearLayout ll_permissons, ll_fault_declare, ll_mod_password, ll_settings;
-    private Button logout;
+    private TextView logout,username;
     private SlidingMenu menu;
 
     @Override
@@ -85,7 +85,11 @@ public class FloorSelectorActivity extends BaseActivity implements View.OnClickL
         ll_fault_declare = (LinearLayout) findViewById(R.id.ll_fault_declare);
         ll_mod_password = (LinearLayout) findViewById(R.id.ll_mod_password);
         ll_settings = (LinearLayout) findViewById(R.id.ll_settings);
-        logout = (Button) findViewById(R.id.btn_logout);
+        logout = (TextView) findViewById(R.id.btn_logout);
+        username = (TextView) findViewById(R.id.username);
+
+        String name = MyApplication.getInstance().getAppConfig().getUsername();
+        username.setText(name);
 
         ll_permissons.setOnClickListener(this);
         ll_fault_declare.setOnClickListener(this);

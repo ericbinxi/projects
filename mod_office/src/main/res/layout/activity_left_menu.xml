@@ -3,35 +3,49 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="#373737">
     <LinearLayout
         android:id="@+id/head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:gravity="center">
+        android:layout_marginTop="30dp">
 
         <cn.com.mod.office.lightman.widget.HeaderImage
             android:id="@+id/user_header"
-            android:layout_width="@dimen/header_size"
-            android:layout_height="@dimen/header_size"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:contentDescription="@null"
             android:scaleType="fitCenter"
+            android:layout_marginLeft="40dp"
             android:src="@drawable/default_header" />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="20dp"
+            android:text=""/>
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/head"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/ll_permissons">
+                android:layout_height="60dp"
+                android:id="@+id/ll_permissons"
+                android:gravity="center_vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,8 +55,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/my_permissions"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="50dp"
-                        android:textSize="15sp"/>
+                        android:layout_marginLeft="35dp"
+                        android:padding="5dp"
+                        android:textSize="18sp"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -51,10 +66,15 @@
                         android:src="@drawable/icon_button_end"/>
                 </RelativeLayout>
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/ll_fault_declare">
+                android:layout_height="60dp"
+                android:id="@+id/ll_fault_declare"
+                android:gravity="center_vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -63,8 +83,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/fault_declare"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="50dp"
-                        android:textSize="15sp"/>
+                        android:layout_marginLeft="35dp"
+                        android:padding="5dp"
+                        android:textSize="18sp"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -73,10 +94,15 @@
                         android:src="@drawable/icon_button_end"/>
                 </RelativeLayout>
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/ll_mod_password">
+                android:layout_height="60dp"
+                android:id="@+id/ll_mod_password"
+                android:gravity="center_vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -85,8 +111,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/mod_password"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="50dp"
-                        android:textSize="15sp"/>
+                        android:layout_marginLeft="35dp"
+                        android:padding="5dp"
+                        android:textSize="18sp"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,10 +122,15 @@
                         android:src="@drawable/icon_button_end"/>
                 </RelativeLayout>
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/ll_settings">
+                android:layout_height="60dp"
+                android:id="@+id/ll_settings"
+                android:gravity="center_vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -107,8 +139,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/settings"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="50dp"
-                        android:textSize="15sp"/>
+                        android:layout_marginLeft="35dp"
+                        android:padding="5dp"
+                        android:textSize="18sp"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -117,6 +150,10 @@
                         android:src="@drawable/icon_button_end"/>
                 </RelativeLayout>
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
         </LinearLayout>
 
 
@@ -124,16 +161,22 @@
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:gravity="bottom|center_horizontal"
             android:orientation="vertical">
-
-            <Button
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
+            <TextView
                 android:id="@+id/btn_logout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="22sp"
                 android:text="@string/logout"/>
         </LinearLayout>
     </RelativeLayout>

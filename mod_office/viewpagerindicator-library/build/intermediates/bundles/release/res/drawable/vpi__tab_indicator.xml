@@ -31,4 +31,3 @@
     <item android:drawable="@drawable/vpi__tab_unselected_pressed_holo" android:state_focused="true" android:state_pressed="true" android:state_selected="false" />
     <item android:drawable="@drawable/vpi__tab_selected_pressed_holo" android:state_focused="true" android:state_pressed="true" android:state_selected="true" />
 </selector>
-<!-- From: file:/D:/eric/CloudLightingAndroid/mod_office/viewpagerindicator-library/src/main/res/drawable/vpi__tab_indicator.xml -->

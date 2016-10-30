@@ -69,13 +69,13 @@ public class MyApplication extends Application {
 
     // 加载本地资源
     public void loadLocalCache() {
-        File dir = null;
+        File dir;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            dir = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
+            dir = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
         } else {
             dir = new File(getFilesDir() + File.separator + Environment.DIRECTORY_PICTURES);
         }
-        mLocalHeaders = new HashMap<String, Bitmap>();
+        mLocalHeaders = new HashMap<>();
         if (dir.exists()) {
             String[] files = dir.list();
             if (files != null) {
@@ -89,7 +89,7 @@ public class MyApplication extends Application {
 
     // 把用户头像资源写入本地缓存
     public void writeLocalHeader(UserInfo userInfo, Bitmap img) {
-        String dir = null;
+        String dir;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             dir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
         } else {
@@ -105,7 +105,7 @@ public class MyApplication extends Application {
             if (outputImg.exists()) {
                 outputImg.delete();
             }
-            boolean result = outputImg.createNewFile();
+            outputImg.createNewFile();
             os = new FileOutputStream(outputImg);
             img.compress(Bitmap.CompressFormat.JPEG, 100, os);
             mLocalHeaders.put(userInfo.username, BitmapFactory.decodeFile(outputImg.getAbsolutePath()));

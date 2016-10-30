@@ -167,5 +167,8 @@
 
     <string name="up_and_down">升降</string>
     <string name="left_and_right">移动位置</string>
+    <string name="vertical_angle">垂直角度</string>
+    <string name="horizon_angle">水平角度</string>
+    <string name="light_angle">光束角度</string>
 
 </resources>

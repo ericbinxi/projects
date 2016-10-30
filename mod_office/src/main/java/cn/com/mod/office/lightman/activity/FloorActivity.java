@@ -260,7 +260,7 @@ public class FloorActivity extends BaseActivity {
                                 info.setRoomEntity(room);
                                 info.setArrowImage(iv);
                                 roomsInfo.add(info);
-                                iv.setImageResource(R.drawable.room_into);
+                                iv.setImageResource(R.drawable.ic_enter_room);
                                 iv.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -330,22 +330,22 @@ public class FloorActivity extends BaseActivity {
     private void handleRooms(List<RoomInfo> rooms){
         if(rooms==null||rooms.size()==0){
             for (RoomInfo info:roomsInfo){
-                info.getArrowImage().setImageResource(R.drawable.room_into);
+                info.getArrowImage().setImageResource(R.drawable.ic_enter_room);
             }
             selectedRooms.clear();
             return;
         }
         for (RoomInfo info:rooms){
-            info.getArrowImage().setImageResource(R.drawable.ic_cb2);
+            info.getArrowImage().setImageResource(R.drawable.ic_multi_select);
             if(info.isSelected()){
-                info.getArrowImage().setImageResource(R.drawable.ic_cb2_checked);
+                info.getArrowImage().setImageResource(R.drawable.ic_choosed);
                 selectedRooms.add(info);
             }else{
                 if(selectedRooms.contains(info))
                     selectedRooms.remove(info);
                 if(selectedRooms.size()==0){
                     for (RoomInfo room:roomsInfo){
-                        info.getArrowImage().setImageResource(R.drawable.room_into);
+                        info.getArrowImage().setImageResource(R.drawable.ic_enter_room);
                     }
                 }
             }
@@ -357,7 +357,7 @@ public class FloorActivity extends BaseActivity {
         if(info.isSelected()){
             if(selectedRooms.size()>0){
                 selectedRooms.add(info);
-                info.getArrowImage().setImageResource(R.drawable.ic_cb2_checked);
+                info.getArrowImage().setImageResource(R.drawable.ic_choosed);
                 mList.getAdapter().notifyDataSetChanged();
             }else{
                 //设置房间的选中参数
@@ -376,10 +376,10 @@ public class FloorActivity extends BaseActivity {
             if(selectedRooms.contains(info))
                 selectedRooms.remove(info);
             if(selectedRooms.size()>0){
-                info.getArrowImage().setImageResource(R.drawable.ic_cb2);
+                info.getArrowImage().setImageResource(R.drawable.ic_multi_select);
             }else{
                 for (RoomInfo room:roomsInfo){
-                    info.getArrowImage().setImageResource(R.drawable.room_into);
+                    info.getArrowImage().setImageResource(R.drawable.ic_enter_room);
                 }
             }
             mList.getAdapter().notifyDataSetChanged();

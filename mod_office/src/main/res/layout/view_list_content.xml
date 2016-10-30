@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_button_end"/>
+                android:src="@drawable/icon_mode"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_button_end"/>
+                android:src="@drawable/icon_clock"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_button_end"/>
+                android:src="@drawable/icon_fault"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -3,18 +3,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_weight="1.6"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_header" />
+        android:src="@drawable/logo" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,13 +32,14 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:gravity="bottom|center_horizontal"
+            android:layout_marginBottom="30dp"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitEnd"
-                android:src="@drawable/logo_footer" />
+                android:src="@drawable/ic_banner" />
         </LinearLayout>
 
     </RelativeLayout>

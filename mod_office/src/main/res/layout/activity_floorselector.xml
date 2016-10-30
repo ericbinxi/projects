@@ -36,7 +36,8 @@
             android:layout_centerVertical="true"
             android:text="@string/about"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:visibility="invisible"/>
     </RelativeLayout>
 
 
