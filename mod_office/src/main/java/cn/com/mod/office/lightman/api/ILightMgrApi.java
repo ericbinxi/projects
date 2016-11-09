@@ -15,6 +15,8 @@ import cn.com.mod.office.lightman.entity.ApkVersionInfo;
 import cn.com.mod.office.lightman.entity.BaseResponse;
 import cn.com.mod.office.lightman.entity.ClockInfo;
 import cn.com.mod.office.lightman.entity.DiySceneInfo;
+import cn.com.mod.office.lightman.entity.FaultRecord;
+import cn.com.mod.office.lightman.entity.FaultRecordResp;
 import cn.com.mod.office.lightman.entity.FloorDivideInfo;
 import cn.com.mod.office.lightman.entity.FloorInfo;
 import cn.com.mod.office.lightman.entity.Frame;
@@ -363,6 +365,28 @@ public interface ILightMgrApi {
      */
     public void modifyDiyScene(String sceneId, String newName, int brightness, int colorTemp,
                                int red, int green, int blue, File file, Callback<BaseResponse> callback);
+
+    /**
+     * 添加故障记录
+     * @param msg_title
+     * @param msg_content
+     * @param lamp_ids
+     * @param callback
+     */
+    void addFaultRecord(String msg_title,String msg_content,String lamp_ids,Callback<BaseResp> callback);
+
+    /**
+     * 删除故障记录
+     * @param msg_title
+     * @param callback
+     */
+    void deleteFaultRecord(String msg_title,Callback<BaseResp> callback);
+
+    /**
+     * 获取故障记录列表
+     * @param callback
+     */
+    void getFaultRecords(Callback<FaultRecordResp> callback);
 
 
     /**

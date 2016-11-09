@@ -170,5 +170,11 @@
     <string name="vertical_angle">垂直角度</string>
     <string name="horizon_angle">水平角度</string>
     <string name="light_angle">光束角度</string>
+    <string name="record">记录</string>
+    <string name="commit">提交</string>
+    <string name="choose_fault_lamp">(请选择故障灯具)</string>
+    <string name="commit_suc">提交成功</string>
+    <string name="fault_hint">故障描述......</string>
+    <string name="fault_declare_tips">给您带来的不便，我们深感抱歉！</string>
 
 </resources>

@@ -75,9 +75,11 @@
         <activity
             android:name=".activity.RoomActivity"
             android:screenOrientation="portrait" />
-        <!--<activity
+        <!--
+            <activity
             android:name=".activity.ClockActivity"
-            android:screenOrientation="portrait" />-->
+            android:screenOrientation="portrait" />
+        -->
         <activity
             android:name=".activity.SceneActivity"
             android:screenOrientation="portrait"
@@ -95,7 +97,8 @@
         <activity android:name=".activity.ModeManagerActivity" />
         <activity android:name=".activity.NormalModeActivity" />
         <activity android:name=".activity.DynamicModeActivity" />
-        <activity android:name=".activity.ClockSettingActivity"></activity>
+        <activity android:name=".activity.ClockSettingActivity" />
+        <activity android:name=".activity.FaultDeclareActivity"></activity>
     </application>
 
 </manifest>

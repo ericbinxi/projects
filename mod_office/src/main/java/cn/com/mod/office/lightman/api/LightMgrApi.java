@@ -41,6 +41,8 @@ import cn.com.mod.office.lightman.entity.AreaInfo;
 import cn.com.mod.office.lightman.entity.BaseResponse;
 import cn.com.mod.office.lightman.entity.ClockInfo;
 import cn.com.mod.office.lightman.entity.DiySceneInfo;
+import cn.com.mod.office.lightman.entity.FaultRecord;
+import cn.com.mod.office.lightman.entity.FaultRecordResp;
 import cn.com.mod.office.lightman.entity.FloorDivideInfo;
 import cn.com.mod.office.lightman.entity.FloorInfo;
 import cn.com.mod.office.lightman.entity.Frame;
@@ -1059,6 +1061,49 @@ public class LightMgrApi implements ILightMgrApi {
                 callback.callback(Callback.CODE_SUCCESS, response);
             }
         }, callback);
+    }
+
+    @Override
+    public void addFaultRecord(String msg_title, String msg_content, String lamp_ids, final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("msg_title", msg_title);
+        params.put("msg_content", msg_content);
+        params.put("lamp_ids", lamp_ids);
+        params.put("json", getSessionString());
+        doService("/addFaultRecord", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        },callback);
+    }
+
+    @Override
+    public void deleteFaultRecord(String msg_title,final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("msg_title", msg_title);
+        params.put("json", getSessionString());
+        doService("/deleteFaultRecord", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        },callback);
+    }
+
+    @Override
+    public void getFaultRecords(final Callback<FaultRecordResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("json", getSessionString());
+        doService("/getFaultRecord", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                FaultRecordResp resp = new BaseParse<FaultRecordResp>().parse(response.toString(),FaultRecordResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        },callback);
     }
 
     @Override
