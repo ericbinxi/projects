@@ -22,110 +22,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e86af202-87e2-41a9-9a20-0f7d69d43eba" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/res/drawable-hdpi/icon_edit_frame_press.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/LampGroup.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/base/BaseModeEntity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/res/drawable/shape_circle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/res/drawable/shape_floor_name.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_01.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_01_off.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_02.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_02_off.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_03.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_03_off.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_04.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/default_04_off.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_launcher.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/viewpagerindicator-library/build/intermediates/bundles/release/classes.jar" afterPath="$PROJECT_DIR$/viewpagerindicator-library/build/intermediates/bundles/release/classes.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/viewpagerindicator-library/build/outputs/aar/viewpagerindicator-library-release.aar" afterPath="$PROJECT_DIR$/viewpagerindicator-library/build/outputs/aar/viewpagerindicator-library-release.aar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/common.iml" afterPath="$PROJECT_DIR$/common/common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/AboutActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/AboutActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ClockListActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ClockListActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ClockSettingActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ClockSettingActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ConfigActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ConfigActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/DynamicModeActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/DynamicModeActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/FaultDeclareActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/FaultDeclareActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/FloorActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/FloorActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/FloorSelectorActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/FloorSelectorActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/LoginActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/LoginActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ModeManagerActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ModeManagerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ModifyPasswordActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ModifyPasswordActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/NormalModeActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/NormalModeActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ParamsListActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/ParamsListActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/PatameterSettingActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/PatameterSettingActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/RoomActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/RoomActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/SaveParamsActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/SaveParamsActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/SceneActivity.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/SceneActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/fragment/LocationFragment.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/fragment/LocationFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/fragment/ParameterFragment.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/activity/fragment/ParameterFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ClockListAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ClockListAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/DynamicModeAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/DynamicModeAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/FloorAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/FloorAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/GridViewAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/GridViewAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ItemAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ItemAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ModeManagerAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ModeManagerAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ParamsListAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/ParamsListAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/SceneButtonAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/adapter/SceneButtonAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/ILightMgrApi.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/ILightMgrApi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/LightMgrApi.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/LightMgrApi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/resp/FloorsResp.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/resp/FloorsResp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/resp/GetModesResp.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/resp/GetModesResp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/resp/LampsResp.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/api/resp/LampsResp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/config/ConfigUtils.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/config/ConfigUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/Clock.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/Clock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/DynamicMode.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/DynamicMode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/FaultRecord.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/FaultRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/Frame.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/Frame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/Lamps.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/Lamps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/NormalMode.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/NormalMode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/SceneInfo.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/entity/SceneInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/manager/AccountManager.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/manager/AccountManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/view/RgbPanel.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/view/RgbPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/HorizonAngleView.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/HorizonAngleView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/LedView.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/LedView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/LeftRightView.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/LeftRightView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/SceneButton.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/SceneButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/UpDownView.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/UpDownView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/VerticalAngleView.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/VerticalAngleView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/timepicker/widget/TimePickerDialog.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/timepicker/widget/TimePickerDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/timepicker/widget/WheelView.java" afterPath="$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/timepicker/widget/WheelView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/acrivity_clocks_list.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/acrivity_clocks_list.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_about.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_about.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_clock_setting.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_clock_setting.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_config.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_dynamic_mode.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_dynamic_mode.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_fault_declare.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_fault_declare.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_floor.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_floor.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_left_menu.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_left_menu.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_login.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_login.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_mode_manager.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_mode_manager.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_normal_mode.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_normal_mode.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_patameter_setting.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_patameter_setting.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_room.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_room.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_save_params.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_save_params.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/dialog_time_picker.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/dialog_time_picker.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_location.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_location.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_parameter_setting.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_parameter_setting.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_add_mode.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_add_mode.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_clock.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_clock.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_clock_list_item.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_clock_list_item.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_dymode.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_dymode.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_floor.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_floor.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_mode_manager.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_mode_manager.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_paramslist.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_paramslist.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/item_scene_button.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/item_scene_button.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/layout_scene_button.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/layout_scene_button.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/view_list_content.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/view_list_content.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/values-zh-rCN/strings.xml" afterPath="$PROJECT_DIR$/src/main/res/values-zh-rCN/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/values/dimens.xml" afterPath="$PROJECT_DIR$/src/main/res/values/dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/src/main/res/values/styles.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/viewpagerindicator-library/viewpagerindicator-library.iml" afterPath="$PROJECT_DIR$/viewpagerindicator-library/viewpagerindicator-library.iml" />
-    </list>
+    <list default="true" id="e86af202-87e2-41a9-9a20-0f7d69d43eba" name="Default" comment="" />
     <ignored path="mod_office.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/build/intermediates/assets/" />
@@ -205,8 +102,8 @@
       <file leaf-file-name="RotateHorizonView.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/RotateHorizonView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4787234">
-              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.26595744">
+              <caret line="48" column="40" selection-start-line="48" selection-start-column="40" selection-end-line="48" selection-end-column="40" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -3567,7 +3464,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28103447" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -3584,7 +3481,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24962063" sideWeight="0.7245509" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24962063" sideWeight="0.7245509" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22758621" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32852808" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -4152,8 +4049,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/com/mod/office/lightman/widget/RotateHorizonView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4787234">
-          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.26595744">
+          <caret line="48" column="40" selection-start-line="48" selection-start-column="40" selection-end-line="48" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
