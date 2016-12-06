@@ -121,6 +121,8 @@ public class FloorSelectorActivity extends BaseActivity implements View.OnClickL
                 startActivity(new Intent(FloorSelectorActivity.this,ModifyPasswordActivity.class));
                 break;
             case R.id.ll_settings:
+                Intent intent2 = new Intent(FloorSelectorActivity.this, AboutActivity.class);
+                startActivity(intent2);
                 break;
             case R.id.btn_logout:
                 logout();
@@ -130,6 +132,8 @@ public class FloorSelectorActivity extends BaseActivity implements View.OnClickL
 
     private void logout() {
         MyApplication.getInstance().getClient().logout();
+        MyApplication.getInstance().getAppConfig().setAutoLogin(false);
+        startActivity(new Intent(this,LoginActivity.class));
         finish();
     }
 
@@ -150,11 +154,11 @@ public class FloorSelectorActivity extends BaseActivity implements View.OnClickL
                         break;
                     case CODE_SUCCESS:
                         mFloorInfos = new ArrayList<FloorInfo>();
-                        List<FloorsResp.FloorIdBean> beans = resp.getFloor_id();
+                        List<FloorsResp.FloorIdBean> beans = resp.getFloors();
                         for (FloorsResp.FloorIdBean bean:beans){
                             FloorInfo info =  new FloorInfo();
-                            info.floorId = bean.getOrg_id();
-                            info.name = "";
+                            info.floorId = bean.getFloor_id();
+                            info.name = bean.getFloor_name();
                             mFloorInfos.add(info);
                         }
                         mFloorAdapter = new FloorAdapter(FloorSelectorActivity.this, mFloorInfos, new FloorAdapter.FloorAdapterListener() {

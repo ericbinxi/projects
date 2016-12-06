@@ -40,7 +40,7 @@ public class LoginActivity extends Activity {
     private ConfigUtils mConfigUtils;
     private ToastUtils mToastUtils;
     private MaskUtils mMaskUtils;
-    private ImageView mUserHeader;
+//    private ImageView mUserHeader;
     private EditText mUsername;
     private EditText mPassword;
     private TextView mPassAlert;
@@ -53,6 +53,7 @@ public class LoginActivity extends Activity {
     private long lastExit;
 
     private View mConfig;
+    private ImageView ivConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class LoginActivity extends Activity {
         mToastUtils = new ToastUtils(this);
 
         // 初始化视图组件
-        mUserHeader = (ImageView) findViewById(R.id.login_header);
+//        mUserHeader = (ImageView) findViewById(R.id.login_header);
         mUsername = (EditText) findViewById(R.id.login_username);
         mPassword = (EditText) findViewById(R.id.login_password);
         mPassAlert = (TextView) findViewById(R.id.login_pass_alert);
@@ -79,6 +80,7 @@ public class LoginActivity extends Activity {
         mLabelAuto = (TextView) findViewById(R.id.login_label_auto);
         mLogin = (Button) findViewById(R.id.login_btn);
         mConfig = findViewById(R.id.gate);
+        ivConfig = (ImageView) findViewById(R.id.iv_config);
 
         // 从配置中读取组件信息
         mUsername.setText(mConfigUtils.getUsername());
@@ -94,6 +96,13 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, ConfigActivity.class));
+            }
+        });
+
+        ivConfig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,ConfigActivity.class));
             }
         });
 
@@ -146,9 +155,9 @@ public class LoginActivity extends Activity {
     }
 
     private void login(){
-        if (mPassAlert.getVisibility() == View.VISIBLE) {
-            mPassAlert.setVisibility(View.INVISIBLE);
-        }
+//        if (mPassAlert.getVisibility() == View.VISIBLE) {
+//            mPassAlert.setVisibility(View.INVISIBLE);
+//        }
         String username = mUsername.getText() + "";
         String password = mPassword.getText() + "";
         // 如果用户名为空
@@ -196,8 +205,9 @@ public class LoginActivity extends Activity {
                             startActivity(new Intent(LoginActivity.this, FloorSelectorActivity.class));
                             finish();
                         } else {
-                            mPassAlert.setVisibility(View.VISIBLE);
+//                            mPassAlert.setVisibility(View.VISIBLE);
                             mPassword.requestFocus();
+                            ToastUtils.show(LoginActivity.this,response.getError_desc());
                         }
                         break;
                 }
@@ -238,12 +248,12 @@ public class LoginActivity extends Activity {
 
     // 刷新用户头像
     private void refreshHeader(String username) {
-        Bitmap bitmap = ((MyApplication) getApplicationContext()).getLocalHeader(username);
-        if (bitmap != null) {
-            mUserHeader.setImageBitmap(bitmap);
-        } else {
-            mUserHeader.setImageResource(R.drawable.default_header);
-        }
+//        Bitmap bitmap = ((MyApplication) getApplicationContext()).getLocalHeader(username);
+//        if (bitmap != null) {
+//            mUserHeader.setImageBitmap(bitmap);
+//        } else {
+//            mUserHeader.setImageResource(R.drawable.default_header);
+//        }
     }
 
     @Override

@@ -1,12 +1,12 @@
 package cn.com.mod.office.lightman.activity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,20 +20,18 @@ import com.joshua.common.util.MaskUtils;
 import com.joshua.common.util.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseActivity;
 import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
+import cn.com.mod.office.lightman.api.resp.LampsResp;
+import cn.com.mod.office.lightman.entity.LampParam;
 import cn.com.mod.office.lightman.entity.Lamps;
+import cn.com.mod.office.lightman.entity.NormalMode;
+import cn.com.mod.office.lightman.entity.TieLampsResp;
 import cn.com.mod.office.lightman.widget.LedView;
 
 public class NormalModeActivity extends BaseActivity implements View.OnClickListener{
@@ -49,15 +47,21 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
     private ToastUtils toastUtils;
     private LinearLayout select_menu,select_all,select_none,grouping,unmarshall;
 
-    private String roomId,modeId;
+    private String roomId;
+    private String modeId;
     private int type;
 
     private List<LedView> ledViews;
-    private List<Lamps> lamps;
-    private List<String> mSelectedLeds = new ArrayList<>();
+    private List<Lamps> mSelectedLeds = new ArrayList<>();
 
     private int lamp_brightness,lamp_colorTemp,lamp_h_degree,lamp_v_degree,lamp_l_degree;
     private String lamp_rgb;//灯的色温  16进制表示
+
+    private List<Lamps> lamps;
+    private NormalMode mode;
+    private List<String> hasParamLampIds = new ArrayList<>();
+//    private List<String> duplicateLampIds = new ArrayList<>();
+    private List<LampParam> lampParams = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +103,15 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
         roomId = getIntent().getStringExtra("roomId");
         type = getIntent().getIntExtra("mode_type",1);
         modeId = getIntent().getStringExtra("mode_id");
+        mode = (NormalMode) getIntent().getSerializableExtra("normalMode");
 
         if(type==1){
             title.setText(R.string.mode_create);
         }else{
             title.setText(R.string.mode_edit);
+            if(mode!=null){
+                et_modename.setText(mode.getMode_name().toCharArray(),0,mode.getMode_name().length());
+            }
         }
     }
 
@@ -117,8 +125,10 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
                 handleLedViews(false);
                 break;
             case R.id.grouping:
+                tieGroupLamps();
                 break;
             case R.id.unmarshall:
+                unTieGroupLamps();
                 break;
             case R.id.ic_back:
                 finish();
@@ -127,26 +137,99 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
                 addNormalMode();
                 break;
             case R.id.bottom://调节灯具
-                Intent intent = new Intent(this,PatameterSettingActivity.class);
-                intent.putExtra("leds", mSelectedLeds.toArray(new String[]{}));
-                intent.putExtra("roomId", roomId);
-                intent.putExtra("type", SceneActivity.TYPE_ADD);
-                startActivityForResult(intent,REQUEST_EDIT_PARAMS);
+                if(mSelectedLeds.size()>0){
+                    Intent intent = new Intent(this,PatameterSettingActivity.class);
+                    intent.putExtra("leds", getLedIdStringArray(mSelectedLeds));
+                    intent.putExtra("roomId", roomId);
+                    intent.putExtra("type", 1);
+                    startActivityForResult(intent,REQUEST_EDIT_PARAMS);
+                }else{
+                    ToastUtils.show(this,"请选择灯具");
+                }
+
                 break;
         }
     }
+    private String[] getLedIdStringArray(List<Lamps> lamps){
+        String[] results = new String[lamps.size()];
+        for (int i=0;i<lamps.size();i++){
+            results[i] = lamps.get(i).getLamp_id();
+        }
+        return results;
+    }
 
+    private void unTieGroupLamps() {
+        if(mSelectedLeds.size()>0){
+            String groupId = mSelectedLeds.get(0).getGroup_id();
+            if(!TextUtils.isEmpty(groupId)){
+                for (Lamps l:mSelectedLeds){
+                    if(!groupId.equals(l.getGroup_id())){
+                        ToastUtils.show(this, R.string.untie_dif_group);
+                        return;
+                    }
+                }
+                maskUtils.show();
+                MyApplication.getInstance().getClient().untieLampGroup(groupId, new ILightMgrApi.Callback<BaseResp>() {
+                    @Override
+                    public void callback(int code, BaseResp entity) {
+                        maskUtils.cancel();
+                        if (code == 0) {
+                            ToastUtils.show(NormalModeActivity.this, R.string.untie_group_success);
+                            handleLedViews(false);
+                        } else {
+                            ToastUtils.show(NormalModeActivity.this, entity.getError_desc());
+                        }
+
+                    }
+                });
+            }else {
+                ToastUtils.show(this, R.string.untie_dif_group);
+            }
+        }else{
+            ToastUtils.show(this, R.string.untie_failure_tips);
+        }
+    }
+
+    private void tieGroupLamps() {
+        if (mSelectedLeds != null && mSelectedLeds.size() > 0) {
+            String lampIdStr = "";
+            for (Lamps lamp : mSelectedLeds) {
+                lampIdStr = lampIdStr + "," + lamp.getLamp_id();
+            }
+            lampIdStr = lampIdStr.substring(1);
+            maskUtils.show();
+            MyApplication.getInstance().getClient().tieLampGroup(roomId, lampIdStr, new ILightMgrApi.Callback<TieLampsResp>() {
+                @Override
+                public void callback(int code, TieLampsResp entity) {
+                    maskUtils.cancel();
+                    if (code == 0 && entity != null && !TextUtils.isEmpty(entity.getGroup_id())) {
+                        ToastUtils.show(NormalModeActivity.this, R.string.tie_group_success);
+                    } else {
+                        ToastUtils.show(NormalModeActivity.this, entity.getError_desc());
+                    }
+                }
+            });
+        }
+    }
     private void addNormalMode() {
         String modeName = et_modename.getText().toString().trim();
         if(TextUtils.isEmpty(modeName)){
             ToastUtils.show(this,R.string.et_mode_name);
             return;
         }
-        if(lamp_l_degree==0&&lamp_v_degree==0&&lamp_h_degree==0&&lamp_brightness==0&&lamp_colorTemp==0){
-            ToastUtils.show(this,R.string.setting_params_tips);
-            return;
+//        if(lamp_l_degree==0&&lamp_v_degree==0&&lamp_h_degree==0&&lamp_brightness==0&&lamp_colorTemp==0){
+//            ToastUtils.show(this,R.string.setting_params_tips);
+//            return;
+//        }
+//        if(mSelectedLeds.size()<=0){
+//            ToastUtils.show(this,"请选择灯具并设置参数");
+//        }
+        List<String> ids = new ArrayList<>();
+        for (Lamps lamp:mSelectedLeds){
+            ids.add(lamp.getLamp_id());
         }
-        MyApplication.getInstance().getClient().createNormalMode(roomId, modeName, (String[]) mSelectedLeds.toArray(), lamp_rgb, lamp_brightness, lamp_colorTemp, lamp_h_degree, lamp_v_degree, lamp_l_degree, new ILightMgrApi.Callback<BaseResp>() {
+//        generateData();
+        MyApplication.getInstance().getClient().createNormalMode(roomId,modeId ,modeName,ids, lampParams, new ILightMgrApi.Callback<BaseResp>() {
             @Override
             public void callback(int code, BaseResp entity) {
                 if(code==0){
@@ -159,22 +242,43 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
         });
     }
 
+    private void generateData() {
+        lamp_brightness = 30;
+        lamp_colorTemp = 3612;
+        lamp_rgb = "f0f0f0";
+        lamp_v_degree = 45;
+        lamp_h_degree = -130;
+        lamp_l_degree = 45;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode==RESULT_OK&&requestCode == REQUEST_EDIT_PARAMS){
             //处理灯的颜色 亮度等
-            if(data!=null){
-                lamp_brightness = data.getIntExtra("lamp_brightness",0);
-                lamp_colorTemp = data.getIntExtra("lamp_colorTemp",0);
-                lamp_h_degree = data.getIntExtra("lamp_h_degree",0);
-                lamp_v_degree = data.getIntExtra("lamp_v_degree",0);
-                lamp_l_degree = data.getIntExtra("lamp_l_degree",0);
-                lamp_rgb = data.getStringExtra("lamp_rgb");
+            if(data!=null&&data.hasExtra("lampParam")){
+                LampParam param = (LampParam) data.getSerializableExtra("lampParam");
+                if(mSelectedLeds.size()>0){
+                    for (Lamps lamp:mSelectedLeds){
+                        LampParam lp = (LampParam) param.clone();
+                        if(lp!=null){
+                            lp.setLamp_id(lamp.getLamp_id());
+                            lampParams.add(lp);
+                        }
+
+
+                        if(!hasParamLampIds.contains(lamp.getLamp_id()))
+                            hasParamLampIds.add(lamp.getLamp_id());
+                    }
+                    ToastUtils.show(this,"当前选中的灯参数设置成功");
+                    //清除之前选择的灯
+                    handleLedViews(false);
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void loadData() {
         if(roomId!=null){
@@ -194,12 +298,18 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
                         case CODE_SUCCESS:
                             ledCanvas.setBackground(new BitmapDrawable(bitmap));
                             // 获取房间灯组
-                            MyApplication.getInstance().getClient().getLampsInRoom(roomId, new ILightMgrApi.Callback<List<Lamps>>() {
+                            MyApplication.getInstance().getClient().getLampsInRoom(roomId, new ILightMgrApi.Callback<LampsResp>() {
                                 @Override
-                                public void callback(int code, List<Lamps> groupInfos) {
+                                public void callback(int code, LampsResp resp) {
                                     switch (code) {
                                         case CODE_SUCCESS:
-                                            canvasLamps(groupInfos);
+                                            if(resp!=null&&resp.getLamps()!=null){
+                                                lamps = resp.getLamps();
+                                                canvasLamps(resp.getLamps());
+                                            }
+                                            break;
+                                        case CODE_FAILURE:
+                                            ToastUtils.show(NormalModeActivity.this,resp.getError_desc());
                                             break;
                                     }
                                 }
@@ -211,7 +321,6 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
 
     }
     private void canvasLamps(List<Lamps> lamps) {
-        this.lamps = lamps;
         // LED图标的大小比例， 600px:30px
         float rate = 30.0f / 600;
 
@@ -220,12 +329,29 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
             ledView.setTag(ledInfo.getLamp_id());
             ledView.setOnCheckStateChangeListener(new LedView.OnCheckStateChangeListener() {
                 @Override
-                public synchronized void onCheckStateChange(Lamps ledInfo, boolean isChecked) {
+                public synchronized void onCheckStateChange(final Lamps ledInfo, boolean isChecked) {
                     if (isChecked) {
-                        mSelectedLeds.add(ledInfo.getLamp_id());
+                        if(!mSelectedLeds.contains(ledInfo))
+                            mSelectedLeds.add(ledInfo);
+                        if(hasParamLampIds.contains(ledInfo.getLamp_id())){
+                            AlertDialog dialog = new AlertDialog.Builder(NormalModeActivity.this).
+                                    setCancelable(false).setMessage("此灯（"+ledInfo.getLamp_id()+")已设置参数，请不要重复设置参数？").
+                                    setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+//                                            if(!duplicateLampIds.contains(ledInfo.getLamp_id()))
+//                                                duplicateLampIds.add(ledInfo.getLamp_id());
+                                            ledView.setChecked(false);
+                                            dialog.dismiss();
+                                        }
+                                    }).create();
+                            dialog.show();
+                        }
+                        handGroupLamps(ledInfo);
                         handleItemList(ledInfo, true);
                     } else {
-                        mSelectedLeds.remove(ledInfo.getLamp_id());
+                        if(mSelectedLeds.contains(ledInfo))
+                            mSelectedLeds.remove(ledInfo);
                         handleItemList(ledInfo, false);
                     }
                 }
@@ -249,8 +375,33 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
             ledViews.add(ledView);
         }
     }
+    private void handGroupLamps(Lamps lamp) {
+        if (mSelectedLeds != null && mSelectedLeds.size() == 1) {
+            String groupId = lamp.getGroup_id();
+            if(!TextUtils.isEmpty(groupId)){
+                for (Lamps l:lamps){
+                    if(groupId.equals(l.getGroup_id())){
+                        handleCheckLed(l);
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleCheckLed(Lamps lamp) {
+        for (LedView ledview : ledViews) {
+            String id = (String) ledview.getTag();
+            if (id.equals(lamp.getLamp_id())) {
+                ledview.setLinkedChecked(true);
+                if (!mSelectedLeds.contains(lamp)) {
+                    mSelectedLeds.add(lamp);
+                }
+                break;
+            }
+        }
+    }
     // 监听地图点选LED灯图标后，对列表的选中状态的变化
-    private synchronized void handleItemList(Lamps ledInfo, boolean isSelected) {
+    private void handleItemList(Lamps ledInfo, boolean isSelected) {
         //显示操作面板
         if(mSelectedLeds.size()>0){
             select_menu.setVisibility(View.VISIBLE);
@@ -260,13 +411,23 @@ public class NormalModeActivity extends BaseActivity implements View.OnClickList
 
     }
     private void handleLedViews(boolean checked) {
-        for (LedView v:ledViews){
-            v.setChecked(checked);
-        }
+        List<Lamps> temps = new ArrayList<>();
+        temps.addAll(mSelectedLeds);
         mSelectedLeds.clear();
-        if(checked&&lamps!=null&&lamps.size()>0){
-            for (Lamps l:lamps){
-                mSelectedLeds.add(l.getLamp_id());
+        mSelectedLeds.addAll(lamps);
+        if(!checked){
+            mSelectedLeds.removeAll(temps);
+        }
+        for (LedView led : ledViews){
+            led.setLinkedChecked(false);
+        }
+        for (Lamps lamp:mSelectedLeds){
+            for (LedView v : ledViews){
+                String lampId = (String) v.getTag();
+                if(lampId.equals(lamp.getLamp_id())){
+                    v.setChecked(true);
+                    break;
+                }
             }
         }
     }

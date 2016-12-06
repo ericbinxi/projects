@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,14 +56,16 @@ public class ClockListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if(convertView==null){
+            holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_clock,null);
             holder.btn_switch = (SwitchButton) convertView.findViewById(R.id.btn_switch);
             holder.clock_time = (TextView) convertView.findViewById(R.id.clock_time);
             holder.ll_repeat = (LinearLayout) convertView.findViewById(R.id.ll_repeat);
             holder.mode_name = (TextView) convertView.findViewById(R.id.mode_name);
-            holder.delete = (TextView) convertView.findViewById(R.id.delete);
+            holder.delete = (ImageView) convertView.findViewById(R.id.delete);
             holder.item_left = (LinearLayout) convertView.findViewById(R.id.left_layout);
             holder.item_right = (LinearLayout) convertView.findViewById(R.id.right_layout);
+            holder.item = (LinearLayout) convertView.findViewById(R.id.item);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
@@ -74,27 +77,50 @@ public class ClockListAdapter extends BaseAdapter {
         holder.item_right.setLayoutParams(lp2);
 
         final Clock clock = clocks.get(position);
-        holder.mode_name.setText(clock.getMode_id());
-        holder.clock_time.setText(clock.getHour()+":"+clock.getMinute());
+        holder.mode_name.setText(clock.getMode_name());
+        int hour = Integer.parseInt(clock.getHour());
+        int minute = Integer.parseInt(clock.getMinute());
+        String hourStr = clock.getHour();
+        String minuteStr = clock.getMinute();
+        if(hour<10){
+            hourStr = "0"+hour;
+        }
+        if(minute<10){
+            minuteStr = "0"+minute;
+        }
+
+        holder.clock_time.setText(hourStr+":"+minuteStr);
+        if("空闲".equals(clock.getClock_status())){
+            holder.btn_switch.setChecked(true);
+        }else{
+            holder.btn_switch.setChecked(false);
+        }
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(onClockOperateListener!=null){
-                    onClockOperateListener.onClockDelete(position,clock.getClock_id());
+                    onClockOperateListener.onClockDelete(position,clock.getClockId());
                 }
             }
         });
         holder.btn_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if(!isChecked){
                     //打开闹钟
                     if(onClockOperateListener!=null)
-                        onClockOperateListener.onClockOpen(clock.getClock_id());
+                        onClockOperateListener.onClockOpen(clock.getClockId());
                 }else{
                     if(onClockOperateListener!=null)
-                        onClockOperateListener.onClockClosed(clock.getClock_id());
+                        onClockOperateListener.onClockClosed(clock.getClockId());
                 }
+            }
+        });
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onClockOperateListener!=null)
+                    onClockOperateListener.onItemClick(position);
             }
         });
         handleRepeatDay(holder.ll_repeat,clock);
@@ -103,27 +129,24 @@ public class ClockListAdapter extends BaseAdapter {
 
     private void handleRepeatDay(LinearLayout ll_repeat, Clock clock) {
         String[] arrays = clock.getWeekday().split(",");
+        LinearLayout linearLayout = new LinearLayout(context);
+
         for(int i=0;i<arrays.length;i++){
             String day = arrays[i].replace("(","").replace(")","");
 
-            CheckedTextView textView = new CheckedTextView(context);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_day,null);
+            CheckedTextView textView = (CheckedTextView) view.findViewById(R.id.checkbox);
             textView.setText(getDayString(Integer.parseInt(day)));
-            textView.setTextColor(context.getResources().getColor(R.color.orange));
-            textView.setTextSize(12);
-            textView.setGravity(Gravity.CENTER);
-            textView.setBackgroundResource(R.drawable.btn_week);
             textView.setClickable(false);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            LinearLayout content = new LinearLayout(context);
-            content.setGravity(Gravity.CENTER);
-            content.addView(textView);
-            ll_repeat.addView(content, params);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+            linearLayout.addView(view, params);
         }
+        ll_repeat.addView(linearLayout);
     }
 
     private String getDayString(int day){
         switch (day){
-            case 0:
+            case 7:
                 return context.getResources().getString(R.string.sunday);
             case 1:
                 return context.getResources().getString(R.string.monday);
@@ -142,14 +165,16 @@ public class ClockListAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
-        LinearLayout ll_repeat,item_left,item_right;
-        TextView mode_name,clock_time,delete;
+        LinearLayout ll_repeat,item_left,item_right,item;
+        TextView mode_name,clock_time;
         SwitchButton btn_switch;
+        ImageView delete;
     }
 
     public interface OnClockOperateListener{
-        void onClockOpen(int clockId);
-        void onClockClosed(int clockId);
-        void onClockDelete(int position,int clockId);
+        void onClockOpen(String clockId);
+        void onClockClosed(String clockId);
+        void onClockDelete(int position,String clockId);
+        void onItemClick(int position);
     }
 }

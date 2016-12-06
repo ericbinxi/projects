@@ -33,13 +33,13 @@ public class LeftRightView extends View {
     }
 
     public void setLeft() {
-        if (count <= -4) return;
+        if (count <= -15) return;
         count = count - 1;
         invalidate();
     }
 
     public void setRight() {
-        if (count >= 4) return;
+        if (count >= 15) return;
         count = count + 1;
         invalidate();
     }
@@ -60,7 +60,7 @@ public class LeftRightView extends View {
             public void run() {
                 width = getWidth();
                 height = getHeight();
-                offset = horizonLine.getIntrinsicWidth() / 10;
+                offset = horizonLine.getIntrinsicWidth() / 30;
             }
         });
     }

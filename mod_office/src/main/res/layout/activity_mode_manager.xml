@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@drawable/bg">
     <RelativeLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:textColor="@color/dark"
             android:text="@string/mode_manager"
             android:textSize="20sp" />
 
@@ -46,13 +47,13 @@
     <LinearLayout
         android:id="@+id/ll_menu"
         android:layout_width="240dp"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
         android:orientation="vertical"
         android:layout_below="@id/bar"
         android:layout_alignParentRight="true"
         android:layout_marginRight="8dp"
         android:background="@drawable/bg_list"
-        android:visibility="gone">
+        android:visibility="visible">
         <LinearLayout
             android:id="@+id/normal_mode"
             android:layout_width="match_parent"
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_button_end"/>
+                android:src="@drawable/icon_mode_normal"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,6 +74,10 @@
                 android:textSize="18sp"
                 android:text="@string/normal_mode"/>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/dark"/>
         <LinearLayout
             android:id="@+id/dynamic_mode"
             android:layout_width="match_parent"
@@ -84,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_button_end"/>
+                android:src="@drawable/icon_mode_dynamic"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

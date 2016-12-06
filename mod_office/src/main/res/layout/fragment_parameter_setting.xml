@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="@color/transparent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +31,7 @@
             android:inputType="number"
             android:maxLength="3"
             android:text="0"
+            android:focusable="false"
             android:textColor="@color/black"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
@@ -83,6 +84,7 @@
             android:background="@drawable/bg_tv_week"
             android:gravity="center"
             android:inputType="number"
+            android:focusable="false"
             android:maxLength="4"
             android:text="2700"
             android:textColor="@color/black"
@@ -145,6 +147,7 @@
                 android:inputType="number"
                 android:maxLength="3"
                 android:text="255"
+                android:focusable="false"
                 android:textColor="@color/black"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp" />
@@ -159,6 +162,7 @@
                 android:inputType="number"
                 android:maxLength="3"
                 android:text="255"
+                android:focusable="false"
                 android:textColor="@color/black"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp" />
@@ -172,6 +176,7 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="3"
+                android:focusable="false"
                 android:text="255"
                 android:textColor="@color/black"
                 android:textCursorDrawable="@null"

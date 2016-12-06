@@ -1,159 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_list"
-    android:paddingTop="8dp">
+    android:layout_height="match_parent">
     <RelativeLayout
-        android:id="@+id/choose_rooms"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/header"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_list">
+        <RelativeLayout
+            android:id="@+id/choose_rooms"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/bg_check_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <CheckBox
+                        android:id="@+id/check_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:button="@drawable/bg_cb2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_toRightOf="@id/check_all"
+                        android:text="@string/select_all"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dark" />
+            </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/bg_check_all"
+                android:id="@+id/footer"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:padding="8dp">
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical">
 
-                <CheckBox
-                    android:id="@+id/check_all"
+                <ImageView
+                    android:id="@+id/has_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:button="@drawable/bg_cb2" />
+                    android:src="@drawable/ic_more"
+                    android:visibility="invisible" />
+            </RelativeLayout>
 
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/footer"
+                android:layout_below="@id/header"
+                android:fadingEdge="none"
+                android:footerDividersEnabled="true"
+                android:headerDividersEnabled="true"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/choose_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:id="@+id/ll_mode_manager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_selector"
+                android:padding="8dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_mode"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_toRightOf="@id/check_all"
-                    android:text="@string/select_all"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-            </RelativeLayout>
-
-            <ImageView
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="18sp"
+                    android:text="@string/mode_manager"/>
+            </LinearLayout>
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/dark" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/has_more"
-                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:background="@color/dark"
+                />
+            <LinearLayout
+                android:id="@+id/ll_clocks_setting"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_more"
-                android:visibility="invisible" />
-        </RelativeLayout>
-
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/footer"
-            android:layout_below="@id/header"
-            android:fadingEdge="none"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="true"
-            android:overScrollMode="never"
-            android:scrollbars="none" />
+                android:background="@drawable/btn_selector"
+                android:padding="8dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_clock"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/clock_setting"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/dark"
+                />
+            <LinearLayout
+                android:id="@+id/ll_fault_declare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_selector"
+                android:padding="8dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_fault"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/fault_declare"/>
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/choose_mode"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:visibility="gone">
-        <LinearLayout
-            android:id="@+id/ll_mode_manager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_selector"
-            android:padding="8dp">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_mode"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:text="@string/mode_manager"/>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/dark"
-            />
-        <LinearLayout
-            android:id="@+id/ll_clocks_setting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_selector"
-            android:padding="8dp">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_clock"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="18sp"
-                android:layout_gravity="center_vertical"
-                android:text="@string/clock_setting"/>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/dark"
-            />
-        <LinearLayout
-            android:id="@+id/ll_fault_declare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_selector"
-            android:padding="8dp">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_fault"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="18sp"
-                android:layout_gravity="center_vertical"
-                android:text="@string/fault_declare"/>
-        </LinearLayout>
-    </LinearLayout>
+
 </RelativeLayout>

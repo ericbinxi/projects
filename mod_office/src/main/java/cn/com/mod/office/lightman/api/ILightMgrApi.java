@@ -10,6 +10,7 @@ import java.util.List;
 import cn.com.mod.office.lightman.api.resp.ClocksResp;
 import cn.com.mod.office.lightman.api.resp.FloorsResp;
 import cn.com.mod.office.lightman.api.resp.GetModesResp;
+import cn.com.mod.office.lightman.api.resp.LampsResp;
 import cn.com.mod.office.lightman.api.resp.LoginResp;
 import cn.com.mod.office.lightman.entity.ApkVersionInfo;
 import cn.com.mod.office.lightman.entity.BaseResponse;
@@ -20,11 +21,15 @@ import cn.com.mod.office.lightman.entity.FaultRecordResp;
 import cn.com.mod.office.lightman.entity.FloorDivideInfo;
 import cn.com.mod.office.lightman.entity.FloorInfo;
 import cn.com.mod.office.lightman.entity.Frame;
+import cn.com.mod.office.lightman.entity.GetParamResp;
 import cn.com.mod.office.lightman.entity.GroupInfo;
+import cn.com.mod.office.lightman.entity.LampParam;
+import cn.com.mod.office.lightman.entity.LampStatusResp;
 import cn.com.mod.office.lightman.entity.Lamps;
 import cn.com.mod.office.lightman.entity.LedInfo;
 import cn.com.mod.office.lightman.entity.RoomEntity;
 import cn.com.mod.office.lightman.entity.SceneInfo;
+import cn.com.mod.office.lightman.entity.TieLampsResp;
 import cn.com.mod.office.lightman.entity.UserInfo;
 
 /**
@@ -61,7 +66,7 @@ public interface ILightMgrApi {
      * @param newPassword 新密码
      * @param callback    携带响应结果的回调函数
      */
-    public void modifyPassword(String oldPassword, String newPassword, Callback<BaseResponse> callback);
+    public void modifyPassword(String oldPassword, String newPassword, Callback<BaseResp> callback);
 
     /**
      * 列出楼层
@@ -128,12 +133,11 @@ public interface ILightMgrApi {
     public void controlLed(String[] ledIds, int brightness, int colorTemp);
 
     /**
-     * 删除自定义情景
-     *
-     * @param sceneId  字符串
-     * @param callback 携带响应结果的回调函数
+     * @param room_id
+     * @param mode_id
+     * @param callback
      */
-    public void deleteDiyScene(String sceneId, Callback<BaseResponse> callback);
+    public void deleteDiyScene(String room_id, String mode_id, Callback<BaseResp> callback);
 
     /**
      * 应用默认情景
@@ -191,18 +195,9 @@ public interface ILightMgrApi {
 
     /**
      * 添加闹钟
-     *
-     * @param floorId    楼层编号
-     * @param roomIds    房间编号集
-     * @param groupIds   灯组编号集
-     * @param sceneId    情景编号
-     * @param diySceneId 自定义情景编号
-     * @param week       周期
-     * @param time       时间
-     * @param status     开启状态
      * @param callback   携带响应结果的回调函数
      */
-    public void addClock(String floorId, String[] roomIds, String[] groupIds, String sceneId, String diySceneId, String week, String time, boolean status, Callback<BaseResponse> callback);
+    public void addClock(String room_id,String clock_name,String mode_id, String weekday,String hour, String minute, Callback<BaseResp> callback);
 
     /**
      * 修改闹钟
@@ -212,7 +207,7 @@ public interface ILightMgrApi {
      * @param time     时间
      * @param callback 携带响应结果的回调函数
      */
-    public void updateClock(String clockId, String week, String time, Callback<BaseResponse> callback);
+    public void updateClock(String mode_id,String clockId, String week,String hour, String minute, Callback<BaseResp> callback);
 
     /**
      * 开启闹钟
@@ -220,7 +215,7 @@ public interface ILightMgrApi {
      * @param clockId  闹钟编号
      * @param callback 携带响应结果的回调函数
      */
-    public void openClock(String roomId,String clockId, Callback<BaseResponse> callback);
+    public void openClock(String roomId, String clockId, Callback<BaseResp> callback);
 
     /**
      * 关闭闹钟
@@ -228,7 +223,7 @@ public interface ILightMgrApi {
      * @param clockId  闹钟编号
      * @param callback 携带响应结果的回调函数
      */
-    public void closeClock(String roomId,String clockId, Callback<BaseResponse> callback);
+    public void closeClock(String roomId, String clockId, Callback<BaseResp> callback);
 
     /**
      * 列出房间
@@ -268,7 +263,7 @@ public interface ILightMgrApi {
      * @param clockId  闹钟编号
      * @param callback 携带响应结果的回调函数
      */
-    public void deleteClock(String roomId,String clockId, Callback<BaseResponse> callback);
+    public void deleteClock(String roomId, String clockId, Callback<BaseResp> callback);
 
     /**
      * 获取服务器Apk版本号
@@ -292,7 +287,7 @@ public interface ILightMgrApi {
      * @param green  G_VAL
      * @param blue   B_VAL
      */
-    public void setRGB(String[] ledIds, int red, int green, int blue);
+    public void setRGB(String room_id,String[] ledIds, int red, int green, int blue,Callback<BaseResp> callback);
 
     /**
      * 设置LED灯的亮度
@@ -300,7 +295,7 @@ public interface ILightMgrApi {
      * @param ledIds     LED灯编号集
      * @param brightness 亮度
      */
-    public void setBrightness(String[] ledIds, int brightness);
+    public void setBrightness(String room_id,String[] ledIds, int brightness,Callback<BaseResp> callback);
 
     /**
      * 设置LED灯的色温
@@ -308,7 +303,39 @@ public interface ILightMgrApi {
      * @param ledIds    LED灯编号集
      * @param colorTemp 色温
      */
-    public void setColorTemp(String[] ledIds, int colorTemp);
+    public void setColorTemp(String room_id,String[] ledIds, int colorTemp,Callback<BaseResp> callback);
+
+    /**
+     * 设置灯的水平角度
+     * @param ledIds
+     * @param lamp_h_degree
+     * @param callback
+     */
+    void setLampHDegree(String room_id,String[] ledIds, int lamp_h_degree,Callback<BaseResp> callback);
+
+    /**
+     * 设置灯的垂直角度
+     * @param ledIds
+     * @param lamp_v_degree
+     * @param callback
+     */
+    void setLampVDegree(String room_id,String[] ledIds, int lamp_v_degree,Callback<BaseResp> callback);
+
+    /**
+     * 设置灯光束角度
+     * @param ledIds
+     * @param lamp_l_degree
+     * @param callback
+     */
+    void setLampLDegree(String room_id,String[] ledIds, int lamp_l_degree,Callback<BaseResp> callback);
+
+    /**
+     * 设置灯的位移  位移方向：1（上）、2（下）、3（左）、4（右）、0（停止）
+     * @param ledIds
+     * @param lamp_movement
+     * @param callback
+     */
+    void setLampMovement(String room_id,String[] ledIds, int lamp_movement,Callback<BaseResp> callback);
 
     /**
      * 获取自定义情景模式
@@ -368,26 +395,55 @@ public interface ILightMgrApi {
 
     /**
      * 添加故障记录
+     *
      * @param msg_title
      * @param msg_content
      * @param lamp_ids
      * @param callback
      */
-    void addFaultRecord(String msg_title,String msg_content,String lamp_ids,Callback<BaseResp> callback);
+    void addFaultRecord(String msg_title, String msg_content, String lamp_ids, Callback<BaseResp> callback);
 
     /**
      * 删除故障记录
+     *
      * @param msg_title
      * @param callback
      */
-    void deleteFaultRecord(String msg_title,Callback<BaseResp> callback);
+    void deleteFaultRecord(String msg_title, Callback<BaseResp> callback);
 
     /**
      * 获取故障记录列表
+     *
      * @param callback
      */
     void getFaultRecords(Callback<FaultRecordResp> callback);
 
+    /**
+     * 获取备份参数列表
+     *
+     * @param callback
+     */
+    void getBackupParam(Callback<GetParamResp> callback);
+
+    /**
+     * 添加备份参数
+     *
+     * @param backupName
+     * @param addInfo
+     * @param lamp_brightness
+     * @param lamp_colorTemp
+     * @param lamp_RGB
+     * @param callback
+     */
+    void addBackupParam(String backupName, String addInfo, int lamp_brightness, int lamp_colorTemp, String lamp_RGB, Callback<BaseResp> callback);
+
+    /**
+     * 删除备份参数
+     *
+     * @param backupName
+     * @param callback
+     */
+    void deleteBackupParam(String backupName, Callback<BaseResp> callback);
 
     /**
      * 测试服务器连通性
@@ -395,6 +451,23 @@ public interface ILightMgrApi {
      * @return 是否成功
      */
     public void connectTest(Callback<Boolean> callback);
+
+    /**
+     * 灯具编组
+     *
+     * @param room_id
+     * @param lamps_id
+     * @param callback
+     */
+    void tieLampGroup(String room_id, String lamps_id, Callback<TieLampsResp> callback);
+
+    /**
+     * 灯具解组
+     *
+     * @param group_id
+     * @param callback
+     */
+    void untieLampGroup(String group_id, Callback<BaseResp> callback);
 
 
     /**
@@ -413,15 +486,26 @@ public interface ILightMgrApi {
 
     public void onRestoreInstanceState(Bundle savedInstanceState);
 
-    public void getLampsInRoom(String roomId,Callback<List<Lamps>> lamps);
+    public void getLampsInRoom(String roomId, Callback<LampsResp> callback);
+
+    void getLampStatus(String lamp_id, Callback<LampStatusResp> callback);
+
+    public void getLampsInLampGroup(String lampGroup_id, Callback<LampsResp> callback);
 
     public void getModes(String room_id, Callback<GetModesResp> callback);
-    public void createNormalMode(String roomId,String modeName,String[] lampId,String lamp_rgb,
-                                 int lamp_brightness,int lamp_colorTemp,int lamp_h_degree,
-                                 int lamp_v_degree,int lamp_l_degree,Callback<BaseResp> callback);
-    public void createDynamicMode(String roomId, String modeName, List<Frame> frames, int hour, int minute, int second, String lamp_rgb,
+
+    public void createNormalMode(String roomId, String mode_id, String modeName, List<String> lampId, List<LampParam> params, Callback<BaseResp> callback);
+
+    public void createDynamicMode(String roomId,String mode_id, String modeName, List<Frame> frames,String lamp_rgb,
                                   int lamp_brightness, int lamp_colorTemp, int lamp_h_degree,
                                   int lamp_v_degree, int lamp_l_degree, Callback<BaseResp> callback);
+
+    void saveDynamicMode(String roomId,String mode_id,String mode_name,List<Frame> frames,Callback<BaseResp> callback);
+
+    void deleteFrame(String frame_id,String mode_id,Callback<BaseResp> callback);
+    void playDynamicMode(String room_id,String mode_id,String[] lamp_ids,Callback<BaseResp> callback);
+    void stopDynamicMode(String room_id,String mode_id,Callback<BaseResp> callback);
+    void applyNormalMode(String room_id,String mode_id,String lamp_ids,Callback<BaseResp> callback);
 
     public interface Callback<T> {
         int CODE_SUCCESS = 0;

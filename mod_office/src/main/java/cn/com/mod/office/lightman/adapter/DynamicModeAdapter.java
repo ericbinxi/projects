@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mod.office.lightman.R;
+import cn.com.mod.office.lightman.entity.Frame;
 
 /**
  * Created by Administrator on 2016/10/22.
@@ -20,64 +21,33 @@ import cn.com.mod.office.lightman.R;
 public class DynamicModeAdapter extends BaseAdapter {
 
     private Context context;
-    private List<String> datas;
+    private List<Frame> datas;
     private View addView;
     private ImageView add;
+    private OnFrameOperateListener onFrameOperateListener;
 
-    public DynamicModeAdapter(Context context) {
+    public DynamicModeAdapter(Context context,List<Frame> datas) {
         this.context = context;
-        datas = new ArrayList<>();
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
-        datas.add("111");
+        this.datas = datas;
+    }
 
+    public void setOnFrameOperateListener(OnFrameOperateListener onFrameOperateListener) {
+        this.onFrameOperateListener = onFrameOperateListener;
+    }
+
+    public void setDatas(List<Frame> datas) {
+        this.datas = datas;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return datas.size()+1;
+        return datas.size();
     }
-
-    @Override
-    public int getItemViewType(int position) {
-        if(position == datas.size())
-            return 2;//加号
-        else
-           return 1;
-    }
-
-//    @Override
-//    public int getViewTypeCount() {
-//        return 2;
-//    }
 
     @Override
     public Object getItem(int position) {
-//        if(position==datas.size())
-//            return addView;
-//        else
-            return datas.get(position);
+        return datas.get(position);
     }
 
     @Override
@@ -86,29 +56,55 @@ public class DynamicModeAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-//        if(getItemViewType(position)==2){
-//            return addView;
-//        }else{
-            Viewholder holder = null;
-            if(convertView==null){
-                convertView = LayoutInflater.from(context).inflate(R.layout.item_dymode,null);
-                holder = new Viewholder();
-                holder.delete = (ImageView) convertView.findViewById(R.id.delete);
-                holder.edit = (ImageView) convertView.findViewById(R.id.edit);
-                holder.index = (TextView) convertView.findViewById(R.id.index);
-                holder.time = (TextView) convertView.findViewById(R.id.time);
-                convertView.setTag(holder);
-            }else{
-                holder = (Viewholder) convertView.getTag();
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        Viewholder holder = null;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_dymode, null);
+            holder = new Viewholder();
+            holder.delete = (ImageView) convertView.findViewById(R.id.delete);
+            holder.edit = (ImageView) convertView.findViewById(R.id.edit);
+            holder.index = (TextView) convertView.findViewById(R.id.index);
+            holder.time = (TextView) convertView.findViewById(R.id.time);
+            convertView.setTag(holder);
+        } else {
+            holder = (Viewholder) convertView.getTag();
+        }
+        Frame frame = datas.get(position);
+        holder.index.setText(String.format(context.getString(R.string.frame_index),position+1));
+        holder.time.setText(frame.getHour()+":"+frame.getMinute()+":"+frame.getSecond());
+        holder.edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onFrameOperateListener!=null)
+                    onFrameOperateListener.editFrame(position);
             }
-            return convertView;
-//        }
-
+        });
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onFrameOperateListener!=null){
+                    onFrameOperateListener.deleteFrame(position);
+                }
+            }
+        });
+        holder.time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onFrameOperateListener!=null){
+                    onFrameOperateListener.editTime(position);
+                }
+            }
+        });
+        return convertView;
     }
 
-    class Viewholder{
-        ImageView delete,edit;
-        TextView index,time;
+    class Viewholder {
+        ImageView delete, edit;
+        TextView index, time;
+    }
+    public interface OnFrameOperateListener{
+        void editFrame(int position);
+        void deleteFrame(int position);
+        void editTime(int position);
     }
 }

@@ -9,11 +9,14 @@ public class SceneInfo {
     public static final int TYPE_DEFAULT = 0;
     public static final int TYPE_DIY = 1;
     public static final int TYPE_NONE = 2;
+    public static final int TYPE_DIY_NORMAL = 3;
+    public static final int TYPE_DIY_DYNAMIC = 4;
 
     public String id;
     public String name;
     public Drawable icon;
     public int type;
+    public int mode_type;
 
     public SceneInfo() {
 

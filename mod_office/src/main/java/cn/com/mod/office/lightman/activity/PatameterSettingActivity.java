@@ -1,11 +1,9 @@
 package cn.com.mod.office.lightman.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,36 +12,23 @@ import android.widget.TextView;
 import com.joshua.common.util.MaskUtils;
 import com.joshua.common.util.ToastUtils;
 
-import java.io.File;
-
 import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseFragmentActivity;
 import cn.com.mod.office.lightman.activity.fragment.LocationFragment;
 import cn.com.mod.office.lightman.activity.fragment.ParameterFragment;
+import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
-import cn.com.mod.office.lightman.entity.BaseResponse;
-import cn.com.mod.office.lightman.entity.DiySceneInfo;
+import cn.com.mod.office.lightman.entity.LampParam;
+import cn.com.mod.office.lightman.entity.ParamEntity;
 import cn.com.mod.office.lightman.widget.ColorPicker;
 import cn.com.mod.office.lightman.widget.HorizontalPager;
-import cn.com.mod.office.lightman.widget.PhotoDialog;
 import cn.com.mod.office.lightman.widget.SeekBarPicker;
 
-public class PatameterSettingActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class PatameterSettingActivity extends BaseFragmentActivity implements View.OnClickListener {
 
+    public static final int REQUEST_BACKUP_GET_PARAM = 101;
     public static final int REQUEST_PICK_IMAGE = 1001;
-
-    public static final int TYPE_ADD = 1;
-    public static final int TYPE_EDIT = 2;
-    // 选择图片
-    public static final int REQUEST_CODE_PICK_PHOTO = 0;
-    // 拍照
-    public static final int REQUEST_CODE_TAKE_PHOTO = 1;
-    // 编辑选择图片
-    public static final int REQUEST_CODE_EDIT_PICK_PHOTO = 2;
-    // 编辑拍照图片
-    public static final int REQUEST_CODE_EDIT_TAKE_PHOTO = 3;
-    public File mIcon;
 
     private ILightMgrApi mClient;
     private ToastUtils mToastUtils;
@@ -51,19 +36,14 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
     private View mGoBack;
     private View mSave;
     private HorizontalPager mPager;
-    private PhotoDialog mDialog;
-    private Uri mPhoto;
-//    private TextView mName;
-    private String modeName;
     private String[] mLeds;
-    private String mSceneId;
-
-    private SendBrightnessTask brightnessTask;
-    private SendColorTempTask colorTempTask;
-    private SendRgbTask rgbTask;
+    private String roomId;
 
     private ParameterFragment parameterFragemnt;
     private LocationFragment locationFragment;
+
+    //使用备份参数相关变量
+    private ParamEntity paramEntity;
 
     private TextView mTab1;
     private TextView mTab2;
@@ -72,20 +52,17 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
     private int lastColorTemp = -1;
     private int[] lastRgb = new int[]{-1, -1, -1};
 
-    private LinearLayout ll_menu,ll_call,ll_copy;
+    private LinearLayout ll_menu, ll_call, ll_copy;
+
+    public boolean adjust = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patameter_setting);
         init();
         initListener();
-
-        brightnessTask = new SendBrightnessTask();
-        colorTempTask = new SendColorTempTask();
-        rgbTask = new SendRgbTask();
-        brightnessTask.start();
-        colorTempTask.start();
-        rgbTask.start();
     }
 
     private void initListener() {
@@ -95,7 +72,7 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
         ll_copy.setOnClickListener(this);
 
         //颜色
-        parameterFragemnt.setPickerListener(new ColorPicker.ColorPickerListener() {
+        parameterFragemnt.setColorPickerListener(new ColorPicker.ColorPickerListener() {
             @Override
             public void onColorChanged(ColorPicker picker, int red, int green, int blue) {
 
@@ -103,16 +80,15 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
 
             @Override
             public void onStart(ColorPicker picker) {
-                rgbTask.flag = true;
             }
 
             @Override
             public void onStop(ColorPicker picker) {
-                rgbTask.flag = false;
                 sendRgb();
             }
         });
-        parameterFragemnt.setPickerListener(new SeekBarPicker.SeekBarPickerListener() {
+        //亮度
+        parameterFragemnt.setBrightPickerListener(new SeekBarPicker.SeekBarPickerListener() {
             @Override
             public void onProgressChanged(SeekBarPicker picker, int progress) {
 
@@ -120,17 +96,15 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
 
             @Override
             public void onStart(SeekBarPicker picker) {
-                brightnessTask.flag = true;
             }
 
             @Override
             public void onStop(SeekBarPicker picker) {
-                brightnessTask.flag = false;
                 sendBrightness();
             }
         });
         //色温
-        parameterFragemnt.setTPickerListener(new SeekBarPicker.SeekBarPickerListener() {
+        parameterFragemnt.setColorTempPickerListener(new SeekBarPicker.SeekBarPickerListener() {
             @Override
             public void onProgressChanged(SeekBarPicker picker, int progress) {
 
@@ -138,60 +112,57 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
 
             @Override
             public void onStart(SeekBarPicker picker) {
-                rgbTask.flag = true;
             }
 
             @Override
             public void onStop(SeekBarPicker picker) {
-                rgbTask.flag = false;
-                sendRgb();
+                sendColorTemp();
             }
         });
 
-        parameterFragemnt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        parameterFragemnt.setOnBrightEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (mLeds != null && mLeds.length > 0) {
-                    int brightness = parameterFragemnt.getBrightness();
-                    if (brightness >= 0 && brightness <= 100) {
-                        mClient.setBrightness(mLeds, brightness);
-                    }
+                int brightness = parameterFragemnt.getBrightness();
+                if (brightness < 0 || brightness > 100) {
+                    mToastUtils.show(getString(R.string.tip_brightness_format));
+                    return false;
                 }
+
+                sendBrightness();
                 return false;
             }
         });
-        parameterFragemnt.setOnTEditorActionListener(new TextView.OnEditorActionListener() {
+        parameterFragemnt.setOnColorTempEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (mLeds != null && mLeds.length > 0) {
-                    int colorTemp = parameterFragemnt.getColorTemp();
-                    if (colorTemp >= 0 && colorTemp <= 255) {
-                        mClient.setColorTemp(mLeds, colorTemp);
-                    }
+                int colorTemp = parameterFragemnt.getColorTemp();
+                if (colorTemp < 0 || colorTemp > 255) {
+                    mToastUtils.show(getString(R.string.tip_colortemp_format));
+                    return false;
                 }
+
+                sendColorTemp();
                 return false;
             }
         });
         parameterFragemnt.setOnRGBEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (mLeds != null && mLeds.length > 0) {
-                    int[] rgb = parameterFragemnt.getRgb();
-                    int red = rgb[0];
-                    int green = rgb[1];
-                    int blue = rgb[2];
-                    if (red >= 0 && red <= 255 && green >= 0 && green <= 255 && blue >= 0 && blue <= 255) {
-                        mClient.setRGB(mLeds, red, green, blue);
+                int[] rgb = parameterFragemnt.getRgb();
+                for (int var : rgb) {
+                    if (var < 0 || var > 255) {
+                        mToastUtils.show(getString(R.string.tip_rgb_format));
+                        return false;
                     }
                 }
+                sendRgb();
                 return false;
             }
         });
     }
 
     private void init() {
-
-        modeName = getIntent().getStringExtra("name");
 
         mClient = MyApplication.getInstance().getClient();
         mToastUtils = new ToastUtils(this);
@@ -211,137 +182,64 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
             @Override
             public void onClick(View v) {
                 mPager.setCurrentScreen(0, true);
+                mTab1.setBackgroundResource(R.drawable.tab_select);
+                mTab2.setBackgroundResource(R.drawable.tab);
             }
         });
         mTab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPager.setCurrentScreen(1, true);
+                mTab2.setBackgroundResource(R.drawable.tab_select);
+                mTab1.setBackgroundResource(R.drawable.tab);
             }
         });
         mPager.setOnScreenSwitchListener(new HorizontalPager.OnScreenSwitchListener() {
             @Override
             public void onScreenSwitched(int screen) {
+                if (screen == 0) {
+                    mTab1.setBackgroundResource(R.drawable.tab_select);
+                    mTab2.setBackgroundResource(R.drawable.tab);
+                } else if (screen == 1) {
+                    mTab2.setBackgroundResource(R.drawable.tab_select);
+                    mTab1.setBackgroundResource(R.drawable.tab);
+                }
             }
         });
-        mPager.setCurrentScreen(0,false);
+        mPager.setCurrentScreen(0, false);
 
         parameterFragemnt = new ParameterFragment();
         locationFragment = new LocationFragment();
+        locationFragment.setOnOperateLampDegreeListener(new LocationFragment.OnOperateLampDegreeListener() {
+            @Override
+            public void setLampHDegree(int degree) {
+                setLampHorizon(degree);
+            }
+
+            @Override
+            public void setLampVDegree(int degree) {
+                setLampVertical(degree);
+            }
+
+            @Override
+            public void setLampLDegree(int degree) {
+                setLampLight(degree);
+            }
+
+            @Override
+            public void setLampMovement(int degree) {
+                setLampMove(degree);
+            }
+        });
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.pager, parameterFragemnt);
         transaction.add(R.id.pager, locationFragment);
         transaction.commit();
 
         mLeds = getIntent().getStringArrayExtra("leds");
-        int type = getIntent().getIntExtra("type", -1);
-        switch (type) {
-            case TYPE_ADD:
-                mSave.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!validate()) {
-                            return;
-                        }
-
-                        final String name = (modeName).replaceAll(" ", "");
-                        mMaskUtils.show();
-                        int[] rgb = parameterFragemnt.getRgb();
-                        mClient.createDiyScene(getIntent().getStringExtra("roomId"), name, parameterFragemnt.getBrightness(),
-                                parameterFragemnt.getColorTemp(), rgb[0], rgb[1], rgb[2], mIcon, new ILightMgrApi.Callback<BaseResponse>() {
-                                    @Override
-                                    public void callback(int code, BaseResponse entity) {
-                                        mMaskUtils.cancel();
-                                        switch (code) {
-                                            case CODE_TIMEOUT:
-                                                mToastUtils.show(getString(R.string.tip_timeout));
-                                                break;
-                                            case CODE_NETWORK_ERROR:
-                                                mToastUtils.show(getString(R.string.tip_network_connect_faild));
-                                                break;
-                                            case CODE_SUCCESS:
-                                                if (!entity.success) {
-                                                    mToastUtils.show(entity.msg);
-                                                } else {
-                                                    Intent data = new Intent();
-                                                    data.putExtra("id", entity.extra);
-                                                    data.putExtra("name", name);
-                                                    data.putExtra("icon", mIcon);
-                                                    setResult(RESULT_OK, data);
-                                                    finish();
-                                                }
-                                                break;
-                                        }
-                                    }
-                                });
-                    }
-                });
-                break;
-            case TYPE_EDIT:
-                mSceneId = getIntent().getStringExtra("sceneId");
-                mClient.getDiySceneImg(mSceneId, new ILightMgrApi.Callback<Bitmap>() {
-                    @Override
-                    public void callback(int code, Bitmap entity) {
-                        Log.v("SceneActivity", code + " is success->" + (code == CODE_SUCCESS) + " -:>" + entity);
-                        switch (code) {
-                            case CODE_SUCCESS:
-                                break;
-                        }
-                    }
-                });
-                mMaskUtils.show();
-                mClient.getDiySceneInfo(mSceneId, new ILightMgrApi.Callback<DiySceneInfo>() {
-                    @Override
-                    public void callback(int code, DiySceneInfo entity) {
-                        mMaskUtils.cancel();
-                        switch (code) {
-                            case CODE_SUCCESS:
-                                parameterFragemnt.setBrightness(entity.brightness);
-                                parameterFragemnt.setColorTemp(entity.colortemp);
-                                parameterFragemnt.setRGB(new int[]{entity.red, entity.green, entity.blue});
-                                break;
-                        }
-                    }
-                });
-
-                mSave.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!validate()) {
-                            return;
-                        }
-                        mMaskUtils.show();
-                        int[] rgb = parameterFragemnt.getRgb();
-                        mClient.modifyDiyScene(mSceneId, modeName,
-                                parameterFragemnt.getBrightness(), parameterFragemnt.getColorTemp(), rgb[0], rgb[1], rgb[2], mIcon, new ILightMgrApi.Callback<BaseResponse>() {
-                                    @Override
-                                    public void callback(int code, BaseResponse entity) {
-                                        mMaskUtils.cancel();
-                                        switch (code) {
-                                            case CODE_TIMEOUT:
-                                                mToastUtils.show(getString(R.string.tip_timeout));
-                                                break;
-                                            case CODE_NETWORK_ERROR:
-                                                mToastUtils.show(getString(R.string.tip_network_connect_faild));
-                                                break;
-                                            case CODE_SUCCESS:
-                                                if (!entity.success) {
-                                                    mToastUtils.show(entity.msg);
-                                                } else {
-                                                    Intent data = new Intent();
-                                                    data.putExtra("id", mSceneId);
-                                                    data.putExtra("name", modeName);
-                                                    data.putExtra("icon", mIcon);
-                                                    setResult(RESULT_OK, data);
-                                                    finish();
-                                                }
-                                                break;
-                                        }
-                                    }
-                                });
-                    }
-                });
-                break;
+        roomId = getIntent().getStringExtra("roomId");
+        if(getIntent().hasExtra("adjust")){
+            adjust = getIntent().getBooleanExtra("adjust",false);
         }
     }
 
@@ -349,162 +247,182 @@ public class PatameterSettingActivity extends BaseFragmentActivity implements Vi
     protected void loadData() {
 
     }
-    private boolean validate() {
-        int brightness = parameterFragemnt.getBrightness();
-        if (brightness < 0 || brightness > 100) {
-            mToastUtils.show(getString(R.string.tip_brightness_format));
-            return false;
-        }
-        int colorTemp = parameterFragemnt.getColorTemp();
-        if (colorTemp < 0 || colorTemp > 255) {
-            mToastUtils.show(getString(R.string.tip_colortemp_format));
-            return false;
-        }
-        int[] rgb = parameterFragemnt.getRgb();
-        for (int var : rgb) {
-            if (var < 0 || var > 255) {
-                mToastUtils.show(getString(R.string.tip_rgb_format));
-                return false;
-            }
-        }
-        return true;
-    }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ll_call://调用参数
-                Intent intent = new Intent(this,ParamsListActivity.class);
-                startActivity(intent);
+                ll_menu.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(this, ParamsListActivity.class);
+                if(adjust&&mLeds!=null&&mLeds.length>0){
+                    intent.putExtra("adjust",adjust);
+                    intent.putExtra("leds",mLeds);
+                    intent.putExtra("roomId",roomId);
+                }
+                startActivityForResult(intent, REQUEST_BACKUP_GET_PARAM);
                 break;
             case R.id.ll_copy://备份参数
-                Intent intent1 = new Intent(this,SaveParamsActivity.class);
+                ll_menu.setVisibility(View.INVISIBLE);
+                Intent intent1 = new Intent(this, SaveParamsActivity.class);
                 //将颜色值等传递过去
-                intent1.putExtra("brightness",parameterFragemnt.getBrightness());
-                intent1.putExtra("temp",parameterFragemnt.getColorTemp());
-                intent1.putExtra("rgb",parameterFragemnt.getRgb());
+                intent1.putExtra("brightness", parameterFragemnt.getBrightness());
+                intent1.putExtra("temp", parameterFragemnt.getColorTemp());
+                intent1.putExtra("rgb", parameterFragemnt.getRgb());
                 startActivity(intent1);
                 break;
             case R.id.save:
-                if(ll_menu.isShown()){
+                if (ll_menu.isShown()) {
                     ll_menu.setVisibility(View.GONE);
-                }else{
+                } else {
                     ll_menu.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.ic_back:
+                setResultData();
                 finish();
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        setResultData();
+        super.onBackPressed();
+    }
+
+    private void setResultData() {
+        if(!adjust){
+            LampParam param = new LampParam();
+            param.setLamp_h_degree(locationFragment.getCurrentHorizonAngle()+"");
+            param.setLamp_v_degree(locationFragment.getCurrentVerticalAngle()+"");
+            param.setLamp_l_degree(locationFragment.getCurrentlightAngle()+"");
+            int[] rgb = parameterFragemnt.getRgb();
+            String red = Integer.toHexString(rgb[0]);
+            if(red.length()<=1)red = "0"+red;
+            String green = Integer.toHexString(rgb[1]);
+            if(green.length()<=1)green = "0"+green;
+            String blue = Integer.toHexString(rgb[2]);
+            if(blue.length()<=1)blue = "0"+blue;
+            String rgbHex = red+green+blue;
+            param.setLamp_rgb(rgbHex);
+            param.setLamp_brightness(parameterFragemnt.getBrightness()+"");
+            param.setLamp_colorTemp(parameterFragemnt.getColorTemp()+"");
+
+            Intent data = new Intent();
+            data.putExtra("lampParam",param);
+            setResult(RESULT_OK,data);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_TAKE_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    Intent intent = new Intent(PatameterSettingActivity.this, PhotoActivity.class);
-                    intent.setData(mPhoto);
-                    intent.putExtra("what", REQUEST_CODE_TAKE_PHOTO);
-//                    intent.putExtra("sceneId", mSceneId);
-                    intent.putExtra("way", PhotoActivity.WAY_SCENE_ICON);
-                    startActivityForResult(intent, REQUEST_CODE_EDIT_TAKE_PHOTO);
-                }
-                break;
-            case REQUEST_CODE_PICK_PHOTO:
-                if (resultCode == RESULT_OK && data != null) {
-                    Intent intent = new Intent(PatameterSettingActivity.this, PhotoActivity.class);
-                    intent.setData(data.getData());
-                    intent.putExtra("what", REQUEST_CODE_PICK_PHOTO);
-//                    intent.putExtra("sceneId", mSceneId);
-                    intent.putExtra("way", PhotoActivity.WAY_SCENE_ICON);
-                    startActivityForResult(intent, REQUEST_CODE_EDIT_PICK_PHOTO);
-                }
-                break;
-            case REQUEST_CODE_EDIT_TAKE_PHOTO:
-            case REQUEST_CODE_EDIT_PICK_PHOTO:
-                break;
             case REQUEST_PICK_IMAGE:
                 parameterFragemnt.setResultData(resultCode, resultCode == RESULT_OK ? data.getData() : null);
                 break;
+            case REQUEST_BACKUP_GET_PARAM:
+                if(data!=null&&data.hasExtra("param")){
+                    paramEntity = (ParamEntity) data.getSerializableExtra("param");
+                    int brightness = paramEntity.getBrightness();
+                    parameterFragemnt.setBrightness(brightness);
+                    int colorTemp = paramEntity.getColorTemp();
+                    parameterFragemnt.setColorTemp(colorTemp);
+                    String rgb = paramEntity.getColorRgbValue();
+                    if(rgb.length()==6){
+                        int[] color = new int[3];
+                        color[0] = Integer.parseInt(rgb.substring(0,2),16);
+                        color[1] = Integer.parseInt(rgb.substring(2,4),16);
+                        color[2] = Integer.parseInt(rgb.substring(4),16);
+                        parameterFragemnt.setRGB(color);
+                    }
+                }
+                break;
         }
     }
+
     private void sendBrightness() {
         int brightness = parameterFragemnt.getBrightness();
-        if (brightness != lastBrightness && mLeds.length != 0) {
-            mClient.setBrightness(mLeds, brightness);
+        if (brightness != lastBrightness && mLeds != null && mLeds.length != 0&&adjust) {
+            mClient.setBrightness(roomId,mLeds, brightness, new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
+
+                }
+            });
         }
         lastBrightness = brightness;
     }
 
     private void sendColorTemp() {
         int colorTemp = parameterFragemnt.getColorTemp();
-        if (colorTemp != lastColorTemp && mLeds.length != 0) {
-            mClient.setColorTemp(mLeds, colorTemp);
+        if (colorTemp != lastColorTemp && mLeds != null && mLeds.length != 0&&adjust) {
+            mClient.setColorTemp(roomId,mLeds, colorTemp, new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
+
+                }
+            });
         }
         lastColorTemp = colorTemp;
     }
 
     private void sendRgb() {
         int[] rgb = parameterFragemnt.getRgb();
-        if (!(rgb[0] == lastRgb[0] && rgb[1] == lastRgb[1] && rgb[2] == lastRgb[2]) && mLeds.length != 0) {
-            mClient.setRGB(mLeds, rgb[0], rgb[1], rgb[2]);
+        if (!(rgb[0] == lastRgb[0] && rgb[1] == lastRgb[1] && rgb[2] == lastRgb[2]) && mLeds != null && mLeds.length != 0&&adjust) {
+            mClient.setRGB(roomId,mLeds, rgb[0], rgb[1], rgb[2], new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
+
+                }
+            });
         }
         lastRgb = rgb;
     }
 
-    private class SendBrightnessTask extends Thread {
-        boolean flag = false;
+    private void setLampHorizon(int degree) {
+        if(adjust){
+            mClient.setLampHDegree(roomId, mLeds, degree, new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
 
-        public void run() {
-            for (; ; ) {
-                if (flag) {
-                    sendBrightness();
                 }
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            });
+        }
+    }
+    private void setLampVertical(int degree) {
+        if(adjust){
+            mClient.setLampVDegree(roomId, mLeds, degree, new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
+
                 }
-            }
+            });
+        }
+    }
+    private void setLampLight(int degree) {
+        if(adjust){
+            mClient.setLampLDegree(roomId, mLeds, degree, new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
+
+                }
+            });
+        }
+    }
+    private void setLampMove(int degree) {
+        if(adjust){
+            mClient.setLampMovement(roomId, mLeds, degree, new ILightMgrApi.Callback<BaseResp>() {
+                @Override
+                public void callback(int code, BaseResp entity) {
+
+                }
+            });
         }
     }
 
-    private class SendColorTempTask extends Thread {
-        boolean flag = false;
-
-        public void run() {
-            for (; ; ) {
-                if (flag) {
-                    sendColorTemp();
-                }
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private class SendRgbTask extends Thread {
-        boolean flag = false;
-
-        public void run() {
-            for (; ; ) {
-                if (flag) {
-                    sendRgb();
-                }
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK ||keyCode == KeyEvent.ACTION_DOWN)&& ll_menu.getVisibility() == View.VISIBLE) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.ACTION_DOWN) && ll_menu.getVisibility() == View.VISIBLE) {
             ll_menu.setVisibility(View.INVISIBLE);
             return true;
         }

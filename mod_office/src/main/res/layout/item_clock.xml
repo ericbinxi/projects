@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/dark"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/left_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_scene_clock" />
+            android:src="@drawable/icon_clock_press" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
+            android:orientation="vertical"
             android:layout_weight="1">
 
             <TextView
@@ -48,12 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="5dp"
+            android:layout_marginRight="10dp"
             android:text="办公模式" />
 
         <cn.com.mod.office.lightman.widget.SwitchButton
             android:id="@+id/btn_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical" />
 
     </LinearLayout>
@@ -64,19 +67,15 @@
         android:layout_height="match_parent"
         android:background="#ff0000"
         android:orientation="horizontal">
-
-        <TextView
+        <ImageView
             android:id="@+id/delete"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn_shape"
             android:gravity="center"
             android:padding="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="删除"
-            android:textColor="@color/dark"
-            android:textSize="16sp" />
+            android:src="@drawable/icon_delete"/>
     </LinearLayout>
 </LinearLayout>

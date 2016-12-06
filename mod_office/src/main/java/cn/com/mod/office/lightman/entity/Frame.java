@@ -1,6 +1,7 @@
 package cn.com.mod.office.lightman.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 动态模式中的帧
@@ -20,112 +21,58 @@ public class Frame implements Serializable {
 //    lamp_v_degree	Int		LED灯垂直角度
 //    lamp_l_degree	Int		LED灯光束角度
 
-    private int frame_id;
-    private int hour;
-    private int minute;
-    private int second;
-    private char is_smooth;
-    private String lamp_id;
-    private int lamp_brightness;
-    private int lamp_colorTemp;
-    private String lamp_rgb;
-    private int lamp_h_degree;
-    private int lamp_v_degree;
-    private int lamp_l_degree;
+    private String frame_id;
+    private String hour;
+    private String minute;
+    private String second;
+    private String is_smooth;
+    private List<LampParam> lamps;
 
-    public int getFrame_id() {
+    public String getFrame_id() {
         return frame_id;
     }
 
-    public void setFrame_id(int frame_id) {
+    public void setFrame_id(String frame_id) {
         this.frame_id = frame_id;
     }
 
-    public int getHour() {
+    public String getHour() {
         return hour;
     }
 
-    public void setHour(int hour) {
+    public void setHour(String hour) {
         this.hour = hour;
     }
 
-    public int getMinute() {
+    public String getMinute() {
         return minute;
     }
 
-    public void setMinute(int minute) {
+    public void setMinute(String minute) {
         this.minute = minute;
     }
 
-    public int getSecond() {
+    public String getSecond() {
         return second;
     }
 
-    public void setSecond(int second) {
+    public void setSecond(String second) {
         this.second = second;
     }
 
-    public char getIs_smooth() {
+    public String getIs_smooth() {
         return is_smooth;
     }
 
-    public void setIs_smooth(char is_smooth) {
+    public void setIs_smooth(String is_smooth) {
         this.is_smooth = is_smooth;
     }
 
-    public String getLamp_id() {
-        return lamp_id;
+    public List<LampParam> getLamps() {
+        return lamps;
     }
 
-    public void setLamp_id(String lamp_id) {
-        this.lamp_id = lamp_id;
-    }
-
-    public int getLamp_brightness() {
-        return lamp_brightness;
-    }
-
-    public void setLamp_brightness(int lamp_brightness) {
-        this.lamp_brightness = lamp_brightness;
-    }
-
-    public int getLamp_colorTemp() {
-        return lamp_colorTemp;
-    }
-
-    public void setLamp_colorTemp(int lamp_colorTemp) {
-        this.lamp_colorTemp = lamp_colorTemp;
-    }
-
-    public String getLamp_rgb() {
-        return lamp_rgb;
-    }
-
-    public void setLamp_rgb(String lamp_rgb) {
-        this.lamp_rgb = lamp_rgb;
-    }
-
-    public int getLamp_h_degree() {
-        return lamp_h_degree;
-    }
-
-    public void setLamp_h_degree(int lamp_h_degree) {
-        this.lamp_h_degree = lamp_h_degree;
-    }
-
-    public int getLamp_v_degree() {
-        return lamp_v_degree;
-    }
-
-    public void setLamp_v_degree(int lamp_v_degree) {
-        this.lamp_v_degree = lamp_v_degree;
-    }
-
-    public int getLamp_l_degree() {
-        return lamp_l_degree;
-    }
-
-    public void setLamp_l_degree(int lamp_l_degree) {
-        this.lamp_l_degree = lamp_l_degree;
+    public void setLamps(List<LampParam> lamps) {
+        this.lamps = lamps;
     }
 }

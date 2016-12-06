@@ -17,6 +17,7 @@ public class ConfigUtils {
     private static String USERNAME = "username"; // 用户名
     private static String PASSWORD = "password"; // 密码
     private static String HOST = "host";
+    private static String SESSION = "session";
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
 
@@ -69,6 +70,15 @@ public class ConfigUtils {
     public void setRememberPass(boolean isRememberPass) {
         mEditor.putBoolean(REMEMBER_PASS, isRememberPass);
         mEditor.commit();
+    }
+
+    public void setSession(String session){
+        mEditor.putString(SESSION, session);
+        mEditor.commit();
+    }
+
+    public String getSession(){
+        return mPreferences.getString(SESSION,"");
     }
 
     public boolean isAutoLogin() {

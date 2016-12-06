@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/bg">
     <RelativeLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:textSize="16sp"
             android:text="@string/save" />
     </RelativeLayout>
     <RelativeLayout
@@ -51,37 +52,44 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:minEms="5"
+            android:background="@null"
             android:hint="自定义模式"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/et_modename"
+            android:background="@drawable/shape_circle"
+            android:scaleType="centerInside"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:src="@drawable/ic_scene_edit_off"/>
+            android:src="@drawable/icon_mode_dynamic"/>
 
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/orange">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/btn_enable_selector">
         <TextView
             android:id="@+id/apply"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/apply_dynamic"
+            android:layout_centerInParent="true"
             android:textSize="20sp"
             android:textColor="@color/dark"
-            android:gravity="center"
+            android:drawableLeft="@drawable/icon_apply_frame"
             android:padding="10dp"/>
-    </LinearLayout>
+    </RelativeLayout>
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/up"
+        android:divider="@null"
         android:layout_above="@id/bottom"/>
 
 </RelativeLayout>

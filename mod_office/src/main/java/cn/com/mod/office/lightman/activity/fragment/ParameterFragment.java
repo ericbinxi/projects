@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 import com.joshua.common.util.ImageUtils;
 
 import cn.com.mod.office.lightman.R;
-import cn.com.mod.office.lightman.activity.SceneActivity;
+import cn.com.mod.office.lightman.activity.PatameterSettingActivity;
 import cn.com.mod.office.lightman.widget.ColorPicker;
 import cn.com.mod.office.lightman.widget.SeekBarPicker;
 
@@ -58,6 +57,7 @@ public class ParameterFragment extends Fragment {
         mBrightnessPicker.setProgressBarDrawable(R.drawable.bg_seekbar_brightness);
         mBrightnessPicker.setThumbDrawable(R.drawable.seekbar_thumb_brightness);
         mBrightnessPicker.setMax(100);
+
         mBrightnessPicker.setSeekBarPickerListener(new SeekBarPicker.SeekBarPickerListener() {
             @Override
             public void onProgressChanged(SeekBarPicker picker, int progress) {
@@ -131,7 +131,7 @@ public class ParameterFragment extends Fragment {
                 if (!mHasChange) {
                     Intent intent = new Intent(Intent.ACTION_PICK);
                     intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-                    getActivity().startActivityForResult(intent, SceneActivity.REQUEST_PICK_IMAGE);
+                    getActivity().startActivityForResult(intent, PatameterSettingActivity.REQUEST_PICK_IMAGE);
                 } else {
                     mFile.setImageResource(R.drawable.ic_file);
                     mColorPicker.setImageResource(R.drawable.bg_color);
@@ -180,11 +180,11 @@ public class ParameterFragment extends Fragment {
 
 
     // 设置滑动条监听器
-    public void setPickerListener(SeekBarPicker.SeekBarPickerListener listener) {
+    public void setBrightPickerListener(SeekBarPicker.SeekBarPickerListener listener) {
         this.mPickerListener_b = listener;
     }
 
-    public void setOnEditorActionListener(TextView.OnEditorActionListener listener) {
+    public void setOnBrightEditorActionListener(TextView.OnEditorActionListener listener) {
         this.mOnEditorActionListener_b = listener;
     }
 
@@ -200,11 +200,11 @@ public class ParameterFragment extends Fragment {
     }
 
     // 设置滑动条监听器
-    public void setTPickerListener(SeekBarPicker.SeekBarPickerListener listener) {
+    public void setColorTempPickerListener(SeekBarPicker.SeekBarPickerListener listener) {
         this.mPickerListener_t = listener;
     }
 
-    public void setOnTEditorActionListener(TextView.OnEditorActionListener listener) {
+    public void setOnColorTempEditorActionListener(TextView.OnEditorActionListener listener) {
         this.mOnEditorActionListener_t = listener;
     }
 
@@ -212,7 +212,7 @@ public class ParameterFragment extends Fragment {
         if (TextUtils.isEmpty(mColorTemp.getText())) {
             return 0;
         }
-        return (int) ((Integer.parseInt(mColorTemp.getText() + "") - 2700) / 3800 * 255);
+        return (int) ((Integer.parseInt(mColorTemp.getText() + "") - 2700) / 3800.0f * 255);
     }
 
     public void setColorTemp(int colorTemp) {
@@ -237,7 +237,7 @@ public class ParameterFragment extends Fragment {
     }
 
     // 设置滑动条监听器
-    public void setPickerListener(ColorPicker.ColorPickerListener listener) {
+    public void setColorPickerListener(ColorPicker.ColorPickerListener listener) {
         this.mPickerListener = listener;
     }
 

@@ -30,23 +30,32 @@ public class FloorsResp extends BaseResp {
         this.floor_num = floor_num;
     }
 
-    public List<FloorIdBean> getFloor_id() {
+    public List<FloorIdBean> getFloors() {
         return floor_id;
     }
 
-    public void setFloor_id(List<FloorIdBean> floor_id) {
-        this.floor_id = floor_id;
+    public void setFloors(List<FloorIdBean> floors) {
+        this.floor_id = floors;
     }
 
     public static class FloorIdBean {
-        private String org_id;
+        private String floor_id;
+        private String floor_name;
 
-        public String getOrg_id() {
-            return org_id;
+        public String getFloor_id() {
+            return floor_id;
         }
 
-        public void setOrg_id(String org_id) {
-            this.org_id = org_id;
+        public void setFloor_id(String floor_id) {
+            this.floor_id = floor_id;
+        }
+
+        public String getFloor_name() {
+            return floor_name;
+        }
+
+        public void setFloor_name(String floor_name) {
+            this.floor_name = floor_name;
         }
     }
 }

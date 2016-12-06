@@ -63,16 +63,16 @@ public class FloorAdapter extends BaseAdapter implements ViewScroller.OnItemSele
         try {
             final Paint paint = new Paint();
             paint.setAntiAlias(true);
-            paint.setColor(Color.GRAY);
-            paint.setTextSize(40);
+            paint.setColor(mContext.getResources().getColor(R.color.dark));
+            paint.setTextSize(mContext.getResources().getDimension(R.dimen.floor_name_size));
             Rect bounds = new Rect();
             paint.getTextBounds(info.name, 0, info.name.length(), bounds);
+            int size = mContext.getResources().getDimensionPixelSize(R.dimen.text_name_size);
             output = Bitmap.createBitmap(bounds.width(), bounds.height(), Bitmap.Config.ARGB_8888);
 
             Canvas canvas = new Canvas(output);
             canvas.drawARGB(0, 255, 255, 255);
-            canvas.drawText(info.name, -bounds.left, -bounds.top, paint);
-        } catch (OutOfMemoryError e) {
+            canvas.drawText(info.name,-bounds.left,-bounds.top, paint);
         } catch (Exception e) {
         }
         textImageView.setImageBitmap(output);

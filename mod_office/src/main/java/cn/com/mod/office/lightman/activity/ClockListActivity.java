@@ -18,6 +18,7 @@ import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseActivity;
 import cn.com.mod.office.lightman.adapter.ClockListAdapter;
+import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
 import cn.com.mod.office.lightman.api.resp.ClocksResp;
 import cn.com.mod.office.lightman.entity.BaseResponse;
@@ -66,57 +67,56 @@ public class ClockListActivity extends BaseActivity implements View.OnClickListe
         listview.setAdapter(adapter);
         adapter.setOnClockOperateListener(new ClockListAdapter.OnClockOperateListener() {
             @Override
-            public void onClockOpen(int clockId) {
-                MyApplication.getInstance().getClient().openClock(roomId, clockId+"", new ILightMgrApi.Callback<BaseResponse>() {
+            public void onClockOpen(String clockId) {
+                MyApplication.getInstance().getClient().openClock(roomId, clockId, new ILightMgrApi.Callback<BaseResp>() {
                     @Override
-                    public void callback(int code, BaseResponse entity) {
+                    public void callback(int code, BaseResp resp) {
                         if(code==0){
                             ToastUtils.show(ClockListActivity.this,R.string.open_clock_success);
                         }else{
-                            ToastUtils.show(ClockListActivity.this,R.string.open_clock_fail);
+                            ToastUtils.show(ClockListActivity.this,resp.getError_desc());
                         }
                     }
                 });
             }
 
             @Override
-            public void onClockClosed(int clockId) {
-                MyApplication.getInstance().getClient().closeClock(roomId, clockId + "", new ILightMgrApi.Callback<BaseResponse>() {
+            public void onClockClosed(String clockId) {
+                MyApplication.getInstance().getClient().closeClock(roomId, clockId, new ILightMgrApi.Callback<BaseResp>() {
                     @Override
-                    public void callback(int code, BaseResponse entity) {
+                    public void callback(int code, BaseResp resp) {
                         if(code==0){
                             ToastUtils.show(ClockListActivity.this,R.string.close_clock_success);
                         }else{
-                            ToastUtils.show(ClockListActivity.this,R.string.close_clock_fail);
+                            ToastUtils.show(ClockListActivity.this,resp.getError_desc());
                         }
                     }
                 });
             }
 
             @Override
-            public void onClockDelete(int position, int clockId) {
-                MyApplication.getInstance().getClient().deleteClock(roomId, clockId + "", new ILightMgrApi.Callback<BaseResponse>() {
+            public void onClockDelete(int position, String clockId) {
+                MyApplication.getInstance().getClient().deleteClock(roomId, clockId + "", new ILightMgrApi.Callback<BaseResp>() {
                     @Override
-                    public void callback(int code, BaseResponse entity) {
+                    public void callback(int code, BaseResp resp) {
                         if(code==0){
                             ToastUtils.show(ClockListActivity.this,R.string.delete_clock_success);
                         }else{
-                            ToastUtils.show(ClockListActivity.this,R.string.delete_clock_fail);
+                            ToastUtils.show(ClockListActivity.this,resp.getError_desc());
                         }
                     }
                 });
             }
-        });
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(int position) {
                 //跳转到编辑闹钟界面
                 Intent intent = new Intent(ClockListActivity.this,ClockSettingActivity.class);
-                intent.putExtra("clock",clocks.get(position));
                 intent.putExtra("type",2);
                 intent.putExtra("roomId",roomId);
+                intent.putExtra("clock",clocks.get(position));
+                intent.putExtra("mode_id",clocks.get(position).getMode_id());
                 startActivityForResult(intent,REQUEST_CODE_EDIT_CLOCK);
-                currentPosition = position;
             }
         });
     }
@@ -130,6 +130,7 @@ public class ClockListActivity extends BaseActivity implements View.OnClickListe
                 public void callback(int code, ClocksResp resp) {
                     maskUtils.cancel();
                     if(resp.getStatus()==0){
+                        clocks.clear();
                         clocks.addAll(resp.getClocks());
                         adapter.notifyDataSetChanged();
                     }else{

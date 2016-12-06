@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/dark">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/left_layout"
@@ -11,14 +10,17 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:orientation="horizontal"
-        android:background="@color/white"
-        android:padding="5dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
         <ImageView
             android:id="@+id/iv_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_scene_clock"/>
+            android:background="@drawable/shape_circle"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_mode_normal"/>
         <TextView
             android:id="@+id/mode_name"
             android:layout_width="0dp"
@@ -26,13 +28,16 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:padding="5dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="18sp"
             android:text="自定义模式"/>
         <ImageView
             android:id="@+id/mode_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_scene_edit_off"/>
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon_adjust_lamp"/>
 
     </LinearLayout>
 
@@ -43,18 +48,15 @@
         android:background="#ff0000"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
             android:id="@+id/delete"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="删除"
-            android:textColor="@color/dark"
-            android:background="@drawable/btn_shape"
-            android:textSize="16sp"
-            android:padding="5dp"/>
+            android:src="@drawable/icon_delete"/>
     </LinearLayout>
 </LinearLayout>

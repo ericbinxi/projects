@@ -49,7 +49,7 @@
 
     <string name="update">更新版本</string>
     <string name="label_desc">软件说明：</string>
-    <string name="text_app">LED云控照明系统V1.0</string>
+    <string name="text_app">LED云控照明系统V%1$s</string>
     <string name="label_company">公司信息：</string>
     <string name="text_company">广东凯乐斯光电科技有限公司\nwww.mod.com.cn</string>
     <string name="label_support">软件支持：</string>
@@ -131,7 +131,7 @@
     <string name="mode_manager">模式管理</string>
     <string name="clock_setting">闹钟设置</string>
     <string name="select_none">反选</string>
-    <string name="grouping">分组</string>
+    <string name="grouping">编组</string>
     <string name="unmarshall">解组</string>
     <string name="adjust_lamp">调节灯具</string>
     <string name="diy_model">自定义模式</string>
@@ -148,6 +148,7 @@
     <string name="normal_mode">常规模式</string>
     <string name="dynamic_mode">动态模式</string>
     <string name="apply_dynamic">预览</string>
+    <string name="stop_apply_dynamic">停止预览</string>
     <string name="mode_create">创建模式</string>
     <string name="mode_edit">编辑模式</string>
     <string name="mode">模式</string>
@@ -173,8 +174,36 @@
     <string name="record">记录</string>
     <string name="commit">提交</string>
     <string name="choose_fault_lamp">(请选择故障灯具)</string>
+    <string name="choose_lamp">(请选择灯具)</string>
     <string name="commit_suc">提交成功</string>
     <string name="fault_hint">故障描述......</string>
+    <string name="fault_record">申报记录</string>
+    <string name="fault_content">申报内容</string>
+    <string name="fault_lamps">故障灯具:</string>
+    <string name="choose_fault_lamps">请选择您要申报的故障灯具</string>
     <string name="fault_declare_tips">给您带来的不便，我们深感抱歉！</string>
+
+    <string name="tie_group_success">灯具编组成功</string>
+    <string name="untie_group_success">灯具解组成功</string>
+    <string name="untie_failure_tips">当前选择的灯具不存在编组</string>
+    <string name="untie_dif_group">当前选择的灯具不在同一个编组</string>
+
+    <string name="delete_mode_success">删除模式成功</string>
+
+    <string name="param_desc_format">亮度%1$s,色温%2$s,颜色%3$s</string>
+    <string name="param_save_success">保存参数成功</string>
+    <string name="add_remark_please">请填写备份信息</string>
+    <string name="create_dynamic_mode">创建动态模式</string>
+    <string name="edit_dynamic_mode">编辑动态模式</string>
+    <string name="frame_index">第%1$d帧</string>
+
+    <string name="add_clock_success">添加闹钟成功</string>
+    <string name="edit_clock_success">修改闹钟成功</string>
+    <string name="choose_mode_please">请选择模式</string>
+    <string name="choose_time_please">请选择时间</string>
+    <string name="choose_weekday_please">请选择重复日期</string>
+    <string name="template">%1$d°</string>
+
+
 
 </resources>

@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.joshua.common.util.ConnectUtils;
 import com.joshua.common.util.MD5Utils;
@@ -37,20 +38,21 @@ import cn.com.mod.office.lightman.api.resp.LoginResp;
 import cn.com.mod.office.lightman.api.resp.RoomsResp;
 import cn.com.mod.office.lightman.config.AppConfig;
 import cn.com.mod.office.lightman.entity.ApkVersionInfo;
-import cn.com.mod.office.lightman.entity.AreaInfo;
 import cn.com.mod.office.lightman.entity.BaseResponse;
 import cn.com.mod.office.lightman.entity.ClockInfo;
 import cn.com.mod.office.lightman.entity.DiySceneInfo;
-import cn.com.mod.office.lightman.entity.FaultRecord;
 import cn.com.mod.office.lightman.entity.FaultRecordResp;
 import cn.com.mod.office.lightman.entity.FloorDivideInfo;
 import cn.com.mod.office.lightman.entity.FloorInfo;
 import cn.com.mod.office.lightman.entity.Frame;
+import cn.com.mod.office.lightman.entity.GetParamResp;
 import cn.com.mod.office.lightman.entity.GroupInfo;
-import cn.com.mod.office.lightman.entity.Lamps;
+import cn.com.mod.office.lightman.entity.LampParam;
+import cn.com.mod.office.lightman.entity.LampStatusResp;
 import cn.com.mod.office.lightman.entity.LedInfo;
 import cn.com.mod.office.lightman.entity.RoomEntity;
 import cn.com.mod.office.lightman.entity.SceneInfo;
+import cn.com.mod.office.lightman.entity.TieLampsResp;
 import cn.com.mod.office.lightman.entity.UserInfo;
 import cn.com.mod.office.lightman.manager.AccountManager;
 
@@ -136,7 +138,7 @@ public class LightMgrApi implements ILightMgrApi {
     public void login(String username, String password, final Callback<LoginResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", username);
-        password = password+"MOD";
+        password = password + "MOD";
         params.put("password", MD5Utils.MD5(password));
         doService("/user/signin", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
@@ -178,22 +180,21 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
     @Override
-    public void modifyPassword(String oldPassword, String newPassword, final Callback<BaseResponse> callback) {
+    public void modifyPassword(String oldPassword, String newPassword, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("oldPassword", MD5Utils.MD5(oldPassword));
-        params.put("newPassword", MD5Utils.MD5(newPassword));
-        params.put("json",getSessionString());
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        String token = "MOD";
+        oldPassword = oldPassword+token;
+        newPassword = newPassword+token;
+        object.addProperty("oldPassword", MD5Utils.MD5(oldPassword));
+        object.addProperty("newPassword", MD5Utils.MD5(newPassword));
+        params.put("json", object.toString());
         doService("/user/modifyPassword", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+                BaseResp resp = new BaseParse<>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
@@ -202,13 +203,13 @@ public class LightMgrApi implements ILightMgrApi {
     public void listFloors(final Callback<FloorsResp> callback) {
         Map map = new HashMap<>();
         map.put("json", getSessionString());
-        doService("/org/getFloorOrgId", map, JSONObject.class, new ResponseHandler<JSONObject>() {
+        doService("/org/getFloor", map, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
                 List<FloorInfo> infos = new ArrayList<FloorInfo>();
                 FloorsResp resp = null;
                 try {
-                    resp = (FloorsResp) new BaseParse<>().parse(json.toString(),FloorsResp.class);
+                    resp = (FloorsResp) new BaseParse<>().parse(json.toString(), FloorsResp.class);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -221,11 +222,11 @@ public class LightMgrApi implements ILightMgrApi {
     public void getFloorImg(String floorId, final Callback<Bitmap> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("level",3);
-        object.addProperty("org_id",floorId);
+        object.add("session", getSessonJson());
+        object.addProperty("level", 3);
+        object.addProperty("org_id", floorId);
 //        params.put("level",3);//3:楼层  4：房间
-        params.put("json",object.toString());
+        params.put("json", object.toString());
 //        params.put("org_id",floorId);
         doService("/org/downloadMap", params, Bitmap.class, new ResponseHandler<Bitmap>() {
             @Override
@@ -239,9 +240,9 @@ public class LightMgrApi implements ILightMgrApi {
     public void getFloorDivide(String floorId, final Callback<FloorDivideInfo> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("floor_id",floorId);
-        params.put("json",object.toString());
+        object.add("session", getSessonJson());
+        object.addProperty("floor_id", floorId);
+        params.put("json", object.toString());
         doService("/org/getRoomsInFloor", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
@@ -261,10 +262,10 @@ public class LightMgrApi implements ILightMgrApi {
     public void getRoomImg(String roomId, final Callback<Bitmap> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("level",4);
-        object.addProperty("org_id",roomId);
-        params.put("json",object.toString());
+        object.add("session", getSessonJson());
+        object.addProperty("level", 4);
+        object.addProperty("org_id", roomId);
+        params.put("json", object.toString());
         doService("/org/downloadMap", params, Bitmap.class, new ResponseHandler<Bitmap>() {
             @Override
             public void handle(Bitmap bitmap) {
@@ -324,121 +325,280 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
     @Override
-    public void getLampsInRoom(String roomId,final Callback<List<Lamps>> callback) {
+    public void getLampsInRoom(String roomId, final Callback<LampsResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("room_id",roomId);
-//        params.put("level",3);//3:楼层  4：房间
-        params.put("json",object.toString());
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", roomId);
+        params.put("json", object.toString());
         doService("/org/getLampsInRoom", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                List<Lamps> groupInfos = new ArrayList<Lamps>();
                 LampsResp resp = null;
                 try {
-                    resp = new BaseParse<LampsResp>().parse(json.toString(),LampsResp.class);
-//                    JSONArray groups = json.getJSONArray("groups");
-//                    for (int i = 0; i < groups.length(); i++) {
-//                        JSONObject group = groups.getJSONObject(i);
-//                        GroupInfo groupInfo = new GroupInfo();
-//                        groupInfo.id = group.getString("groupId");
-//                        groupInfo.name = group.getString("name");
-//                        groupInfo.roomName = group.getString("roomName");
-//                        groupInfo.hasClock = group.getBoolean("hasClock");
-//                        groupInfos.add(groupInfo);
-//                    }
-                    groupInfos = resp.getLamps();
+                    resp = new BaseParse<LampsResp>().parse(json.toString(), LampsResp.class);
+                    callback.callback(Callback.CODE_SUCCESS, resp);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    callback.callback(Callback.CODE_FAILURE, null);
                 }
-                callback.callback(Callback.CODE_SUCCESS, groupInfos);
+
             }
         }, callback);
     }
 
     @Override
-    public void getModes(String room_id,final Callback<GetModesResp> callback) {
+    public void getLampStatus(String lamp_id, final Callback<LampStatusResp> callback) {
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        JsonObject object = new JsonObject();
+//        object.add("session", getSessonJson());
+//        object.addProperty("lamp_id", lamp_id);
+//        params.put("json", object.toString());
+//        doService("/getLampStatus", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+//            @Override
+//            public void handle(JSONObject json) {
+//                LampStatusResp resp = null;
+//                try {
+//                    resp = new BaseParse<LampStatusResp>().parse(json.toString(), LampStatusResp.class);
+//                    callback.callback(Callback.CODE_SUCCESS, resp);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    callback.callback(Callback.CODE_FAILURE, null);
+//                }
+//
+//            }
+//        }, callback);
+    }
+
+    @Override
+    public void getLampsInLampGroup(String lampGroup_id, final Callback<LampsResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("room_id",room_id);
-        params.put("json",object.toString());
+        params.put("lampGroup_id", lampGroup_id);
+        params.put("json", getSessionString());
         doService("/org/getLampsInRoom", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
+                LampsResp resp = null;
                 try {
-                    GetModesResp  resp = new BaseParse<GetModesResp>().parse(json.toString(),GetModesResp.class);
-                    callback.callback(resp.getStatus(),resp);
+                    resp = new BaseParse<LampsResp>().parse(json.toString(), LampsResp.class);
+                    callback.callback(Callback.CODE_SUCCESS, resp);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    callback.callback(Callback.CODE_FAILURE, null);
                 }
-                callback.callback(Callback.CODE_FAILURE, null);
+
             }
         }, callback);
     }
 
     @Override
-    public void createNormalMode(String roomId, String modeName, String[] lampId, String lamp_rgb, int lamp_brightness, int lamp_colorTemp,
-                                 int lamp_h_degree, int lamp_v_degree, int lamp_l_degree, final Callback<BaseResp> callback) {
+    public void getModes(String room_id, final Callback<GetModesResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("json", getSessionString());
-        params.put("room_id",roomId);
-        params.put("mode_name",modeName);
-        JSONArray array = new JSONArray();
-        for (String id:lampId) {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("lamp_id",id);
-            obj.addProperty("lamp_rgb",lamp_rgb);
-            obj.addProperty("lamp_brightness",lamp_brightness);
-            obj.addProperty("lamp_colorTemp",lamp_colorTemp);
-            obj.addProperty("lamp_h_degree",lamp_h_degree);
-            obj.addProperty("lamp_v_degree",lamp_v_degree);
-            obj.addProperty("lamp_l_degree",lamp_l_degree);
-            array.put(obj);
-        }
-        params.put("normal_modes",array);
-        doService("/addNormalMode", params, JSONObject.class, new ResponseHandler<JsonObject>() {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", room_id);
+        params.put("json", object.toString());
+        doService("/getModes", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
-            public void handle(JsonObject response) {
-                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(),BaseResp.class);
-                callback.callback(resp.getStatus(),resp);
+            public void handle(JSONObject json) {
+                try {
+                    GetModesResp resp = new BaseParse<GetModesResp>().parse(json.toString(), GetModesResp.class);
+                    callback.callback(resp.getStatus(), resp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callback.callback(Callback.CODE_FAILURE, null);
+                }
+
             }
-        },callback);
+        }, callback);
     }
 
     @Override
-    public void createDynamicMode(String roomId, String modeName ,List<Frame> frames, int hour, int minute, int second, String lamp_rgb,
+    public void createNormalMode(String roomId, String mode_id, String modeName, List<String> lampId,List<LampParam> lampParams, final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", roomId);
+        object.addProperty("mode_id", mode_id);
+        object.addProperty("mode_name", modeName);
+        JsonArray array = new JsonArray();
+        for (LampParam p : lampParams) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("lamp_id", p.getLamp_id());
+            obj.addProperty("lamp_rgb", p.getLamp_rgb());
+            obj.addProperty("lamp_brightness", p.getLamp_brightness());
+            obj.addProperty("lamp_colorTemp", p.getLamp_colorTemp());
+            obj.addProperty("lamp_h_degree", p.getLamp_h_degree());
+            obj.addProperty("lamp_v_degree", p.getLamp_v_degree());
+            obj.addProperty("lamp_l_degree", p.getLamp_l_degree());
+            array.add(obj);
+        }
+        object.add("normal_modes", array);
+        params.put("json", object.toString());
+        doService("/saveNormalMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void createDynamicMode(String roomId,String mode_id, String modeName, List<Frame> frames,String lamp_rgb,
                                   int lamp_brightness, int lamp_colorTemp, int lamp_h_degree, int lamp_v_degree, int lamp_l_degree, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("json", getSessionString());
-        params.put("room_id",roomId);
-        params.put("mode_name",modeName);
-        JSONArray array = new JSONArray();
-        for (int i=0;i<frames.size();i++) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", roomId);
+        object.addProperty("mode_id", mode_id);
+        object.addProperty("mode_name", modeName);
+        JsonArray array = new JsonArray();
+        for (int i = 0; i < frames.size(); i++) {
             JsonObject obj = new JsonObject();
-            obj.addProperty("frame_id",frames.get(i).getFrame_id());
-            obj.addProperty("lamp_id",frames.get(i).getLamp_id());
-            obj.addProperty("is_smooth",1);
-            obj.addProperty("hour",frames.get(i).getHour());
-            obj.addProperty("minute",frames.get(i).getMinute());
-            obj.addProperty("second",frames.get(i).getSecond());
-            obj.addProperty("lamp_rgb",lamp_rgb);
-            obj.addProperty("lamp_brightness",lamp_brightness);
-            obj.addProperty("lamp_colorTemp",lamp_colorTemp);
-            obj.addProperty("lamp_h_degree",lamp_h_degree);
-            obj.addProperty("lamp_v_degree",lamp_v_degree);
-            obj.addProperty("lamp_l_degree",lamp_l_degree);
-            array.put(obj);
+            obj.addProperty("frame_id", frames.get(i).getFrame_id());
+//            obj.addProperty("lamp_id", frames.get(i).getLamp_id());
+            obj.addProperty("is_smooth", 1);
+            obj.addProperty("hour", frames.get(i).getHour());
+            obj.addProperty("minute", frames.get(i).getMinute());
+            obj.addProperty("second", frames.get(i).getSecond());
+            obj.addProperty("lamp_rgb", lamp_rgb);
+            obj.addProperty("lamp_brightness", lamp_brightness);
+            obj.addProperty("lamp_colorTemp", lamp_colorTemp);
+            obj.addProperty("lamp_h_degree", lamp_h_degree);
+            obj.addProperty("lamp_v_degree", lamp_v_degree);
+            obj.addProperty("lamp_l_degree", lamp_l_degree);
+            array.add(obj);
         }
-        params.put("dynamic_modes",array);
-        doService("/addDynamicMode", params, JSONObject.class, new ResponseHandler<JsonObject>() {
+        object.add("dynamic_modes", array);
+        params.put("json", object.toString());
+        doService("/saveDynamicMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
-            public void handle(JsonObject response) {
-                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(),BaseResp.class);
-                callback.callback(resp.getStatus(),resp);
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
-        },callback);
+        }, callback);
+    }
+
+    @Override
+    public void saveDynamicMode(String roomId, String mode_id, String mode_name, List<Frame> frames, final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", roomId);
+        object.addProperty("mode_id", mode_id);
+        object.addProperty("mode_name", mode_name);
+        JsonArray array = new JsonArray();
+        for (int i = 0; i < frames.size(); i++) {
+            Frame frame = frames.get(i);
+            List<LampParam> lampParams = frame.getLamps();
+            if(lampParams!=null){
+                for (LampParam param:lampParams){
+                    JsonObject obj = new JsonObject();
+                    obj.addProperty("frame_id", frame.getFrame_id());
+                    obj.addProperty("lamp_id", param.getLamp_id());
+                    obj.addProperty("is_smooth", frame.getIs_smooth());
+                    obj.addProperty("hour", frame.getHour());
+                    obj.addProperty("minute", frame.getMinute());
+                    obj.addProperty("second", frame.getSecond());
+                    obj.addProperty("lamp_rgb", param.getLamp_rgb());
+                    obj.addProperty("lamp_brightness", param.getLamp_brightness());
+                    obj.addProperty("lamp_colorTemp", param.getLamp_colorTemp());
+                    obj.addProperty("lamp_h_degree", param.getLamp_h_degree());
+                    obj.addProperty("lamp_v_degree", param.getLamp_v_degree());
+                    obj.addProperty("lamp_l_degree", param.getLamp_l_degree());
+                    array.add(obj);
+                }
+            }
+
+        }
+        object.add("dynamic_modes", array);
+        params.put("json", object.toString());
+        doService("/saveDynamicMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void deleteFrame(String frame_id, String mode_id,final Callback<BaseResp> callback) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("frame_id", frame_id);
+        object.addProperty("mode_id", mode_id);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("json", object.toString());
+        doService("/deleteFrame", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void playDynamicMode(String room_id, String mode_id, String[] lamp_ids,final Callback<BaseResp> callback) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", room_id);
+        object.addProperty("mode_id", mode_id);
+        String lampIds = "";
+        if(lamp_ids!=null&&lamp_ids.length>0){
+            for (String id:lamp_ids){
+                lampIds = ","+id;
+            }
+        }
+        lampIds = lampIds.substring(1);
+        object.addProperty("lamp_ids", lampIds);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("json", object.toString());
+        doService("/playDynamicMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void stopDynamicMode(String room_id, String mode_id,final Callback<BaseResp> callback) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", room_id);
+        object.addProperty("mode_id", mode_id);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("json", object.toString());
+        doService("/stopDynamicMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void applyNormalMode(String room_id, String mode_id, String lamp_ids,final Callback<BaseResp> callback) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", room_id);
+        object.addProperty("mode_id", mode_id);
+        object.addProperty("lamp_ids", lamp_ids);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("json", object.toString());
+        doService("/applyNormalMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
     }
 
     @Override
@@ -487,20 +647,18 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
     @Override
-    public void deleteDiyScene(String sceneId, final Callback<BaseResponse> callback) {
+    public void deleteDiyScene(String room_id, String mode_id, final Callback<BaseResp> callback) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", room_id);
+        object.addProperty("mode_id", mode_id);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("sceneId", sceneId);
-        doService("/deleteDiyScene", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+        params.put("json", object.toString());
+        doService("/deleteMode", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
-            public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
@@ -648,106 +806,76 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
     @Override
-    public void addClock(String floorId, String[] roomIds, String[] groupIds, String sceneId, String diySceneId, String week, String time, boolean status, final Callback<BaseResponse> callback) {
-        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        if (floorId != null) {
-            pairs.add(new BasicNameValuePair("floorId", floorId));
-        } else if (roomIds != null) {
-            for (String roomId : roomIds) {
-                pairs.add(new BasicNameValuePair("roomIds", roomId));
-            }
-        } else if (groupIds != null) {
-            for (String groupId : groupIds) {
-                pairs.add(new BasicNameValuePair("groupIds", groupId));
-            }
-        }
-
-        if (sceneId != null) {
-            pairs.add(new BasicNameValuePair("sceneId", sceneId));
-        } else if (diySceneId != null) {
-            pairs.add(new BasicNameValuePair("diySceneId", diySceneId));
-        }
-        pairs.add(new BasicNameValuePair("week", week));
-        pairs.add(new BasicNameValuePair("time", time));
-        pairs.add(new BasicNameValuePair("status", status + ""));
+    public void addClock(String room_id,String clock_name,String mode_id, String weekday,String hour, String minute,final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        try {
-            params.put(AQuery.POST_ENTITY, new UrlEncodedFormEntity(pairs, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        JsonObject object = new JsonObject();
+        object.add("session",getSessonJson());
+        object.addProperty("room_id", room_id);
+        object.addProperty("clock_name", clock_name);
+        object.addProperty("mode_id", mode_id);
+        object.addProperty("weekday", weekday);
+        object.addProperty("hour", hour);
+        object.addProperty("minute", minute);
+        params.put("json", object.toString());
         doService("/addClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
 
     @Override
-    public void updateClock(String clockId, String week, String time, final Callback<BaseResponse> callback) {
+    public void updateClock(String mode_id,String clockId, String week,String hour, String minute, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("clockId", clockId);
-        params.put("week", week);
-        params.put("time", time);
-        doService("/updateClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+        JsonObject object = new JsonObject();
+        object.add("session",getSessonJson());
+        object.addProperty("mode_id", clockId);
+        object.addProperty("clock_id", clockId);
+        object.addProperty("weekday", clockId);
+        object.addProperty("hour", clockId);
+        object.addProperty("minute", clockId);
+        params.put("json", object.toString());
+        doService("/modifyClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
 
     @Override
-    public void openClock(String roomId,String clockId, final Callback<BaseResponse> callback) {
+    public void openClock(String roomId, String clockId, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("room_id", roomId);
-        params.put("clock_id", clockId);
-        params.put("json", getSessionString());
+        JsonObject object = new JsonObject();
+        object.add("session",getSessonJson());
+        object.addProperty("room_id", roomId);
+        object.addProperty("clock_id", clockId);
+        params.put("json", object.toString());
         doService("/startClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
 
     @Override
-    public void closeClock(String roomId,String clockId, final Callback<BaseResponse> callback) {
+    public void closeClock(String roomId, String clockId, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("clockId", clockId);
+        JsonObject object = new JsonObject();
+        object.add("session",getSessonJson());
+        object.addProperty("room_id", roomId);
+        object.addProperty("clock_id", clockId);
+        params.put("json", object.toString());
         doService("/stopClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
@@ -756,9 +884,9 @@ public class LightMgrApi implements ILightMgrApi {
     public void listRooms(String floorId, final Callback<List<RoomEntity>> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("floor_id",floorId);
-        params.put("json",object.toString());
+        object.add("session", getSessonJson());
+        object.addProperty("floor_id", floorId);
+        params.put("json", object.toString());
         doService("/org/getRoomsInFloor", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
@@ -778,14 +906,15 @@ public class LightMgrApi implements ILightMgrApi {
     @Override
     public void getRoomClocks(String roomId, final Callback<ClocksResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("roomId", roomId);
-        params.put("json",getSessionString());
+        JsonObject object = new JsonObject();
+        object.add("session",getSessonJson());
+        object.addProperty("room_id", roomId);
+        params.put("json", object.toString());
         doService("/getClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                List<ClockInfo> clockInfos = new ArrayList<ClockInfo>();
                 try {
-                    ClocksResp resp = new BaseParse<ClocksResp>().parse(json.toString(),ClocksResp.class);
+                    ClocksResp resp = new BaseParse<ClocksResp>().parse(json.toString(), ClocksResp.class);
                     callback.callback(resp.getStatus(), resp);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -799,10 +928,10 @@ public class LightMgrApi implements ILightMgrApi {
     public void listGroups(String roomId, final Callback<List<GroupInfo>> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
         JsonObject object = new JsonObject();
-        object.add("session",getSessonJson());
-        object.addProperty("room_id",roomId);
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", roomId);
 //        params.put("level",3);//3:楼层  4：房间
-        params.put("json",object.toString());
+        params.put("json", object.toString());
         doService("/org/getLampsInRoom", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
@@ -857,22 +986,18 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
     @Override
-    public void deleteClock(String roomId,String clockId, final Callback<BaseResponse> callback) {
+    public void deleteClock(String roomId, String clockId, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("room_id", roomId);
-        params.put("json", getSessionString());
-        params.put("clock_id", clockId);
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", roomId);
+        object.addProperty("clock_id", clockId);
+        params.put("json", object.toString());
         doService("/deleteClock", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject json) {
-                BaseResponse response = new BaseResponse();
-                try {
-                    response.success = json.getBoolean("success");
-                    response.msg = json.getString("msg");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                callback.callback(Callback.CODE_SUCCESS, response);
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
         }, callback);
     }
@@ -905,53 +1030,159 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
     @Override
-    public void setRGB(String[] ledIds, int red, int green, int blue) {
-        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        for (int i = 0; i < ledIds.length; i++) {
-            pairs.add(new BasicNameValuePair("ledIds", ledIds[i]));
+    public void setRGB(String room_id,String[] ledIds, int red, int green, int blue, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
         }
-        pairs.add(new BasicNameValuePair("rgb_r", red + ""));
-        pairs.add(new BasicNameValuePair("rgb_g", green + ""));
-        pairs.add(new BasicNameValuePair("rgb_b", blue + ""));
+        ids = ids.substring(1);
+        String rgb = Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+
         Map<String, Object> params = new HashMap<String, Object>();
-        try {
-            params.put(AQuery.POST_ENTITY, new UrlEncodedFormEntity(pairs, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        doService("/setRGB", params, null, null, null);
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_RGB", rgb);
+        params.put("json", object.toString());
+        doService("/setLampRGB", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
     }
 
     @Override
-    public void setBrightness(String[] ledIds, int brightness) {
-        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        for (int i = 0; i < ledIds.length; i++) {
-            pairs.add(new BasicNameValuePair("ledIds", ledIds[i]));
+    public void setBrightness(String room_id,String[] ledIds, int brightness, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
         }
-        pairs.add(new BasicNameValuePair("brightness", brightness + ""));
+        ids = ids.substring(1);
         Map<String, Object> params = new HashMap<String, Object>();
-        try {
-            params.put(AQuery.POST_ENTITY, new UrlEncodedFormEntity(pairs, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        doService("/setBrightness", params, null, null, null);
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_brightness", brightness);
+        params.put("json", object.toString());
+        doService("/setLampBrightness", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
     }
 
     @Override
-    public void setColorTemp(String[] ledIds, int colorTemp) {
-        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        for (int i = 0; i < ledIds.length; i++) {
-            pairs.add(new BasicNameValuePair("ledIds", ledIds[i]));
+    public void setColorTemp(String room_id,String[] ledIds, int colorTemp, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
         }
-        pairs.add(new BasicNameValuePair("colorTemp", colorTemp + ""));
+        ids = ids.substring(1);
         Map<String, Object> params = new HashMap<String, Object>();
-        try {
-            params.put(AQuery.POST_ENTITY, new UrlEncodedFormEntity(pairs, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_colorTemp", colorTemp);
+        params.put("json", object.toString());
+        doService("/setLampColorTemp", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void setLampHDegree(String room_id,String[] ledIds, int lamp_h_degree, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
         }
-        doService("/setColorTemp", params, null, null, null);
+        ids = ids.substring(1);
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_h_degree", lamp_h_degree);
+        params.put("json", object.toString());
+        doService("/setLampHDegree", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void setLampVDegree(String room_id,String[] ledIds, int lamp_v_degree, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
+        }
+        ids = ids.substring(1);
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_v_degree", lamp_v_degree);
+        params.put("json", object.toString());
+        doService("/setLampVDegree", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void setLampLDegree(String room_id,String[] ledIds, int lamp_l_degree, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
+        }
+        ids = ids.substring(1);
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_l_degree", lamp_l_degree);
+        params.put("json", object.toString());
+        doService("/setLampLDegree", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void setLampMovement(String room_id,String[] ledIds, int lamp_movement, final Callback<BaseResp> callback) {
+        String ids = "";
+        for (String id:ledIds) {
+            ids = ids+","+id;
+        }
+        ids = ids.substring(1);
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("lamp_ids", ids);
+        object.addProperty("lamp_movement", lamp_movement);
+        params.put("json", object.toString());
+        doService("/setLampMovement", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject json) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(json.toString(),BaseResp.class);
+                callback.callback(resp.getStatus(),resp);
+            }
+        }, callback);
     }
 
     @Override
@@ -1065,32 +1296,36 @@ public class LightMgrApi implements ILightMgrApi {
 
     @Override
     public void addFaultRecord(String msg_title, String msg_content, String lamp_ids, final Callback<BaseResp> callback) {
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("msg_title", msg_title);
+        object.addProperty("msg_content", msg_content);
+        object.addProperty("lamp_ids", lamp_ids);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("msg_title", msg_title);
-        params.put("msg_content", msg_content);
-        params.put("lamp_ids", lamp_ids);
-        params.put("json", getSessionString());
+        params.put("json", object.toString());
         doService("/addFaultRecord", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject response) {
-                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(),BaseResp.class);
-                callback.callback(resp.getStatus(),resp);
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
-        },callback);
+        }, callback);
     }
 
     @Override
-    public void deleteFaultRecord(String msg_title,final Callback<BaseResp> callback) {
+    public void deleteFaultRecord(String msg_title, final Callback<BaseResp> callback) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("msg_title", msg_title);
-        params.put("json", getSessionString());
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("msg_title", msg_title);
+        params.put("json", object.toString());
         doService("/deleteFaultRecord", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject response) {
-                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(),BaseResp.class);
-                callback.callback(resp.getStatus(),resp);
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
-        },callback);
+        }, callback);
     }
 
     @Override
@@ -1100,10 +1335,94 @@ public class LightMgrApi implements ILightMgrApi {
         doService("/getFaultRecord", params, JSONObject.class, new ResponseHandler<JSONObject>() {
             @Override
             public void handle(JSONObject response) {
-                FaultRecordResp resp = new BaseParse<FaultRecordResp>().parse(response.toString(),FaultRecordResp.class);
-                callback.callback(resp.getStatus(),resp);
+                FaultRecordResp resp = new BaseParse<FaultRecordResp>().parse(response.toString(), FaultRecordResp.class);
+                callback.callback(resp.getStatus(), resp);
             }
-        },callback);
+        }, callback);
+    }
+
+    @Override
+    public void getBackupParam(final Callback<GetParamResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        params.put("json", object.toString());
+        doService("/getBackupParam", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                GetParamResp resp = new BaseParse<GetParamResp>().parse(response.toString(), GetParamResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void addBackupParam(String backupName, String addInfo, int lamp_brightness, int lamp_colorTemp, String lamp_RGB, final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("backupName", backupName);
+        object.addProperty("addInfo", addInfo);
+        object.addProperty("lamp_brightness", lamp_brightness);
+        object.addProperty("lamp_colorTemp", lamp_colorTemp);
+        object.addProperty("lamp_RGB", lamp_RGB);
+        params.put("json", object.toString());
+        doService("/addBackupParam", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void deleteBackupParam(String backupName, final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("backupName", backupName);
+        params.put("json", object.toString());
+        doService("/deleteBackupParam", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void tieLampGroup(String room_id, String lamps_id, final Callback<TieLampsResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("room_id", room_id);
+        object.addProperty("lamp_ids", lamps_id);
+        params.put("json", object.toString());
+        doService("/tieLampGroup", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                TieLampsResp resp = new BaseParse<TieLampsResp>().parse(response.toString(), TieLampsResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
+    }
+
+    @Override
+    public void untieLampGroup(String group_id, final Callback<BaseResp> callback) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        JsonObject object = new JsonObject();
+        object.add("session", getSessonJson());
+        object.addProperty("group_id", group_id);
+        params.put("json", object.toString());
+        doService("/untieLampGroup", params, JSONObject.class, new ResponseHandler<JSONObject>() {
+            @Override
+            public void handle(JSONObject response) {
+                BaseResp resp = new BaseParse<BaseResp>().parse(response.toString(), BaseResp.class);
+                callback.callback(resp.getStatus(), resp);
+            }
+        }, callback);
     }
 
     @Override
@@ -1123,6 +1442,7 @@ public class LightMgrApi implements ILightMgrApi {
             }
         }, callback);
     }
+
 
     @Override
     public void bindProgressHandler(ProgressBar progressBar) {
@@ -1157,22 +1477,48 @@ public class LightMgrApi implements ILightMgrApi {
     }
 
 
+    public String getSessionString() {
+//        JsonObject json = new JsonObject();
+//        LoginResp.Session session = AccountManager.getInstance().getSession();
+//        json.addProperty("session_id", session.getSession_id());
+//        json.addProperty("operator_id", session.getOperator_id());
+        String jsonString = AccountManager.getInstance().getSessionString();
+        JSONObject json = null;
+        JSONObject target = null;
+        try {
+            json = new JSONObject(jsonString);
+            target = new JSONObject();
+            target.put("session", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-    public String getSessionString(){
-        JsonObject json = new JsonObject();
-        LoginResp.Session session = AccountManager.getInstance().getSession();
-        json.addProperty("session_id",session.getSession_id());
-        json.addProperty("operator_id",session.getOperator_id());
-
-        JsonObject target = new JsonObject();
-        target.add("session",json);
         return target.toString();
     }
-    private JsonObject getSessonJson(){
+
+    private JsonObject getSessonJson() {
+
         JsonObject json = new JsonObject();
-        LoginResp.Session session = AccountManager.getInstance().getSession();
-        json.addProperty("session_id",session.getSession_id());
-        json.addProperty("operator_id",session.getOperator_id());
+        try {
+            String jsonString = AccountManager.getInstance().getSessionString();
+            JSONObject object = new JSONObject(jsonString);
+            json.addProperty("session_id", object.optString("session_id"));
+            json.addProperty("operator_id", object.optString("operator_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return json;
+    }
+
+    private String getToken(){
+        String token = "";
+        try {
+            String jsonString = AccountManager.getInstance().getSessionString();
+            JSONObject object = new JSONObject(jsonString);
+            token = object.optString("session_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return token;
     }
 }

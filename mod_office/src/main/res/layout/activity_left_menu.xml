@@ -10,14 +10,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp">
 
-        <cn.com.mod.office.lightman.widget.HeaderImage
+        <!--<cn.com.mod.office.lightman.widget.HeaderImage
             android:id="@+id/user_header"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:contentDescription="@null"
             android:scaleType="fitCenter"
             android:layout_marginLeft="40dp"
-            android:src="@drawable/default_header" />
+            android:src="@drawable/icon_user_account" />-->
+        <ImageView
+            android:id="@+id/user_header"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="40dp"
+            android:src="@drawable/icon_user_account" />
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
@@ -81,7 +89,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/fault_declare"
+                        android:text="@string/feedback"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="35dp"
                         android:padding="5dp"
@@ -137,7 +145,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/settings"
+                        android:text="@string/about"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="35dp"
                         android:padding="5dp"

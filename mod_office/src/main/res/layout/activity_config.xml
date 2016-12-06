@@ -61,7 +61,59 @@
         <TextView
             android:text="@string/tip_config_path"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:id="@+id/iv_default_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_choosed"/>
+            <TextView
+                android:id="@+id/tv_default_addr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:text="默认地址"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:id="@+id/iv_currenr_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_multi_select"/>
+            <EditText
+                android:id="@+id/et_current_addr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="16sp"
+                android:hint="服务器地址"
+                android:background="@null"
+                android:gravity="start|left|top"
+                android:inputType="textMultiLine"
+                android:maxLength="120"
+                android:padding="8dp"
+                android:textCursorDrawable="@null"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/path"
@@ -75,7 +127,8 @@
             android:maxLength="120"
             android:padding="8dp"
             android:textColor="@color/black"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/ok"
@@ -84,6 +137,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
             android:background="@drawable/bg_btn"
+            android:layout_marginTop="100dp"
             android:padding="10dp"
             android:text="@string/confirm"
             android:textColor="@drawable/bg_btn"

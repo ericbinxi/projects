@@ -1,6 +1,7 @@
 package cn.com.mod.office.lightman.activity;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -19,12 +20,14 @@ import com.joshua.common.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseActivity;
 import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
+import cn.com.mod.office.lightman.api.resp.LampsResp;
 import cn.com.mod.office.lightman.entity.Lamps;
 import cn.com.mod.office.lightman.widget.LedView;
 
@@ -39,8 +42,11 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
     private MaskUtils maskUtils;
 
     private String roomId;
-    private List<Lamps> lamps;
+//    private List<Lamps> lamps;
     private List<String> selectIds;
+
+    private Bitmap roomBitmap;
+    private ArrayList<Lamps> lamps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,8 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
         selectIds = new ArrayList<>();
 
         roomId = getIntent().getStringExtra("roomId");
+        roomBitmap = getIntent().getParcelableExtra("bitmap");
+//        lamps = (ArrayList<Lamps>) getIntent().getSerializableExtra("lamps");
     }
 
     private void initListener() {
@@ -70,6 +78,7 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
         tv_commit.setOnClickListener(this);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void loadData() {
         if (TextUtils.isEmpty(roomId)) {
@@ -84,7 +93,7 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
             public void callback(int code, Bitmap bitmap) {
                 maskUtils.cancel();
                 if (bitmap == null) {
-                    ToastUtils.show(FaultDeclareActivity.this,R.string.room_no_map);
+                    ToastUtils.show(FaultDeclareActivity.this, R.string.room_no_map);
                     finish();
                     return;
                 }
@@ -92,12 +101,16 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
                     case CODE_SUCCESS:
                         led_canvas.setBackground(new BitmapDrawable(bitmap));
                         // 获取房间灯组
-                        MyApplication.getInstance().getClient().getLampsInRoom(roomId, new ILightMgrApi.Callback<List<Lamps>>() {
+                        MyApplication.getInstance().getClient().getLampsInRoom(roomId, new ILightMgrApi.Callback<LampsResp>() {
                             @Override
-                            public void callback(int code, List<Lamps> groupInfos) {
+                            public void callback(int code, LampsResp resp) {
                                 switch (code) {
                                     case CODE_SUCCESS:
-                                        canvasLamps(groupInfos);
+                                        if (resp.getLamps() != null)
+                                            canvasLamps(resp.getLamps());
+                                        break;
+                                    case CODE_FAILURE:
+                                        ToastUtils.show(FaultDeclareActivity.this,resp.getError_desc());
                                         break;
                                 }
                             }
@@ -108,7 +121,6 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void canvasLamps(List<Lamps> lamps) {
-        this.lamps = lamps;
         // LED图标的大小比例， 600px:30px
         float rate = 30.0f / 600;
         for (final Lamps ledInfo : lamps) {
@@ -150,6 +162,9 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.ic_menu:
+                Intent intent = new Intent(this, RecordListActivity.class);
+                intent.putExtra("roomId",roomId);
+                startActivity(intent);
                 break;
             case R.id.tv_commit:
                 commit();
@@ -160,20 +175,25 @@ public class FaultDeclareActivity extends BaseActivity implements View.OnClickLi
     private void commit() {
         String faultDesc = fault_desc.getText().toString().trim();
         String idStr = "";
-        for (String id:selectIds){
-            idStr = id+",";
+        for (String id : selectIds) {
+            idStr = idStr+","+id;
         }
-        idStr.substring(0,idStr.length()-1);
-        MyApplication.getInstance().getClient().addFaultRecord("", faultDesc, idStr, new ILightMgrApi.Callback<BaseResp>() {
+        if(TextUtils.isEmpty(idStr)){
+            ToastUtils.show(this,R.string.choose_fault_lamps);
+            return;
+        }
+        idStr = idStr.substring(1);
+        String uuid = UUID.randomUUID().toString();
+        MyApplication.getInstance().getClient().addFaultRecord(uuid, faultDesc, idStr, new ILightMgrApi.Callback<BaseResp>() {
             @Override
             public void callback(int code, BaseResp entity) {
-                if(code==0){
+                if (code == 0) {
                     fl_result.setVisibility(View.VISIBLE);
                     fl_lamp.setVisibility(View.GONE);
-                }else {
+                } else {
                     fl_result.setVisibility(View.GONE);
                     fl_lamp.setVisibility(View.VISIBLE);
-                    ToastUtils.show(FaultDeclareActivity.this,entity.getError_desc());
+                    ToastUtils.show(FaultDeclareActivity.this, entity.getError_desc());
                 }
             }
         });

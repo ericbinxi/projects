@@ -22,16 +22,14 @@ import cn.com.mod.office.lightman.entity.SceneInfo;
  * Created by CAT on 2014/11/14.
  */
 public class SceneButton extends LinearLayout {
-    private TextView mCancel;
+//    private TextView mCancel;
     private TextView mSceneName;
     private ImageView mScene;
-    private ImageView mDelete;
-    private ImageView mClock;
-    private ImageView mEdit;
+//    private ImageView mDelete;
+//    private ImageView mClock;
+//    private ImageView mEdit;
     private SceneInfo mSceneInfo;
     private View mRoot;
-    private ImageView mBorder1;
-    private ImageView mBorder2;
     private boolean mIsChecked;
     private SceneButtonListener sceneButtonListener;
 
@@ -61,49 +59,47 @@ public class SceneButton extends LinearLayout {
         // 初始化控件
         mScene = (ImageView) v.findViewById(R.id.scene);
         mSceneName = (TextView) v.findViewById(R.id.scene_name);
-        mDelete = (ImageView) v.findViewById(R.id.ic_delete);
-        mClock = (ImageView) v.findViewById(R.id.ic_clock);
-        mEdit = (ImageView) v.findViewById(R.id.ic_edit);
-        mCancel = (TextView) v.findViewById(R.id.cancel);
-        mBorder1 = (ImageView) v.findViewById(R.id.border1);
-        mBorder2 = (ImageView) v.findViewById(R.id.border2);
+//        mDelete = (ImageView) v.findViewById(R.id.ic_delete);
+//        mClock = (ImageView) v.findViewById(R.id.ic_clock);
+//        mEdit = (ImageView) v.findViewById(R.id.ic_edit);
+//        mCancel = (TextView) v.findViewById(R.id.cancel);
 
         // 初始化事件处理
-        mCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sceneButtonListener != null) {
-                    sceneButtonListener.onCanelClick(SceneButton.this, mSceneInfo);
-                }
-            }
-        });
+//        mCancel.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (sceneButtonListener != null) {
+//                    sceneButtonListener.onCanelClick(SceneButton.this, mSceneInfo);
+//                }
+//            }
+//        });
 
-        mEdit.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sceneButtonListener != null) {
-                    sceneButtonListener.onEditClick(SceneButton.this, mSceneInfo);
-                }
-            }
-        });
-
-        mClock.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sceneButtonListener != null) {
-                    sceneButtonListener.onClockClick(SceneButton.this, mSceneInfo);
-                }
-            }
-        });
-
-        mDelete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sceneButtonListener != null) {
-                    sceneButtonListener.onDeleteClick(SceneButton.this, mSceneInfo);
-                }
-            }
-        });
+//        mEdit.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (sceneButtonListener != null) {
+//                    sceneButtonListener.onEditClick(SceneButton.this, mSceneInfo);
+//                }
+//            }
+//        });
+//
+//        mClock.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (sceneButtonListener != null) {
+//                    sceneButtonListener.onClockClick(SceneButton.this, mSceneInfo);
+//                }
+//            }
+//        });
+//
+//        mDelete.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (sceneButtonListener != null) {
+//                    sceneButtonListener.onDeleteClick(SceneButton.this, mSceneInfo);
+//                }
+//            }
+//        });
 
         mScene.setOnClickListener(new OnClickListener() {
             @Override
@@ -133,23 +129,24 @@ public class SceneButton extends LinearLayout {
             case SceneInfo.TYPE_DEFAULT:
                 switch (Integer.parseInt(sceneInfo.id)) {
                     case 1:
-                        setSceneIcon(getResources().getDrawable(R.drawable.default_01_off));
+                        setSceneIcon(getResources().getDrawable(R.drawable.icon_working));
                         break;
                     case 2:
-                        setSceneIcon(getResources().getDrawable(R.drawable.default_02_off));
+                        setSceneIcon(getResources().getDrawable(R.drawable.icon_meeting));
                         break;
                     case 3:
-                        setSceneIcon(getResources().getDrawable(R.drawable.default_03_off));
+                        setSceneIcon(getResources().getDrawable(R.drawable.icon_rest));
                         break;
                     case 4:
-                        setSceneIcon(getResources().getDrawable(R.drawable.default_04_off));
+                        setSceneIcon(getResources().getDrawable(R.drawable.icon_work_off));
                         break;
                 }
+                break;
             case SceneInfo.TYPE_DIY:
-                if (sceneInfo.icon == null) {
-                    setSceneIcon(getResources().getDrawable(R.drawable.default_diy2));
-                } else {
-                    setSceneIcon(sceneInfo.icon);
+                if(sceneInfo.mode_type==1){
+                    setSceneIcon(getResources().getDrawable(R.drawable.icon_normal));
+                }else{
+                    setSceneIcon(getResources().getDrawable(R.drawable.icon_dynamic));
                 }
                 break;
             case SceneInfo.TYPE_NONE:
@@ -167,58 +164,9 @@ public class SceneButton extends LinearLayout {
     public void setChecked(boolean isChecked) {
         this.mIsChecked = isChecked;
         if (isChecked) {
-            if (mSceneInfo.type == SceneInfo.TYPE_DEFAULT) {
-                switch (Integer.parseInt(mSceneInfo.id)) {
-                    case 1:
-                        mScene.setImageResource(R.drawable.default_01);
-                        break;
-                    case 2:
-                        mScene.setImageResource(R.drawable.default_02);
-                        break;
-                    case 3:
-                        mScene.setImageResource(R.drawable.default_03);
-                        break;
-                    case 4:
-                        mScene.setImageResource(R.drawable.default_04);
-                        break;
-                }
-            } else if (mSceneInfo.type == SceneInfo.TYPE_NONE) {
-                mScene.setImageResource(R.drawable.diy);
-            }
-            mBorder1.setImageResource(R.drawable.bg_scene_border);
-            mBorder2.setImageResource(R.drawable.bg_scene_border);
-            mEdit.setImageResource(R.drawable.ic_scene_edit);
-            mClock.setImageResource(R.drawable.ic_scene_clock);
-            mDelete.setImageResource(R.drawable.ic_scene_delete);
-
             mRoot.setBackgroundResource(R.drawable.bg_scene_button_press);
-            mSceneName.setTextColor(getResources().getColor(R.color.black));
         } else {
-            if (mSceneInfo.type == SceneInfo.TYPE_DEFAULT) {
-                switch (Integer.parseInt(mSceneInfo.id)) {
-                    case 1:
-                        mScene.setImageResource(R.drawable.default_01_off);
-                        break;
-                    case 2:
-                        mScene.setImageResource(R.drawable.default_02_off);
-                        break;
-                    case 3:
-                        mScene.setImageResource(R.drawable.default_03_off);
-                        break;
-                    case 4:
-                        mScene.setImageResource(R.drawable.default_04_off);
-                        break;
-                }
-            } else if (mSceneInfo.type == SceneInfo.TYPE_NONE) {
-                mScene.setImageResource(R.drawable.diy_off);
-            }
-            mBorder1.setImageResource(R.drawable.bg_scene_border_off);
-            mBorder2.setImageResource(R.drawable.bg_scene_border_off);
-            mEdit.setImageResource(R.drawable.ic_scene_edit_off);
-            mClock.setImageResource(R.drawable.ic_scene_clock_off);
-            mDelete.setImageResource(R.drawable.ic_scene_delete_off);
             mRoot.setBackgroundResource(R.drawable.bg_scene_button);
-            mSceneName.setTextColor(getResources().getColor(R.color.white));
         }
     }
 
@@ -232,19 +180,23 @@ public class SceneButton extends LinearLayout {
         mScene.setImageDrawable(drawable);
     }
 
+    public void setSceneIcon(int drawableId) {
+        mScene.setImageResource(drawableId);
+    }
+
     // 显示工具
     public void showTools() {
         if (mSceneInfo != null) {
             switch (mSceneInfo.type) {
                 case SceneInfo.TYPE_DEFAULT:
-                    mClock.setVisibility(VISIBLE);
-                    mCancel.setVisibility(VISIBLE);
+//                    mClock.setVisibility(VISIBLE);
+//                    mCancel.setVisibility(VISIBLE);
                     break;
                 case SceneInfo.TYPE_DIY:
-                    mDelete.setVisibility(VISIBLE);
-                    mEdit.setVisibility(VISIBLE);
-                    mClock.setVisibility(VISIBLE);
-                    mCancel.setVisibility(VISIBLE);
+//                    mDelete.setVisibility(VISIBLE);
+//                    mEdit.setVisibility(VISIBLE);
+//                    mClock.setVisibility(VISIBLE);
+//                    mCancel.setVisibility(VISIBLE);
                     break;
                 case SceneInfo.TYPE_NONE:
                     break;
@@ -254,12 +206,12 @@ public class SceneButton extends LinearLayout {
 
     // 隐藏工具
     public void hideTools() {
-        if (mSceneInfo != null) {
-            mDelete.setVisibility(INVISIBLE);
-            mEdit.setVisibility(INVISIBLE);
-            mClock.setVisibility(INVISIBLE);
-        }
-        mCancel.setVisibility(INVISIBLE);
+//        if (mSceneInfo != null) {
+//            mDelete.setVisibility(INVISIBLE);
+//            mEdit.setVisibility(INVISIBLE);
+//            mClock.setVisibility(INVISIBLE);
+//        }
+//        mCancel.setVisibility(INVISIBLE);
     }
 
     // 设置按钮监听器

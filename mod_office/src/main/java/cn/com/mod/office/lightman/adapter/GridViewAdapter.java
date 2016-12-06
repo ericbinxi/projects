@@ -33,6 +33,17 @@ public class GridViewAdapter extends BaseAdapter {
         mItemCheckedPosition = -1;
     }
 
+    public void setSceneInfo(int checkedPosition,List<SceneInfo> mSceneInfo) {
+        this.mItemCheckedPosition = checkedPosition;
+        this.mSceneInfo = mSceneInfo;
+        notifyDataSetChanged();
+    }
+
+    public void setCheckedPosition(int mItemCheckedPosition) {
+        this.mItemCheckedPosition = mItemCheckedPosition;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mSceneInfo.size();
@@ -51,32 +62,21 @@ public class GridViewAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = View.inflate(mContext, R.layout.layout_scene_button, null);
+            convertView = View.inflate(mContext, R.layout.item_grid_scene_button, null);
         }
-        // 子项的首位不显示分割线
-        ImageView divider = ViewHolder.get(convertView, R.id.divider);
-        if (position == 0) {
-            divider.setVisibility(View.INVISIBLE);
-            divider.setImageResource(R.color.dark);
-        } else {
-            divider.setVisibility(View.VISIBLE);
-            divider.setImageResource(R.color.black);
-        }
-        divider.setVisibility(View.GONE);
-
-        GridView.LayoutParams param = new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        convertView.setLayoutParams(param);
-        convertView.setPadding(2, 2, 2, 2);
+//        GridView.LayoutParams param = new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        convertView.setLayoutParams(param);
         // 获取对应的情景按钮
         SceneButton button = ViewHolder.get(convertView, R.id.btn_scene);
         // 获取该项对应的情景信息
         SceneInfo sceneInfo = (SceneInfo) getItem(position);
         button.setScenenInfo(sceneInfo);
-
-
+        if(mItemCheckedPosition==position){
+            button.setChecked(true);
+        }
         // 设置按钮状态
         if (mItemToolVisiblePosition == position) {
-            button.showTools();
+//            button.showTools();
         } else {
             button.hideTools();
         }
@@ -89,8 +89,6 @@ public class GridViewAdapter extends BaseAdapter {
         button.setSceneButtonListener(new SceneButton.SceneButtonListener() {
             @Override
             public void onLongClick(SceneButton button, SceneInfo info) {
-                mItemToolVisiblePosition = position;
-                notifyDataSetChanged();
             }
 
             @Override
@@ -102,28 +100,18 @@ public class GridViewAdapter extends BaseAdapter {
 
             @Override
             public void onClockClick(SceneButton button, SceneInfo info) {
-                mSceneButtonAdapterListener.onSceneClockClick(info);
-                mItemToolVisiblePosition = -1;
-                notifyDataSetChanged();
             }
 
             @Override
             public void onDeleteClick(SceneButton button, SceneInfo info) {
-                mSceneButtonAdapterListener.onSceneDeleteClick(info);
-                mItemToolVisiblePosition = -1;
-                mItemCheckedPosition = -1;
-                notifyDataSetChanged();
             }
 
             @Override
             public void onEditClick(SceneButton button, SceneInfo info) {
-                mSceneButtonAdapterListener.onSceneEditClick(info);
             }
 
             @Override
             public void onCanelClick(SceneButton button, SceneInfo info) {
-                mItemToolVisiblePosition = -1;
-                notifyDataSetChanged();
             }
         });
 
@@ -132,11 +120,5 @@ public class GridViewAdapter extends BaseAdapter {
 
     public interface SceneButtonAdapterListener {
         public void onSceneClick(SceneInfo sceneInfo);
-
-        public void onSceneClockClick(SceneInfo sceneInfo);
-
-        public void onSceneDeleteClick(SceneInfo sceneInfo);
-
-        public void onSceneEditClick(SceneInfo sceneInfo);
     }
 }

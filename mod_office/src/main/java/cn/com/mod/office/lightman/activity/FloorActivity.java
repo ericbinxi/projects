@@ -29,6 +29,7 @@ import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseActivity;
 import cn.com.mod.office.lightman.adapter.ItemAdapter;
 import cn.com.mod.office.lightman.adapter.SceneButtonAdapter;
+import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
 import cn.com.mod.office.lightman.entity.BaseResponse;
 import cn.com.mod.office.lightman.entity.FloorDivideInfo;
@@ -48,13 +49,11 @@ import cn.com.mod.office.lightman.widget.PowerfulLayout;
 public class FloorActivity extends BaseActivity {
     public static final String TAG = "FloorActivity";
 
-    public static final int REQUEST_CODE_CLOCK = 1;
-
     private ToastUtils mToastUtils;
     private MaskUtils mMaskUtils;
     private ImageView mGoBack;
     private TextView mFloorName;
-    private ImageView mMenu,background;
+    private ImageView mMenu, background;
     private ItemListView mList;
     private HorizontalListView mSceneList;
     private SceneButtonAdapter mSceneButtonAdapter;
@@ -70,14 +69,15 @@ public class FloorActivity extends BaseActivity {
     private PowerfulLayout pf_floor;
     private MyLayout layout_floor;
     private List<RoomInfo> roomsInfo;
-//    private Bitmap unSelectedImg,selectedImg;
-    private List<RoomInfo>  selectedRooms;
+    //    private Bitmap unSelectedImg,selectedImg;
+    private List<RoomInfo> selectedRooms;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_floor);
         init();
+        initScene();
     }
 
     // 初始化
@@ -88,23 +88,43 @@ public class FloorActivity extends BaseActivity {
         mMaskUtils = new MaskUtils(this);
         // 初始化组件
         mMenu = (ImageView) findViewById(R.id.ic_menu);
-//        background = (ImageView) findViewById(R.id.background);
         mFloorName = (TextView) findViewById(R.id.floor_name);
         mList = (ItemListView) findViewById(R.id.menu_list);
         mGoBack = (ImageView) findViewById(R.id.ic_back);
         mSceneList = (HorizontalListView) findViewById(R.id.control_panel);
         pf_floor = (PowerfulLayout) findViewById(R.id.pf_floor);
         layout_floor = (MyLayout) findViewById(R.id.layout_floor);
-//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layout_floor.getLayoutParams();
-//        params.height = params.width;
-//        layout_floor.setLayoutParams(params);
-        arrow = LayoutInflater.from(this).inflate(R.layout.arrow,null);
+        arrow = LayoutInflater.from(this).inflate(R.layout.arrow, null);
+
+        mGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mList.getVisibility() == View.VISIBLE) {
+                    mList.setVisibility(View.INVISIBLE);
+                    //取消选择
+                    selectedRooms.clear();
+                    handleRooms(selectedRooms);
+                } else {
+                    mList.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    //初始化情景模式
+    private void initScene() {
         // 默认的4个按钮
         List<SceneInfo> sceneInfos = new ArrayList<SceneInfo>();
         SceneInfo scene1 = new SceneInfo("1", getString(R.string.default_scene1), null, SceneInfo.TYPE_DEFAULT);
-        SceneInfo scene2 = new SceneInfo("2", getString(R.string.default_scene2), null, SceneInfo.TYPE_DEFAULT);
-        SceneInfo scene3 = new SceneInfo("3", getString(R.string.default_scene3), null, SceneInfo.TYPE_DEFAULT);
-        SceneInfo scene4 = new SceneInfo("4", getString(R.string.default_scene4), null, SceneInfo.TYPE_DEFAULT);
+        SceneInfo scene3 = new SceneInfo("2", getString(R.string.default_scene3), null, SceneInfo.TYPE_DEFAULT);
+        SceneInfo scene4 = new SceneInfo("3", getString(R.string.default_scene4), null, SceneInfo.TYPE_DEFAULT);
+        SceneInfo scene2 = new SceneInfo("4", getString(R.string.default_scene2), null, SceneInfo.TYPE_DEFAULT);
         sceneInfos.add(scene1);
         sceneInfos.add(scene2);
         sceneInfos.add(scene3);
@@ -113,19 +133,20 @@ public class FloorActivity extends BaseActivity {
             @Override
             public void onSceneClick(SceneInfo info) {
                 if (selectedRooms.size() == 0) {
-                    Log.v(TAG, "apply floor scene floorId-->" + floorId);
-                    Toast.makeText(FloorActivity.this,R.string.unselected_rooms_tips,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FloorActivity.this, R.string.unselected_rooms_tips, Toast.LENGTH_SHORT).show();
+                    mSceneButtonAdapter.setItemCheckedPosition(-1);
                 } else {
-                    Log.v(TAG, "apply room scene rooms -->" + mSelectedRooms);
-                    MyApplication.getInstance().getClient().applyDefaultScene(info.id, null, mSelectedRooms.toArray(new String[]{}), null, null, new ILightMgrApi.Callback<BaseResponse>() {
-                        @Override
-                        public void callback(int code, BaseResponse response) {
-                            switch (code) {
-                                case CODE_SUCCESS:
-                                    break;
+                    for (RoomInfo room : selectedRooms) {
+                        MyApplication.getInstance().getClient().applyNormalMode(room.getRoomEntity().getRoom_id(), info.id, null, new ILightMgrApi.Callback<BaseResp>() {
+                            @Override
+                            public void callback(int code, BaseResp entity) {
+                                if (code == 0) {
+                                } else {
+                                    ToastUtils.show(FloorActivity.this, entity.getError_desc());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
 
@@ -144,24 +165,6 @@ public class FloorActivity extends BaseActivity {
             }
         });
         mSceneList.setAdapter(mSceneButtonAdapter);
-
-        mMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mList.getVisibility() == View.VISIBLE) {
-                    mList.setVisibility(View.INVISIBLE);
-                } else {
-                    mList.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        mGoBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -186,25 +189,6 @@ public class FloorActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_CLOCK:
-                if (resultCode == RESULT_OK) {
-                    String id = data.getStringExtra("id");
-                    if (id != null) {
-                        for (int i = 0; i < mRooms.size(); i++) {
-                            if (mRooms.get(i).id.equals(id)) {
-                                mRooms.get(i).hasClock = false;
-                                mList.getAdapter().notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-    }
-
-    @Override
     public void loadData() {
         // 传值的floorId
         floorId = getIntent().getStringExtra("floorId");
@@ -214,9 +198,12 @@ public class FloorActivity extends BaseActivity {
         if (floorId != null && floorName != null) {
             mFloorName.setText(floorName);
             // 获取楼层图片
+            mMaskUtils.show();
             MyApplication.getInstance().getClient().getFloorImg(floorId, new ILightMgrApi.Callback<Bitmap>() {
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void callback(int code, final Bitmap image) {
+                    mMaskUtils.cancel();
                     switch (code) {
                         case CODE_TIMEOUT:
                             mToastUtils.show(getString(R.string.tip_timeout));
@@ -225,19 +212,7 @@ public class FloorActivity extends BaseActivity {
                             mToastUtils.show(getString(R.string.tip_network_connect_faild));
                             break;
                         case CODE_SUCCESS:
-                            // 获取楼层分隔
-                            MyApplication.getInstance().getClient().getFloorDivide(floorId, new ILightMgrApi.Callback<FloorDivideInfo>() {
-                                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                                @Override
-                                public void callback(int code, FloorDivideInfo divideInfo) {
-                                    switch (code) {
-                                        case CODE_SUCCESS:
-                                            layout_floor.setBackground(new BitmapDrawable(image));
-//                                            background.setBackground(new BitmapDrawable(image));
-
-                                    }
-                                }
-                            });
+                            layout_floor.setBackground(new BitmapDrawable(image));
                             break;
                     }
                 }
@@ -250,76 +225,7 @@ public class FloorActivity extends BaseActivity {
                     switch (code) {
                         case CODE_SUCCESS:
                             mRooms = roomInfos;
-                            //画箭头
-                            roomsInfo = new ArrayList<RoomInfo>();
-                            for (final RoomEntity room : roomInfos) {
-                                // LED图标的大小比例， 600px:30px
-                                float rate = 30.0f / 600;
-                                ImageView iv = new ImageView(FloorActivity.this);
-                                final  RoomInfo info = new RoomInfo();
-                                info.setRoomEntity(room);
-                                info.setArrowImage(iv);
-                                roomsInfo.add(info);
-                                iv.setImageResource(R.drawable.ic_enter_room);
-                                iv.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        info.setSelected(!info.isSelected());
-                                        handleRoom(info);
-                                    }
-                                });
-                                iv.setOnLongClickListener(new View.OnLongClickListener() {
-                                    @Override
-                                    public boolean onLongClick(View v) {
-                                        info.setSelected(!info.isSelected());
-                                        handleRooms(roomsInfo);
-                                        return true;
-                                    }
-                                });
-                                int x = room.getRoom_x();
-                                int y = room.getRoom_y();
-                                int w = layout_floor.getWidth();
-                                int h = layout_floor.getHeight();
-                                if (w >= h) {
-                                    int size = (int) (h * rate);
-                                    int pointX = (int) (h / 600.0 * x) + (w - h) / 2;
-                                    int pointY = (int) (h / 600.0 * y);
-                                    layout_floor.addView(iv, new AbsoluteLayout.LayoutParams(size, size, pointX, pointY));
-                                } else {
-                                    int size = (int) (w * rate);
-                                    int pointX = (int) (w / 600.0 * x);
-                                    int pointY = ((int) (w / 600.0 * y) + (h - w) / 2);
-                                    layout_floor.addView(iv, new AbsoluteLayout.LayoutParams(size, size, pointX, pointY));
-                                }
-                            }
-                            ItemAdapter adapter = new ItemAdapter(FloorActivity.this, roomsInfo,null);
-                            adapter.setOnRoomClickListener(new ItemAdapter.OnRoomClickListener() {
-                                @Override
-                                public void onRoomClick(List<RoomInfo> infos) {
-                                    handleRooms(infos);
-                                }
-                            });
-                            mList.setAdapter(adapter);
-//                            mList.setAdapter(new ItemAdapter(FloorActivity.this, roomsInfo, new ItemAdapter.ItemAdapterListener() {
-//                                @Override
-//                                public void onClockClick(Item item) {
-//                                    Intent intent = new Intent(FloorActivity.this, ClockActivity.class);
-//                                    intent.putExtra("way", ClockActivity.WAY_ROOM);
-//                                    intent.putExtra("id", item.id);
-//                                    intent.putExtra("name", item.name);
-//                                    startActivityForResult(intent, REQUEST_CODE_CLOCK);
-//                                }
-//
-//                                @Override
-//                                public void onItemSelectedChange(String itemId, boolean isSelected) {
-//                                    if (isSelected) {
-//                                        mSelectedRooms.add(itemId);
-//                                    } else {
-//                                        mSelectedRooms.remove(itemId);
-//                                    }
-//                                    Log.v(TAG, "selectRoom-->" + mSelectedRooms);
-//                                }
-//                            }));
+                            canvasFloor();
                             break;
                     }
                 }
@@ -327,24 +233,79 @@ public class FloorActivity extends BaseActivity {
         }
     }
 
-    private void handleRooms(List<RoomInfo> rooms){
-        if(rooms==null||rooms.size()==0){
-            for (RoomInfo info:roomsInfo){
+    private void canvasFloor() {
+        //画箭头
+        roomsInfo = new ArrayList<RoomInfo>();
+        for (final RoomEntity room : mRooms) {
+            // LED图标的大小比例， 600px:30px
+            float rate = 30.0f / 600;
+            ImageView iv = new ImageView(FloorActivity.this);
+            final RoomInfo info = new RoomInfo();
+            info.setRoomEntity(room);
+            info.setArrowImage(iv);
+            roomsInfo.add(info);
+            iv.setImageResource(R.drawable.ic_enter_room);
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    info.setSelected(!info.isSelected());
+                    handleRoom(info);
+                }
+            });
+            iv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    info.setSelected(!info.isSelected());
+                    handleRooms(roomsInfo);
+                    return true;
+                }
+            });
+            int x = room.getRoom_x();
+            int y = room.getRoom_y();
+            int w = layout_floor.getWidth();
+            int h = layout_floor.getHeight();
+            if (w >= h) {
+                int size = (int) (h * rate);
+                int pointX = (int) (h / 600.0 * x) + (w - h) / 2;
+                int pointY = (int) (h / 600.0 * y);
+                layout_floor.addView(iv, new AbsoluteLayout.LayoutParams(size, size, pointX, pointY));
+            } else {
+                int size = (int) (w * rate);
+                int pointX = (int) (w / 600.0 * x);
+                int pointY = ((int) (w / 600.0 * y) + (h - w) / 2);
+                layout_floor.addView(iv, new AbsoluteLayout.LayoutParams(size, size, pointX, pointY));
+            }
+        }
+        ItemAdapter adapter = new ItemAdapter(FloorActivity.this, roomsInfo, null);
+        adapter.setOnRoomClickListener(new ItemAdapter.OnRoomClickListener() {
+            @Override
+            public void onRoomClick(List<RoomInfo> infos) {
+                handleRooms(infos);
+            }
+        });
+        mList.setAdapter(adapter);
+    }
+
+    private void handleRooms(List<RoomInfo> rooms) {
+        if (rooms == null || rooms.size() == 0) {
+            for (RoomInfo info : roomsInfo) {
                 info.getArrowImage().setImageResource(R.drawable.ic_enter_room);
             }
             selectedRooms.clear();
+            mList.getAdapter().notifyDataSetChanged();
             return;
         }
-        for (RoomInfo info:rooms){
+        for (RoomInfo info : rooms) {
             info.getArrowImage().setImageResource(R.drawable.ic_multi_select);
-            if(info.isSelected()){
+            if (info.isSelected()) {
                 info.getArrowImage().setImageResource(R.drawable.ic_choosed);
-                selectedRooms.add(info);
-            }else{
-                if(selectedRooms.contains(info))
+                if (!selectedRooms.contains(info))
+                    selectedRooms.add(info);
+            } else {
+                if (selectedRooms.contains(info))
                     selectedRooms.remove(info);
-                if(selectedRooms.size()==0){
-                    for (RoomInfo room:roomsInfo){
+                if (selectedRooms.size() == 0) {
+                    for (RoomInfo room : roomsInfo) {
                         info.getArrowImage().setImageResource(R.drawable.ic_enter_room);
                     }
                 }
@@ -353,15 +314,15 @@ public class FloorActivity extends BaseActivity {
         mList.getAdapter().notifyDataSetChanged();
     }
 
-    private void handleRoom(RoomInfo info){
-        if(info.isSelected()){
-            if(selectedRooms.size()>0){
+    private void handleRoom(RoomInfo info) {
+        if (info.isSelected()) {
+            if (selectedRooms.size() > 0) {
                 selectedRooms.add(info);
                 info.getArrowImage().setImageResource(R.drawable.ic_choosed);
                 mList.getAdapter().notifyDataSetChanged();
-            }else{
+            } else {
                 //设置房间的选中参数
-                for (RoomInfo roomInfo:roomsInfo){
+                for (RoomInfo roomInfo : roomsInfo) {
                     roomInfo.setSelected(false);
                 }
                 selectedRooms.clear();
@@ -372,13 +333,13 @@ public class FloorActivity extends BaseActivity {
                 startActivity(intent);
 
             }
-        }else{//checked
-            if(selectedRooms.contains(info))
+        } else {//checked
+            if (selectedRooms.contains(info))
                 selectedRooms.remove(info);
-            if(selectedRooms.size()>0){
+            if (selectedRooms.size() > 0) {
                 info.getArrowImage().setImageResource(R.drawable.ic_multi_select);
-            }else{
-                for (RoomInfo room:roomsInfo){
+            } else {
+                for (RoomInfo room : roomsInfo) {
                     info.getArrowImage().setImageResource(R.drawable.ic_enter_room);
                 }
             }

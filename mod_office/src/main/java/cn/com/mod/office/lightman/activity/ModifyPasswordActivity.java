@@ -14,6 +14,7 @@ import com.joshua.common.util.ToastUtils;
 import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseActivity;
+import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
 import cn.com.mod.office.lightman.config.ConfigUtils;
 import cn.com.mod.office.lightman.entity.BaseResponse;
@@ -77,25 +78,18 @@ public class ModifyPasswordActivity extends BaseActivity {
                     return;
                 }
                 mMaskUtils.show();
-                MyApplication.getInstance().getClient().modifyPassword(oldPass, newPass, new ILightMgrApi.Callback<BaseResponse>() {
+                MyApplication.getInstance().getClient().modifyPassword(oldPass, newPass, new ILightMgrApi.Callback<BaseResp>() {
                     @Override
-                    public void callback(int code, BaseResponse entity) {
+                    public void callback(int code, BaseResp entity) {
                         mMaskUtils.cancel();
-                        switch (code) {
-                            case CODE_TIMEOUT:
-                                mToastUtils.show(getString(R.string.tip_timeout));
-                                break;
-                            case CODE_NETWORK_ERROR:
-                                mToastUtils.show(getString(R.string.tip_network_connect_faild));
-                                break;
-                            case CODE_SUCCESS:
-                                mToastUtils.show(entity.msg);
-                                ConfigUtils config = MyApplication.getInstance().getAppConfig();
-                                config.setAutoLogin(false);
-                                config.setPasword(null);
-                                config.setRememberPass(false);
-                                startActivity(new Intent(ModifyPasswordActivity.this,LoginActivity.class));
-                                break;
+                        if(code ==0 ){
+                            ConfigUtils config = MyApplication.getInstance().getAppConfig();
+                            config.setAutoLogin(false);
+                            config.setPasword(null);
+                            config.setRememberPass(false);
+                            startActivity(new Intent(ModifyPasswordActivity.this,LoginActivity.class));
+                        }else{
+                            mToastUtils.show(entity.getError_desc());
                         }
                     }
                 });

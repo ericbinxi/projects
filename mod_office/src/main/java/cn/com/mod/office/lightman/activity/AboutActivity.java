@@ -2,6 +2,8 @@ package cn.com.mod.office.lightman.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -20,6 +22,7 @@ public class AboutActivity extends Activity {
     private TextView mLinkService;
     private ImageView mGoBack;
     private TextView mUpdate;
+    private TextView version;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,9 @@ public class AboutActivity extends Activity {
         mLinkService = (TextView) findViewById(R.id.service);
         mGoBack = (ImageView) findViewById(R.id.ic_back);
         mUpdate = (TextView) findViewById(R.id.ic_update);
+        version = (TextView) findViewById(R.id.version);
+
+        version.setText(String.format(getString(R.string.text_app),getVersion()));
 
         // 设置下划线
         mLinkService.setText(Html.fromHtml("<u>" + mLinkService.getText() + "</u>"));
@@ -56,5 +62,22 @@ public class AboutActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * 2  * 获取版本号
+     * 3  * @return 当前应用的版本号
+     * 4
+     */
+    public String getVersion() {
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

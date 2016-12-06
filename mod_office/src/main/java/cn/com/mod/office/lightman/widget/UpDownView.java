@@ -43,7 +43,7 @@ public class UpDownView extends View {
         this.context = context;
         horizonDrawable = context.getResources().getDrawable(R.drawable.ic_horizon);
         upDownDrawable = context.getResources().getDrawable(R.drawable.ic_up_down);
-        upOffset = upDownDrawable.getIntrinsicHeight()/2;
+        upOffset = upDownDrawable.getIntrinsicHeight();
         this.post(new Runnable() {
             @Override
             public void run() {
@@ -65,19 +65,26 @@ public class UpDownView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        horizonDrawable.setBounds((width-horizonDrawable.getIntrinsicWidth())/2,height*2/3,width-(width-horizonDrawable.getIntrinsicWidth())/2,height*2/3+horizonDrawable.getIntrinsicHeight());
+        int bLeft = (width-horizonDrawable.getIntrinsicWidth())/2;
+        int bTop = (height-horizonDrawable.getIntrinsicHeight())/2;
+        int bRight = width-(width-horizonDrawable.getIntrinsicWidth())/2;
+        int bBottom = height-(height-horizonDrawable.getIntrinsicHeight())/2;
+        horizonDrawable.setBounds(bLeft,bTop,bRight,bBottom);
         horizonDrawable.draw(canvas);
         canvas.save();
-        if(isUp){
+        if(!isUp){
             int left = width/2-upDownDrawable.getIntrinsicWidth()/2;
             int right = left+upDownDrawable.getIntrinsicWidth();
-            int bottom = height*2/3-20;
-            int top = bottom-upDownDrawable.getIntrinsicHeight();
+//            int top = (height-upDownDrawable.getIntrinsicHeight())/2;
+            int top = bBottom+10;
+//            int bottom = height-(height-upDownDrawable.getIntrinsicHeight())/2;
+            int bottom = top+upDownDrawable.getIntrinsicHeight();
             upDownDrawable.setBounds(left,top,right,bottom);
         }else{
             int left = width/2-upDownDrawable.getIntrinsicWidth()/2;
             int right = left+upDownDrawable.getIntrinsicWidth();
-            int bottom = height*2/3-upOffset;
+//            int bottom = height-(height-upDownDrawable.getIntrinsicHeight())/2+upOffset;
+            int bottom = bTop-10;
             int top = bottom-upDownDrawable.getIntrinsicHeight();
             upDownDrawable.setBounds(left,top,right,bottom);
         }

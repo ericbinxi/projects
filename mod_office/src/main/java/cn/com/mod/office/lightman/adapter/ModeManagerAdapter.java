@@ -13,25 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mod.office.lightman.R;
+import cn.com.mod.office.lightman.entity.base.BaseModeEntity;
 
 /**
  * Created by Administrator on 2016/10/21.
  */
 public class ModeManagerAdapter extends BaseAdapter {
 
-    private List<String> datas;
+    private List<BaseModeEntity> modes;
     private Context context;
     private int rightWidth;
     private OnModeOperaterListener listener;
 
-    public ModeManagerAdapter(Context context, int rightWidth) {
+    public ModeManagerAdapter(Context context, int rightWidth,List<BaseModeEntity> datas) {
         this.context = context;
         this.rightWidth = rightWidth;
-        datas = new ArrayList<>();
-        datas.add("11111");
-        datas.add("22211");
-        datas.add("13311");
-        datas.add("14441");
+        this.modes = datas;
+    }
+
+    public void setModes(List<BaseModeEntity> modes) {
+        this.modes = modes;
+        notifyDataSetChanged();
     }
 
     public void setListener(OnModeOperaterListener listener) {
@@ -40,12 +42,12 @@ public class ModeManagerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return datas.size();
+        return modes.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return datas.get(position);
+        return modes.get(position);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class ModeManagerAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if(convertView==null){
             convertView = LayoutInflater.from(context).inflate(R.layout.item_mode_manager,null);
@@ -62,7 +64,7 @@ public class ModeManagerAdapter extends BaseAdapter {
             holder.mode_name = (TextView) convertView.findViewById(R.id.mode_name);
             holder.iv_mode = (ImageView) convertView.findViewById(R.id.iv_mode);
             holder.mode_edit = (ImageView) convertView.findViewById(R.id.mode_edit);
-            holder.delete = (TextView) convertView.findViewById(R.id.delete);
+            holder.delete = (ImageView) convertView.findViewById(R.id.delete);
             holder.item_left = (LinearLayout) convertView.findViewById(R.id.left_layout);
             holder.item_right = (LinearLayout) convertView.findViewById(R.id.right_layout);
             convertView.setTag(holder);
@@ -70,18 +72,40 @@ public class ModeManagerAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+
         LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         holder.item_left.setLayoutParams(lp1);
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(rightWidth, LinearLayout.LayoutParams.MATCH_PARENT);
         holder.item_right.setLayoutParams(lp2);
 
+        BaseModeEntity mode = modes.get(position);
+        holder.mode_name.setText(mode.getMode_name());
+        if(1==mode.getModeType()){
+            holder.iv_mode.setImageResource(R.drawable.icon_mode_normal);
+        }else{
+            holder.iv_mode.setImageResource(R.drawable.icon_mode_dynamic);
+        }
+        holder.mode_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener!=null)
+                    listener.editMode(position);
+            }
+        });
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener!=null)
+                    listener.deleteMode(position);
+            }
+        });
         return convertView;
     }
 
     class ViewHolder{
-        ImageView mode_edit,iv_mode;
-        TextView mode_name,delete;
+        ImageView mode_edit,iv_mode,delete;
+        TextView mode_name;
         LinearLayout item_left,item_right;
     }
 

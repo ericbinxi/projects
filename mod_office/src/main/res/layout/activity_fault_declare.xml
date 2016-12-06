@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:textSize="16sp"
             android:text="@string/record"/>
     </RelativeLayout>
     <FrameLayout
@@ -61,12 +62,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:layout_above="@id/control_panel"/>
+                    android:layout_above="@id/fault_desc"/>
                 <EditText
                     android:id="@+id/fault_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minLines="4"
+                    android:background="@null"
                     android:hint="@string/fault_hint"
                     android:padding="5dp"/>
                 <TextView

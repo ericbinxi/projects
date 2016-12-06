@@ -11,7 +11,7 @@ public class FaultRecord implements Serializable {
     private String status;
     private String msg_content;
     private String lamp_id;
-    private long op_time;
+    private String op_time;
 
     public String getMsg_title() {
         return msg_title;
@@ -45,11 +45,11 @@ public class FaultRecord implements Serializable {
         this.lamp_id = lamp_id;
     }
 
-    public long getOp_time() {
+    public String getOp_time() {
         return op_time;
     }
 
-    public void setOp_time(long op_time) {
+    public void setOp_time(String op_time) {
         this.op_time = op_time;
     }
 }

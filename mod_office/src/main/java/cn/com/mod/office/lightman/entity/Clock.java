@@ -7,25 +7,36 @@ import java.io.Serializable;
  */
 public class Clock implements Serializable {
 
-    private int clock_id; //闹钟标识
-    private int mode_id; //闹钟对应情景模式
-    private String weekday; //重复周期
-    private String hour; //闹钟开始小时
-    private String minute; //闹钟开始分钟
+    /**
+     * clockId : 18
+     * mode_id : 2
+     * weekday : 1,2,3,4,5,6
+     * hour : 9
+     * minute : 25
+     * mode_name : 会议模式
+     */
 
-    public int getClock_id() {
-        return clock_id;
+    private String clockId;
+    private String mode_id;
+    private String weekday;
+    private String hour;
+    private String minute;
+    private String mode_name;
+    private String clock_status;
+
+    public String getClockId() {
+        return clockId;
     }
 
-    public void setClock_id(int clock_id) {
-        this.clock_id = clock_id;
+    public void setClockId(String clockId) {
+        this.clockId = clockId;
     }
 
-    public int getMode_id() {
+    public String getMode_id() {
         return mode_id;
     }
 
-    public void setMode_id(int mode_id) {
+    public void setMode_id(String mode_id) {
         this.mode_id = mode_id;
     }
 
@@ -51,5 +62,21 @@ public class Clock implements Serializable {
 
     public void setMinute(String minute) {
         this.minute = minute;
+    }
+
+    public String getMode_name() {
+        return mode_name;
+    }
+
+    public void setMode_name(String mode_name) {
+        this.mode_name = mode_name;
+    }
+
+    public String getClock_status() {
+        return clock_status;
+    }
+
+    public void setClock_status(String clock_status) {
+        this.clock_status = clock_status;
     }
 }

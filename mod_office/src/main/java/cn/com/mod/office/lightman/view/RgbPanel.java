@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.joshua.common.util.ImageUtils;
 
 import cn.com.mod.office.lightman.R;
-import cn.com.mod.office.lightman.activity.SceneActivity;
+import cn.com.mod.office.lightman.activity.PatameterSettingActivity;
 import cn.com.mod.office.lightman.widget.ColorPicker;
 
 /**
@@ -51,7 +51,7 @@ public class RgbPanel extends Fragment {
                 if (!mHasChange) {
                     Intent intent = new Intent(Intent.ACTION_PICK);
                     intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-                    getActivity().startActivityForResult(intent, SceneActivity.REQUEST_PICK_IMAGE);
+                    getActivity().startActivityForResult(intent, PatameterSettingActivity.REQUEST_PICK_IMAGE);
                 } else {
                     mFile.setImageResource(R.drawable.ic_file);
                     mColorPicker.setImageResource(R.drawable.bg_color);

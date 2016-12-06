@@ -83,23 +83,19 @@ public class ItemAdapter extends BaseAdapter {
         final CheckBox checkBox = ViewHolder.get(v, R.id.cb);
         // 名字
         final TextView itemName = ViewHolder.get(v, R.id.name);
-        // 闹钟
-        final ImageView clockIcon = ViewHolder.get(v, R.id.has_clock);
         // 选项名
         final RoomInfo room = (RoomInfo) item;
         itemName.setText(room.getRoomEntity().getRoom_name());
 
-        handleCheckView(room.isSelected(),itemName,v);
+        handleCheckView(room.isSelected(),checkBox,v);
         //被选中的房间
         if(!roomInfos.contains(room))
             roomInfos.add(room);
-        // 闹钟是否显示
-        clockIcon.setVisibility(item.hasClock ? View.VISIBLE : View.INVISIBLE);
         // 勾选按钮事件
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                handleCheckView(isChecked,itemName,v);
+                handleCheckView(isChecked,checkBox,v);
                 room.setSelected(isChecked);
                 mItemSelectedStatus.set(position, isChecked);
 
@@ -122,15 +118,6 @@ public class ItemAdapter extends BaseAdapter {
                 checkBox.performClick();
             }
         });
-        // 闹钟点击事件
-        clockIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onClockClick(item);
-                }
-            }
-        });
 
         // 从历史状态读取勾选状态
         checkBox.setChecked(mItemSelectedStatus.get(position));
@@ -138,13 +125,14 @@ public class ItemAdapter extends BaseAdapter {
         return v;
     }
 
-    private void handleCheckView(boolean isChecked,TextView itemName,View v){
+    private void handleCheckView(boolean isChecked,CheckBox checkBox,View v){
+        checkBox.setChecked(isChecked);
         if (isChecked) {
-            v.setBackgroundResource(R.drawable.bg_dark_repeat);
-            itemName.setTextColor(mContext.getResources().getColor(R.color.orange));
+//            v.setBackgroundResource(R.drawable.bg_dark_repeat);
+//            itemName.setTextColor(mContext.getResources().getColor(R.color.orange));
         } else {
-            v.setBackgroundColor(Color.WHITE);
-            itemName.setTextColor(mContext.getResources().getColor(R.color.black));
+//            v.setBackgroundColor(Color.WHITE);
+//            itemName.setTextColor(mContext.getResources().getColor(R.color.black));
         }
     }
 

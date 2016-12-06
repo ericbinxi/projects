@@ -33,6 +33,16 @@ public class SceneButtonAdapter extends BaseAdapter {
         mItemCheckedPosition = -1;
     }
 
+    public void setSceneInfo(List<SceneInfo> mSceneInfo) {
+        this.mSceneInfo = mSceneInfo;
+        notifyDataSetChanged();
+    }
+
+    public void setItemCheckedPosition(int mItemCheckedPosition) {
+        this.mItemCheckedPosition = mItemCheckedPosition;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mSceneInfo.size();
@@ -72,7 +82,8 @@ public class SceneButtonAdapter extends BaseAdapter {
 
         // 设置按钮状态
         if (mItemToolVisiblePosition == position) {
-            button.showTools();
+//            button.showTools();
+            button.hideTools();
         } else {
             button.hideTools();
         }

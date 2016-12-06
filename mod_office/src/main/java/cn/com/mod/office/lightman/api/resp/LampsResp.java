@@ -3,6 +3,7 @@ package cn.com.mod.office.lightman.api.resp;
 import java.util.List;
 
 import cn.com.mod.office.lightman.api.BaseResp;
+import cn.com.mod.office.lightman.entity.LampGroup;
 import cn.com.mod.office.lightman.entity.Lamps;
 
 /**
@@ -19,4 +20,5 @@ public class LampsResp extends BaseResp {
     public void setLamps(List<Lamps> lamps) {
         this.lamps = lamps;
     }
+
 }

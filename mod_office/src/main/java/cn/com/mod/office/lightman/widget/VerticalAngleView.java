@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import cn.com.mod.office.lightman.R;
@@ -20,6 +21,10 @@ public class VerticalAngleView extends View {
     private Bitmap pin;
     private int angle;
     private int width, height;
+
+    private float radius = 170;
+    private float centerX,centerY;
+    private OnAngleChangeListener onAngleChangeListener;
 
     public VerticalAngleView(Context context) {
         super(context);
@@ -46,12 +51,22 @@ public class VerticalAngleView extends View {
             public void run() {
                 width = getWidth();
                 height = getHeight();
+                radius = 170.0f/290*pin.getHeight();
+                centerX = width/2;
+                centerY = 86.0f/290*pin.getHeight()+(height-pin.getHeight())/2;
             }
         });
     }
+
+    public void setOnAngleChangeListener(OnAngleChangeListener onAngleChangeListener) {
+        this.onAngleChangeListener = onAngleChangeListener;
+    }
+
     public void setAngle(int angle) {
-        this.angle = angle;
-        invalidate();
+        if(angle<=85&&angle>=-85){
+            this.angle = angle;
+            invalidate();
+        }
     }
 
     @Override
@@ -68,15 +83,75 @@ public class VerticalAngleView extends View {
 
         Bitmap newBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
         Canvas rCanvas = new Canvas(newBitmap);
-//        pin.setBounds((width-pin.getIntrinsicWidth())/2,(height-pin.getIntrinsicHeight())/2,
-//                (width+pin.getIntrinsicWidth())/2,(height+pin.getIntrinsicHeight())/2);
-        rCanvas.rotate(-angle,newBitmap.getWidth()/2,pin.getHeight()/3+(newBitmap.getHeight()-pin.getHeight())/2);
+        float y = 86.0f/290*pin.getHeight()+(newBitmap.getHeight()-pin.getHeight())/2;
+        rCanvas.rotate(-angle,newBitmap.getWidth()/2,y);
         rCanvas.drawBitmap(pin,(newBitmap.getWidth()-pin.getWidth())/2,(newBitmap.getHeight()-pin.getHeight())/2,paint);
-//        pin.draw(rCanvas);
-
-//        Paint paint = new Paint();
-//        paint.setAntiAlias(true);
         canvas.drawBitmap(newBitmap,(width-newBitmap.getWidth())/2,(height-newBitmap.getHeight())/2,paint);
         canvas.save();
+    }
+
+    float downX,downY;
+    //左右基准点
+    float leftX;
+    float leftY;
+    float rightX;
+    float rightY;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                downX = event.getX();
+                downY = event.getY();
+                leftX = centerX-radius;
+                leftY = centerY;
+                rightX = centerX+radius;
+                rightY = centerY;
+                double r = Math.sqrt((downX-centerX)*(downX-centerX)+(downY-centerY)*(downY-centerY));
+                if(Math.abs(r-radius)<25){
+                    double a = radius;
+                    double b = getRadius(downX,downY);
+                    if(downX<centerX&&downY>=centerY){
+                        double c = getRectangleLeftC(downX,downY);
+                        double acrAngle = getCosAngle(a,b,c);
+                        angle = (int)acrAngle-90;
+                    }else if(downX>centerX&&downY>centerY){
+                        double c = getRectangleRightC(downX,downY);
+                        double acrAngle = getCosAngle(a,b,c);
+                        angle = 90-(int)acrAngle;
+                    }
+                    if(angle<-80)angle = -80;
+                    if(angle>80)angle = 80;
+                    invalidate();
+                    if (onAngleChangeListener!=null)
+                        onAngleChangeListener.onAngleChange(angle);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+        return true;
+    }
+
+    private double getRadius(float x,float y){
+        return Math.sqrt((x-centerX)*(x-centerX)+(y-centerY)*(y-centerY));
+    }
+    private double getRectangleLeftC(float x,float y){
+        return Math.sqrt((x-leftX)*(x-leftX)+(y-leftY)*(y-leftY));
+    }
+    private double getRectangleRightC(float x,float y){
+        return Math.sqrt((x-rightX)*(x-rightX)+(y-rightY)*(y-rightY));
+    }
+
+    private double getCosAngle(double a,double b,double c){
+        double cosC = (a*a+b*b-c*c)/(2*a*b);
+        double arcC = Math.acos(cosC);
+        return arcC * 180 /Math.PI;
+    }
+
+    public interface OnAngleChangeListener{
+        void onAngleChange(int angle);
     }
 }

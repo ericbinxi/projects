@@ -75,15 +75,13 @@
         <activity
             android:name=".activity.RoomActivity"
             android:screenOrientation="portrait" />
-        <!--
-            <activity
-            android:name=".activity.ClockActivity"
-            android:screenOrientation="portrait" />
-        -->
         <activity
+            android:name=".activity.ClockListActivity"
+            android:screenOrientation="portrait" />
+        <!--<activity
             android:name=".activity.SceneActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />-->
         <activity
             android:name=".activity.ConfigActivity"
             android:screenOrientation="portrait" />
@@ -95,10 +93,19 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.SaveParamsActivity" />
         <activity android:name=".activity.ModeManagerActivity" />
-        <activity android:name=".activity.NormalModeActivity" />
-        <activity android:name=".activity.DynamicModeActivity" />
+        <activity android:name=".activity.NormalModeActivity"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.DynamicModeActivity"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".activity.ClockSettingActivity" />
-        <activity android:name=".activity.FaultDeclareActivity"></activity>
+        <activity android:name=".activity.FaultDeclareActivity"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.RecordListActivity" />
+        <activity android:name=".activity.FaultContentActivity" />
+        <activity android:name=".activity.FrameActivity"></activity>
     </application>
 
 </manifest>

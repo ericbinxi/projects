@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="@color/transparent"
+    android:id="@+id/scrollview">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,7 +15,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:background="#000000">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -25,7 +27,8 @@
             <cn.com.mod.office.lightman.widget.UpDownView
                 android:id="@+id/view_up_down"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal"
                 />
             <ImageView
@@ -110,9 +113,9 @@
                 android:layout_gravity="center_horizontal">
                 <ImageView
                     android:id="@+id/btn_v_reduce"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/ic_angle_reduce"/>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -121,24 +124,21 @@
                     android:layout_gravity="center_vertical">
                     <TextView
                         android:id="@+id/tv_v_angle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:textSize="20sp"
                         android:text="0"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="top"
-                        android:text=" 。"/>
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/btn_v_add"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginRight="2dp"
                     android:src="@drawable/ic_angle_add"/>
             </LinearLayout>
         </LinearLayout>
@@ -155,12 +155,85 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/icon_vertical_angle"
+                    android:drawableLeft="@drawable/icon_horizon_angle"
                     android:drawablePadding="10dp"
-                    android:text="@string/vertical_angle"/>
+                    android:text="@string/horizon_angle"/>
             </LinearLayout>
             <cn.com.mod.office.lightman.widget.HorizonAngleView
                 android:id="@+id/view_horizon"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="260dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_horizon_compass"/>
+                <cn.com.mod.office.lightman.widget.RotateImagView
+                    android:layout_width="300dp"
+                    android:layout_height="260dp"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_btn_bg"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:layout_gravity="center_horizontal">
+                <ImageView
+                    android:id="@+id/btn_h_reduce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:src="@drawable/ic_angle_reduce"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tv_h_angle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="20sp"
+                        android:text="0"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btn_h_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:src="@drawable/ic_angle_add"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                android:background="@color/black">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_light"
+                    android:drawablePadding="10dp"
+                    android:text="@string/light_angle"/>
+            </LinearLayout>
+            <cn.com.mod.office.lightman.widget.LightAngleView
+                android:id="@+id/view_light"
                 android:layout_width="match_parent"
                 android:layout_height="250dp" />
             <LinearLayout
@@ -171,10 +244,10 @@
                 android:padding="5dp"
                 android:layout_gravity="center_horizontal">
                 <ImageView
-                    android:id="@+id/btn_h_reduce"
-                    android:layout_width="0dp"
+                    android:id="@+id/btn_l_reduce"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/ic_angle_reduce"/>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -182,25 +255,22 @@
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical">
                     <TextView
-                        android:id="@+id/tv_h_angle"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_l_angle"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:textSize="20sp"
-                        android:text="0"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="top"
-                        android:text=" 。"/>
+                        android:text="15"/>
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/btn_h_add"
-                    android:layout_width="0dp"
+                    android:id="@+id/btn_l_add"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginRight="2dp"
                     android:src="@drawable/ic_angle_add"/>
             </LinearLayout>
         </LinearLayout>

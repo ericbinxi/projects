@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.joshua.common.util.MaskUtils;
@@ -26,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,11 +37,20 @@ import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.R;
 import cn.com.mod.office.lightman.activity.base.BaseActivity;
 import cn.com.mod.office.lightman.adapter.SceneButtonAdapter;
+import cn.com.mod.office.lightman.api.BaseResp;
 import cn.com.mod.office.lightman.api.ILightMgrApi;
+import cn.com.mod.office.lightman.api.resp.GetModesResp;
+import cn.com.mod.office.lightman.api.resp.LampsResp;
 import cn.com.mod.office.lightman.entity.BaseResponse;
+import cn.com.mod.office.lightman.entity.DynamicMode;
 import cn.com.mod.office.lightman.entity.GroupInfo;
+import cn.com.mod.office.lightman.entity.LampGroup;
+import cn.com.mod.office.lightman.entity.LampStatusResp;
 import cn.com.mod.office.lightman.entity.Lamps;
+import cn.com.mod.office.lightman.entity.NormalMode;
 import cn.com.mod.office.lightman.entity.SceneInfo;
+import cn.com.mod.office.lightman.entity.TieLampsResp;
+import cn.com.mod.office.lightman.entity.base.BaseModeEntity;
 import cn.com.mod.office.lightman.widget.HorizontalListView;
 import cn.com.mod.office.lightman.widget.ItemListView;
 import cn.com.mod.office.lightman.widget.LedView;
@@ -48,10 +60,9 @@ import cn.com.mod.office.lightman.widget.ScrollBar;
  * 房间界面
  * Created by CAT on 2014/11/10.
  */
-public class RoomActivity extends BaseActivity implements OnClickListener{
+public class RoomActivity extends BaseActivity implements OnClickListener {
     public static final String TAG = "RoomActivity";
 
-    public static final int REQUEST_CODE_CLOCK = 1;
     public static final int REQUEST_CODE_ADD_SCENE = 2;
     public static final int REQUEST_CODE_EDIT_SCENE = 3;
 
@@ -65,15 +76,11 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
     private HorizontalListView mSceneList;
     private ScrollBar mScrollBar;
     private SceneButtonAdapter mSceneButtonAdapter;
-    private List<GroupInfo> mGroupInfos;
     private List<SceneInfo> mSceneInfos;
     private Map<String, List<LedView>> mLedViews;
-    private Set<String> mSelectedGroups = new HashSet<String>();
-    private Set<String> mSelectedLeds = new HashSet<String>();
-    private SceneInfo mCurrentScene;
-    private boolean isSelecting = false;
+    private List<Lamps> mSelectedLeds = new ArrayList<>();
 
-    private LinearLayout select_menu,select_all,select_none,grouping,unmarshall;
+    private LinearLayout select_menu, select_all, select_none, grouping, unmarshall;
     private LinearLayout ll_adjust_lamp;
 
     private String id;
@@ -82,7 +89,11 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
     private LinearLayout ll_scene;
     private TextView adjust_lamp;
     private ArrayList<LedView> ledViews;
-    private List<Lamps> lamps;
+    private ArrayList<Lamps> lamps;
+
+    private List<BaseModeEntity> modeEntities = new ArrayList<>();
+    private List<DynamicMode> dynamicModes;
+    private List<NormalMode> normalModes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +102,7 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
         initView();
         initListener();
     }
+
     // 初始化
     public void initView() {
         // 初始化系统工具
@@ -124,8 +136,10 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
         id = getIntent().getStringExtra("roomId");
         name = getIntent().getStringExtra("roomName");
 
+
         initScene();
     }
+
     private void initListener() {
         mScrollBar.setOnTouchListener(new View.OnTouchListener() {
 
@@ -146,20 +160,24 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
         mList.setRoomMode(new ItemListView.OnChooseRoomMode() {
             @Override
             public void onChooseRoomMode(int index) {
+                mList.setVisibility(View.INVISIBLE);
                 //index  1:模式管理  2：闹钟设置  3：故障申报
-                if(index==1){
-                    Intent intent = new Intent(RoomActivity.this,ModeManagerActivity.class);
-                    intent.putExtra("roomId",id);
+                if (index == 1) {
+                    Intent intent = new Intent(RoomActivity.this, ModeManagerActivity.class);
+                    intent.putExtra("roomId", id);
                     startActivity(intent);
-                }else if(index==2){
-                    Intent intent1 = new Intent(RoomActivity.this,ClockSettingActivity.class);
-                    intent1.putExtra("roomId",id);
+                } else if (index == 2) {
+                    Intent intent1 = new Intent(RoomActivity.this, ClockListActivity.class);
+                    intent1.putExtra("roomId", id);
                     startActivity(intent1);
+                } else if (index == 3) {
+                    Intent intent2 = new Intent(RoomActivity.this, FaultDeclareActivity.class);
+                    intent2.putExtra("roomId", id);
+                    startActivity(intent2);
                 }
 
             }
         });
-
 
 
         mGoBack.setOnClickListener(new OnClickListener() {
@@ -188,122 +206,91 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
                                  }
         );
     }
+
     private void initScene() {
         // 默认的4个按钮 + 自定义按钮
-        mSceneInfos = new ArrayList<SceneInfo>();
-        final SceneInfo scene1 = new SceneInfo("1", getString(R.string.default_scene1), null, SceneInfo.TYPE_DEFAULT);
+        mSceneInfos = new ArrayList<>();
+        SceneInfo scene1 = new SceneInfo("1", getString(R.string.default_scene1), null, SceneInfo.TYPE_DEFAULT);
         SceneInfo scene2 = new SceneInfo("2", getString(R.string.default_scene2), null, SceneInfo.TYPE_DEFAULT);
         SceneInfo scene3 = new SceneInfo("3", getString(R.string.default_scene3), null, SceneInfo.TYPE_DEFAULT);
         SceneInfo scene4 = new SceneInfo("4", getString(R.string.default_scene4), null, SceneInfo.TYPE_DEFAULT);
-        SceneInfo scene5 = new SceneInfo("", getString(R.string.default_add), null, SceneInfo.TYPE_NONE);
         mSceneInfos.add(scene1);
         mSceneInfos.add(scene2);
         mSceneInfos.add(scene3);
         mSceneInfos.add(scene4);
-        mSceneInfos.add(scene5);
         mSceneButtonAdapter = new SceneButtonAdapter(RoomActivity.this, mSceneInfos, new SceneButtonAdapter.SceneButtonAdapterListener() {
             @Override
-            public void onSceneClick(SceneInfo sceneInfo) {
-                if (sceneInfo.type == SceneInfo.TYPE_NONE) {
-                    Intent intent = new Intent(RoomActivity.this, SceneActivity.class);
-                    intent.putExtra("leds", mSelectedLeds.toArray(new String[]{}));
-                    intent.putExtra("roomId", id);
-                    intent.putExtra("type", SceneActivity.TYPE_ADD);
-                    startActivityForResult(intent, REQUEST_CODE_ADD_SCENE);
-                    return;
-                }
-
-                ILightMgrApi.Callback<BaseResponse> responseCallback = new ILightMgrApi.Callback<BaseResponse>() {
-                    @Override
-                    public void callback(int code, BaseResponse response) {
-                        switch (code) {
-                            case CODE_SUCCESS:
-                                break;
+            public void onSceneClick(final SceneInfo sceneInfo) {
+                //应用模式
+                mMaskUtils.show();
+                if(sceneInfo.type==2){
+                    MyApplication.getInstance().getClient().playDynamicMode(id, sceneInfo.id, new String[]{}, new ILightMgrApi.Callback<BaseResp>() {
+                        @Override
+                        public void callback(int code, BaseResp entity) {
+                            mMaskUtils.cancel();
+                            if(code==0){
+                                ToastUtils.show(RoomActivity.this,"应用"+sceneInfo.name+"成功");
+                            }else{
+                                ToastUtils.show(RoomActivity.this,entity.getError_desc());
+                            }
                         }
-                    }
-                };
-                // 没有选中任何LED灯，则以房间为单位发送
-                if (mSelectedLeds.size() == 0) {
-                    if (sceneInfo.type == SceneInfo.TYPE_DEFAULT) {
-                        MyApplication.getInstance().getClient().applyDefaultScene(sceneInfo.id, null, new String[]{id}, null, null, responseCallback);
-                    } else if (sceneInfo.type == SceneInfo.TYPE_DIY) {
-                        MyApplication.getInstance().getClient().applyDiyScene(sceneInfo.id, id, null, null, responseCallback);
-                    }
-                    return;
-                }
-                // 如果有选中LED灯，则优先以灯组发送，剩余的按灯发送
-                if (mSelectedLeds.size() != 0) {
-                    if (mSelectedGroups.size() != 0) {
-                        if (sceneInfo.type == SceneInfo.TYPE_DEFAULT) {
-                            MyApplication.getInstance().getClient().applyDefaultScene(sceneInfo.id, null, null, mSelectedGroups.toArray(new String[]{}), null, responseCallback);
-                        } else if (sceneInfo.type == SceneInfo.TYPE_DIY) {
-                            MyApplication.getInstance().getClient().applyDiyScene(sceneInfo.id, null, mSelectedGroups.toArray(new String[]{}), null, responseCallback);
+                    });
+                }else{
+                    MyApplication.getInstance().getClient().applyNormalMode(id, sceneInfo.id, null, new ILightMgrApi.Callback<BaseResp>() {
+                        @Override
+                        public void callback(int code, BaseResp entity) {
+                            mMaskUtils.cancel();
+                            if(code==0){
+                                ToastUtils.show(RoomActivity.this,"应用"+sceneInfo.name+"成功");
+                            }else{
+                                ToastUtils.show(RoomActivity.this,entity.getError_desc());
+                            }
                         }
-                    }
-                    ArrayList<String> otherLeds = new ArrayList<String>();
-                    for (String ledId : mSelectedLeds) {
-                        if (!mSelectedGroups.contains(getGroup(ledId))) {
-                            otherLeds.add(ledId);
-                        }
-                    }
-                    if (otherLeds.size() != 0) {
-                        if (sceneInfo.type == SceneInfo.TYPE_DEFAULT) {
-                            MyApplication.getInstance().getClient().applyDefaultScene(sceneInfo.id, null, null, null, otherLeds.toArray(new String[]{}), responseCallback);
-                        } else if (sceneInfo.type == SceneInfo.TYPE_DIY) {
-                            MyApplication.getInstance().getClient().applyDiyScene(sceneInfo.id, null, null, otherLeds.toArray(new String[]{}), responseCallback);
-                        }
-                    }
+                    });
                 }
             }
 
             @Override
             public void onSceneClockClick(SceneInfo sceneInfo) {
-                mCurrentScene = sceneInfo;
             }
 
             @Override
             public void onSceneDeleteClick(final SceneInfo sceneInfo) {
-                new AlertDialog.Builder(RoomActivity.this)
-                        .setTitle(getString(R.string.delete_scene_dialog_title))
-                        .setMessage(getString(R.string.delete_scene_dialog_msg))
-                        .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mMaskUtils.show();
-                                MyApplication.getInstance().getClient().deleteDiyScene(sceneInfo.id, new ILightMgrApi.Callback<BaseResponse>() {
-                                    @Override
-                                    public void callback(int code, BaseResponse response) {
-                                        mMaskUtils.cancel();
-                                        switch (code) {
-                                            case CODE_TIMEOUT:
-                                                mToastUtils.show(getString(R.string.tip_timeout));
-                                                break;
-                                            case CODE_NETWORK_ERROR:
-                                                mToastUtils.show(getString(R.string.tip_network_connect_faild));
-                                                break;
-                                            case CODE_SUCCESS:
-                                                if (response.success) {
-                                                    mSceneInfos.remove(sceneInfo);
-                                                    mSceneButtonAdapter.notifyDataSetChanged();
-                                                } else {
-                                                    mToastUtils.show(response.msg);
-                                                }
-                                                break;
-                                        }
-                                    }
-                                });
-                            }
-                        }).setNegativeButton("取消", null).show();
+//                new AlertDialog.Builder(RoomActivity.this)
+//                        .setTitle(getString(R.string.delete_scene_dialog_title))
+//                        .setMessage(getString(R.string.delete_scene_dialog_msg))
+//                        .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                mMaskUtils.show();
+//                                MyApplication.getInstance().getClient().deleteDiyScene(sceneInfo.id, new ILightMgrApi.Callback<BaseResponse>() {
+//                                    @Override
+//                                    public void callback(int code, BaseResponse response) {
+//                                        mMaskUtils.cancel();
+//                                        switch (code) {
+//                                            case CODE_TIMEOUT:
+//                                                mToastUtils.show(getString(R.string.tip_timeout));
+//                                                break;
+//                                            case CODE_NETWORK_ERROR:
+//                                                mToastUtils.show(getString(R.string.tip_network_connect_faild));
+//                                                break;
+//                                            case CODE_SUCCESS:
+//                                                if (response.success) {
+//                                                    mSceneInfos.remove(sceneInfo);
+//                                                    mSceneButtonAdapter.notifyDataSetChanged();
+//                                                } else {
+//                                                    mToastUtils.show(response.msg);
+//                                                }
+//                                                break;
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        }).setNegativeButton("取消", null).show();
             }
 
             @Override
             public void onSceneEditClick(SceneInfo sceneInfo) {
-                Intent intent = new Intent(RoomActivity.this, SceneActivity.class);
-                intent.putExtra("sceneId", sceneInfo.id);
-                intent.putExtra("name", sceneInfo.name);
-                intent.putExtra("type", SceneActivity.TYPE_EDIT);
-                intent.putExtra("leds", mSelectedLeds.toArray(new String[]{}));
-                startActivityForResult(intent, REQUEST_CODE_EDIT_SCENE);
             }
         });
 
@@ -313,7 +300,7 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.select_all:
                 handleLedViews(true);
                 break;
@@ -321,59 +308,108 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
                 handleLedViews(false);
                 break;
             case R.id.grouping:
+                tieGroupLamps();
                 break;
             case R.id.unmarshall:
+                unTieGroupLamps();
                 break;
             case R.id.adjust_lamp:
-                Intent intent = new Intent(RoomActivity.this,PatameterSettingActivity.class);
-                intent.putExtra("leds", mSelectedLeds.toArray(new String[]{}));
+                Intent intent = new Intent(RoomActivity.this, PatameterSettingActivity.class);
                 intent.putExtra("roomId", id);
-                intent.putExtra("type", SceneActivity.TYPE_ADD);
+                intent.putExtra("type", 1);
+                intent.putExtra("adjust",true);
+                intent.putExtra("leds",getSelectIds());
                 startActivity(intent);
                 break;
         }
     }
 
+    private String[] getSelectIds(){
+        if(mSelectedLeds!=null&&mSelectedLeds.size()>0){
+            String[] ids = new String[mSelectedLeds.size()];
+            for (int i=0;i<mSelectedLeds.size();i++){
+                Lamps lamp = mSelectedLeds.get(i);
+                ids[i] = lamp.getLamp_id();
+            }
+            return ids;
+        }
+        return null;
+    }
+
+    private void unTieGroupLamps() {
+        if(mSelectedLeds.size()>0){
+            String groupId = mSelectedLeds.get(0).getGroup_id();
+            if(!TextUtils.isEmpty(groupId)){
+                for (Lamps l:mSelectedLeds){
+                    if(!groupId.equals(l.getGroup_id())){
+                        ToastUtils.show(this, R.string.untie_dif_group);
+                        return;
+                    }
+                }
+                mMaskUtils.show();
+                MyApplication.getInstance().getClient().untieLampGroup(groupId, new ILightMgrApi.Callback<BaseResp>() {
+                    @Override
+                    public void callback(int code, BaseResp entity) {
+                        mMaskUtils.cancel();
+                        if (code == 0) {
+                            ToastUtils.show(RoomActivity.this, R.string.untie_group_success);
+                            handleLedViews(false);
+                        } else {
+                            ToastUtils.show(RoomActivity.this, entity.getError_desc());
+                        }
+
+                    }
+                });
+            }else {
+                ToastUtils.show(this, R.string.untie_dif_group);
+            }
+        }else{
+            ToastUtils.show(this, R.string.untie_failure_tips);
+        }
+    }
+
+    private void tieGroupLamps() {
+        if (mSelectedLeds != null && mSelectedLeds.size() > 0) {
+            String lampIdStr = "";
+            for (Lamps lamp : mSelectedLeds) {
+                lampIdStr = lampIdStr + "," + lamp.getLamp_id();
+            }
+            lampIdStr = lampIdStr.substring(1);
+            mMaskUtils.show();
+            MyApplication.getInstance().getClient().tieLampGroup(id, lampIdStr, new ILightMgrApi.Callback<TieLampsResp>() {
+                @Override
+                public void callback(int code, TieLampsResp entity) {
+                    mMaskUtils.cancel();
+                    if (code == 0 && entity != null && !TextUtils.isEmpty(entity.getGroup_id())) {
+                        ToastUtils.show(RoomActivity.this, R.string.untie_group_success);
+                    } else {
+                        ToastUtils.show(RoomActivity.this, entity.getError_desc());
+                    }
+                }
+            });
+        }
+    }
+
     private void handleLedViews(boolean checked) {
-        for (LedView v:ledViews){
-            v.setChecked(checked);
-        }
+        List<Lamps> temps = new ArrayList<>();
+        temps.addAll(mSelectedLeds);
         mSelectedLeds.clear();
-        if(checked&&lamps!=null&&lamps.size()>0){
-            for (Lamps l:lamps){
-                mSelectedLeds.add(l.getLamp_id());
-            }
+        mSelectedLeds.addAll(lamps);
+        if(!checked){
+            mSelectedLeds.removeAll(temps);
         }
-    }
-
-    // 获取group目前选中的led灯的数目
-    private int getSelectedLedCount(String groupId) {
-        int count = 0;
-        List<LedView> ledViews = mLedViews.get(groupId);
-        for (LedView ledView : ledViews) {
-            if (ledView.isChecked()) {
-                count++;
-            }
+        for (LedView led : ledViews){
+            led.setLinkedChecked(false);
         }
-        return count;
-    }
-
-    // 获取led所在的group
-    private String getGroup(String ledId) {
-        String groupId = null;
-        for (String group : mLedViews.keySet()) {
-            List<LedView> ledViews = mLedViews.get(group);
-            for (LedView ledView : ledViews) {
-                if (ledView.getLedInfo().getLamp_id().equals(ledId)) {
-                    groupId = group;
+        for (Lamps lamp:mSelectedLeds){
+            for (LedView v : ledViews){
+                String lampId = (String) v.getTag();
+                if(lampId.equals(lamp.getLamp_id())){
+                    v.setChecked(true);
                     break;
                 }
             }
-            if (groupId != null) {
-                break;
-            }
         }
-        return groupId;
     }
 
     @Override
@@ -381,15 +417,13 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
         if (id != null && name != null) {
             mRoomName.setText(name);
             mMaskUtils.show();
-            getScenes();
-
             // 获取房间图片
             MyApplication.getInstance().getClient().getRoomImg(id, new ILightMgrApi.Callback<Bitmap>() {
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void callback(int code, Bitmap bitmap) {
                     mMaskUtils.cancel();
-                    if(bitmap==null){
+                    if (bitmap == null) {
                         mToastUtils.show(getString(R.string.room_no_map));
                         finish();
                         return;
@@ -398,12 +432,17 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
                         case CODE_SUCCESS:
                             mLedCanvas.setBackground(new BitmapDrawable(bitmap));
                             // 获取房间灯组
-                            MyApplication.getInstance().getClient().getLampsInRoom(id, new ILightMgrApi.Callback<List<Lamps>>() {
+                            MyApplication.getInstance().getClient().getLampsInRoom(id, new ILightMgrApi.Callback<LampsResp>() {
                                 @Override
-                                public void callback(int code, List<Lamps> groupInfos) {
+                                public void callback(int code, LampsResp resp) {
                                     switch (code) {
                                         case CODE_SUCCESS:
-                                            canvasLamps(groupInfos);
+                                            if (resp != null && resp.getLamps() != null) {
+                                                canvasLamps(resp.getLamps());
+                                            }
+                                            break;
+                                        case CODE_FAILURE:
+                                            ToastUtils.show(RoomActivity.this, resp.getError_desc());
                                             break;
                                     }
                                 }
@@ -411,11 +450,61 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
                     }
                 }
             });
+            //获取房间的情景模式
+            MyApplication.getInstance().getClient().getModes(id, new ILightMgrApi.Callback<GetModesResp>() {
+                @Override
+                public void callback(int code, GetModesResp resp) {
+                    if (code == 0) {
+                        if(resp.getNormal_modes()!=null&&resp.getNormal_modes().size()>0){
+                            normalModes = resp.getNormal_modes();
+                            for(NormalMode normalMode:normalModes){
+                                BaseModeEntity entity = new BaseModeEntity();
+                                entity.setModeType(1);
+                                entity.setMode_name(normalMode.getMode_name());
+                                entity.setMode_id(normalMode.getMode_id());
+                                modeEntities.add(entity);
+                            }
+                        }
+                        if(resp.getDynamic_modes()!=null&&resp.getDynamic_modes().size()>0){
+                            dynamicModes = resp.getDynamic_modes();
+                            for (DynamicMode dynamicMode:dynamicModes){
+                                BaseModeEntity entity = new BaseModeEntity();
+                                entity.setModeType(2);
+                                entity.setMode_name(dynamicMode.getMode_name());
+                                entity.setMode_id(dynamicMode.getMode_id());
+                                modeEntities.add(entity);
+                            }
+                        }
+                        initSceneAdapter();
+                    } else {
+                        ToastUtils.show(RoomActivity.this, resp.getError_desc());
+                    }
+                }
+            });
         }
     }
 
+    private void initSceneAdapter() {
+        if(modeEntities.size()>0){
+            mSceneInfos.clear();
+            for (BaseModeEntity entity:modeEntities){
+                SceneInfo scene;
+                if(Integer.parseInt(entity.getMode_id())<=4){
+                    scene = new SceneInfo(entity.getMode_id()+"", entity.getMode_name(), null, SceneInfo.TYPE_DEFAULT);
+                }else{
+                    scene = new SceneInfo(entity.getMode_id()+"", entity.getMode_name(), null, SceneInfo.TYPE_DIY);
+                    scene.mode_type = entity.getModeType();
+                }
+                mSceneInfos.add(scene);
+            }
+            mSceneButtonAdapter.setSceneInfo(mSceneInfos);
+        }
+
+    }
+
     private void canvasLamps(List<Lamps> lamps) {
-        this.lamps = lamps;
+        this.lamps = new ArrayList<>();
+        this.lamps.addAll(lamps);
         // LED图标的大小比例， 600px:30px
         float rate = 30.0f / 600;
         ledViews = new ArrayList<LedView>();
@@ -426,10 +515,13 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
                 @Override
                 public synchronized void onCheckStateChange(Lamps ledInfo, boolean isChecked) {
                     if (isChecked) {
-                        mSelectedLeds.add(ledInfo.getLamp_id());
+                        if(!mSelectedLeds.contains(ledInfo))
+                            mSelectedLeds.add(ledInfo);
+                        handGroupLamps(ledInfo);
                         handleItemList(ledInfo, true);
                     } else {
-                        mSelectedLeds.remove(ledInfo.getLamp_id());
+                        if(mSelectedLeds.contains(ledInfo))
+                            mSelectedLeds.remove(ledInfo);
                         handleItemList(ledInfo, false);
                     }
                 }
@@ -456,87 +548,49 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
             mLedViews = new HashMap<String, List<LedView>>();
         }
         mLedViews.put(id, ledViews);
-        // 获取各个灯组的LED灯
-//                                                MyApplication.getInstance().getClient().listLeds(groupInfo.id, new ILightMgrApi.Callback<List<LedInfo>>() {
-//                                                    private String groupId = groupInfo.id;
-//
-//                                                    @Override
-//                                                    public void callback(int code, List<LedInfo> ledInfos) {
-//                                                        switch (code) {
-//                                                            case CODE_SUCCESS:
-//
-//                                                                break;
-//                                                        }
-//                                                    }
-//                                                });
+    }
+
+    private void handGroupLamps(Lamps lamp) {
+        if (mSelectedLeds != null && mSelectedLeds.size() == 1) {
+            String groupId = lamp.getGroup_id();
+            if(!TextUtils.isEmpty(groupId)){
+                for (Lamps l:lamps){
+                    if(groupId.equals(l.getGroup_id())){
+                        handleCheckLed(l);
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleCheckLed(Lamps lamp) {
+        for (LedView ledview : ledViews) {
+            String id = (String) ledview.getTag();
+                if (id.equals(lamp.getLamp_id())) {
+                    ledview.setLinkedChecked(true);
+                    if (!mSelectedLeds.contains(lamp)) {
+                        mSelectedLeds.add(lamp);
+                    }
+                    break;
+                }
+        }
     }
 
     // 监听地图点选LED灯图标后，对列表的选中状态的变化
-    private synchronized void handleItemList(Lamps ledInfo, boolean isSelected) {
+    private void handleItemList(Lamps ledInfo, boolean isSelected) {
         //显示操作面板
-        if(mSelectedLeds.size()>0){
-            mMenu.setVisibility(View.INVISIBLE);
+        if (mSelectedLeds.size() > 0) {
+//            mMenu.setVisibility(View.INVISIBLE);
             select_menu.setVisibility(View.VISIBLE);
             ll_adjust_lamp.setVisibility(View.VISIBLE);
             ll_scene.setVisibility(View.GONE);
-        }else{
-            mMenu.setVisibility(View.VISIBLE);
+        } else {
+//            mMenu.setVisibility(View.VISIBLE);
             select_menu.setVisibility(View.GONE);
             ll_adjust_lamp.setVisibility(View.GONE);
             ll_scene.setVisibility(View.VISIBLE);
         }
 
-    }
-
-    private void getScenes() {
-
-        // 获取房间默认情景
-        MyApplication.getInstance().getClient().getDefaultSceneName(id, new ILightMgrApi.Callback<List<SceneInfo>>() {
-            @Override
-            public void callback(int code, List<SceneInfo> sceneInfos) {
-                switch (code) {
-                    case CODE_SUCCESS:
-                        for (int i = 0; i < sceneInfos.size(); i++) {
-                            mSceneInfos.get(i).name = sceneInfos.get(i).name;
-                            mSceneButtonAdapter.notifyDataSetChanged();
-                        }
-                        break;
-                }
-            }
-        });
-
-        // 获取房间自定义情景
-        MyApplication.getInstance().getClient().listDiyScene(id, new ILightMgrApi.Callback<List<SceneInfo>>() {
-            @Override
-            public void callback(int code, List<SceneInfo> sceneInfos) {
-                switch (code) {
-                    case CODE_SUCCESS:
-                        for (SceneInfo sceneInfo : sceneInfos) {
-                            sceneInfo.type = SceneInfo.TYPE_DIY;
-                            sceneInfo.icon = getResources().getDrawable(R.drawable.default_diy2);
-                        }
-                        mSceneInfos.addAll(mSceneInfos.size() - 1, sceneInfos);
-                        mSceneButtonAdapter.notifyDataSetChanged();
-
-                        for (final SceneInfo sceneInfo : mSceneInfos) {
-                            if (sceneInfo.type == SceneInfo.TYPE_DIY) {
-                                MyApplication.getInstance().getClient().getDiySceneImg(sceneInfo.id, new ILightMgrApi.Callback<Bitmap>() {
-                                    @Override
-                                    public void callback(int code, Bitmap entity) {
-                                        switch (code) {
-                                            case CODE_SUCCESS:
-                                                sceneInfo.icon = new BitmapDrawable(getResources(), entity);
-                                                mSceneButtonAdapter.notifyDataSetChanged();
-                                                break;
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                        break;
-                }
-            }
-        });
     }
 
     @Override
@@ -559,19 +613,6 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_CLOCK:
-                if (resultCode == RESULT_OK) {
-                    String id = data.getStringExtra("id");
-                    if (id != null) {
-                        for (int i = 0; i < mGroupInfos.size(); i++) {
-                            if (mGroupInfos.get(i).id.equals(id)) {
-                                mGroupInfos.get(i).hasClock = false;
-//                                mList.getAdapter().notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
-                break;
             case REQUEST_CODE_ADD_SCENE:
                 if (resultCode == RESULT_OK) {
                     SceneInfo sceneInfo = new SceneInfo();
@@ -613,7 +654,4 @@ public class RoomActivity extends BaseActivity implements OnClickListener{
                 break;
         }
     }
-
-
-
 }

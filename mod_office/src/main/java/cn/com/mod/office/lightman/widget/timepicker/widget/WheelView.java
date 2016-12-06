@@ -174,6 +174,10 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
         init();
     }
 
+    public List<T> getList() {
+        return mList;
+    }
+
     /**
      * 设置滚轮滑动停止时事件，监听滚轮选中项
      *

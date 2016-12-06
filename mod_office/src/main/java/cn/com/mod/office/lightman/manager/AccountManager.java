@@ -1,7 +1,11 @@
 package cn.com.mod.office.lightman.manager;
 
 import android.content.Context;
+import android.text.TextUtils;
 
+import com.google.gson.JsonObject;
+
+import cn.com.mod.office.lightman.MyApplication;
 import cn.com.mod.office.lightman.api.resp.LoginResp;
 
 /**
@@ -13,6 +17,7 @@ public class AccountManager {
     private String sessionId;
     private int operatorId;
     private LoginResp.Session session;
+    private String sessionString;
 
     private AccountManager(){
     }
@@ -42,8 +47,19 @@ public class AccountManager {
     public LoginResp.Session getSession() {
         return session;
     }
+    public String getSessionString() {
+        if(TextUtils.isEmpty(sessionString)){
+            sessionString =  MyApplication.getInstance().getAppConfig().getSession();
+        }
+        return sessionString;
+    }
 
     public void setSession(LoginResp.Session session) {
         this.session = session;
+        JsonObject json = new JsonObject();
+        json.addProperty("session_id", session.getSession_id());
+        json.addProperty("operator_id", session.getOperator_id());
+        this.sessionString = json.toString();
+        MyApplication.getInstance().getAppConfig().setSession(json.toString());
     }
 }

@@ -48,7 +48,7 @@
 
     <string name="update">Version update</string>
     <string name="label_desc">Version：</string>
-    <string name="text_app">MOD smart light control system V1.0</string>
+    <string name="text_app">MOD smart light control system V%1$s</string>
     <string name="label_company">Company：</string>
     <string name="text_company">Shenzhen cloud control lighting Information Technology Co., Ltd.</string>
     <string name="label_support">System required：</string>
@@ -144,4 +144,63 @@
     <string name="apply">应用</string>
     <string name="remark">备注:</string>
     <string name="params_desc">亮度%1$d,颜色R%2$d、G%3$d、B%4$d,色温%5$dK</string>
+
+    <string name="normal_mode">常规模式</string>
+    <string name="dynamic_mode">动态模式</string>
+    <string name="apply_dynamic">预览</string>
+    <string name="stop_apply_dynamic">停止预览</string>
+    <string name="mode_create">创建模式</string>
+    <string name="mode_edit">编辑模式</string>
+    <string name="mode">模式</string>
+    <string name="clock_create">创建闹钟</string>
+    <string name="get_clocks_fail">获取闹钟列表失败</string>
+    <string name="open_clock_success">闹钟已开启</string>
+    <string name="open_clock_fail">开启闹钟失败</string>
+    <string name="close_clock_success">闹钟已关闭</string>
+    <string name="close_clock_fail">闹钟关闭失败</string>
+    <string name="delete_clock_success">闹钟已删除</string>
+    <string name="delete_clock_fail">删除闹钟失败</string>
+    <string name="clock_edit">编辑闹钟</string>
+    <string name="time_picker">时间选择</string>
+    <string name="time_picker_tips">当前的时间不能小于前一帧的时间，请重新选择时间</string>
+    <string name="et_mode_name">请输入自定义模式的名字</string>
+    <string name="setting_params_tips">请设置灯具的参数</string>
+
+    <string name="up_and_down">升降</string>
+    <string name="left_and_right">移动位置</string>
+    <string name="vertical_angle">垂直角度</string>
+    <string name="horizon_angle">水平角度</string>
+    <string name="light_angle">光束角度</string>
+    <string name="record">记录</string>
+    <string name="commit">提交</string>
+    <string name="choose_fault_lamp">(请选择故障灯具)</string>
+    <string name="choose_lamp">(请选择灯具)</string>
+    <string name="commit_suc">提交成功</string>
+    <string name="fault_hint">故障描述......</string>
+    <string name="fault_record">申报记录</string>
+    <string name="fault_content">申报内容</string>
+    <string name="fault_lamps">故障灯具:</string>
+    <string name="choose_fault_lamps">请选择您要申报的故障灯具</string>
+    <string name="fault_declare_tips">给您带来的不便，我们深感抱歉！</string>
+
+    <string name="tie_group_success">灯具编组成功</string>
+    <string name="untie_group_success">灯具解组成功</string>
+    <string name="untie_failure_tips">当前选择的灯具不存在编组</string>
+    <string name="untie_dif_group">当前选择的灯具不在同一个编组</string>
+
+    <string name="delete_mode_success">删除模式成功</string>
+
+    <string name="param_desc_format">亮度%1$s,色温%2$s,颜色%3$s</string>
+    <string name="param_save_success">保存参数成功</string>
+    <string name="add_remark_please">请填写备份信息</string>
+    <string name="create_dynamic_mode">创建动态模式</string>
+    <string name="edit_dynamic_mode">编辑动态模式</string>
+    <string name="frame_index">第%1$d帧</string>
+
+    <string name="add_clock_success">添加闹钟成功</string>
+    <string name="edit_clock_success">修改闹钟成功</string>
+    <string name="choose_mode_please">请选择模式</string>
+    <string name="choose_time_please">请选择时间</string>
+    <string name="choose_weekday_please">请选择重复日期</string>
+    <string name="template">%1$d°</string>
 </resources>
